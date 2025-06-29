@@ -2,7 +2,6 @@ import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 
 export default function CommunityIcon({isFocused}: {isFocused: boolean}) {
-  console.log(isFocused);
   return (
     <Svg
       width={20}
