@@ -1,48 +1,68 @@
-import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import HomeImage from "@/conponents/AnimatedImages/HomeImage";
+import Heading1 from "@/conponents/CustomText/Heading1";
+import Paragraph6 from "@/conponents/CustomText/Paragraph6";
+import MainBackground from "@/conponents/LinearBackground/MainBackground";
+import {
+  Button,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 export default function Index() {
   return (
     <View style={styles.container}>
-      <SafeAreaView>
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.myStatus}>
-            <View style={styles.flightLevel}>
-              <Text>LOGO</Text>
-              <Text>설악산 글라이더</Text>
-              <Text>김유이 님</Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        horizontal={false}
+      >
+        <MainBackground />
+        <View style={styles.myStatus}>
+          {/* 비행고도 기록 */}
+          <View>
+            <Heading1 style={styles.logo}>LOGO</Heading1>
+            <View style={styles.gliderView}>
+              <Paragraph6 style={styles.gliderText}>설악산 글라이더</Paragraph6>
             </View>
-            <View style={styles.travelCard}>
-              <View>
-                <Text>양평 여행 (3일)</Text>
-                <Text> 07.24 - 07. 26</Text>
-              </View>
-              <View>
-                <View>
-                  <Text>1일차</Text>
-                  <Text>양평 패러러브 패러글라이딩</Text>
-                </View>
-                <View>
-                  <Text>2일차</Text>
-                  <Text>000 드라마 세트장</Text>
-                </View>
-                <View>
-                  <Text>3일차</Text>
-                  <Text>양평 해수욕장</Text>
-                </View>
-              </View>
-              <View style={styles.cardBottom}>
-                <Text>2인</Text>
-                <Button onPress={() => {}} title="일정보기" />
-              </View>
-            </View>
-            <Text>홈페이지</Text>
-            <Text>홈페이지</Text>
-            <Text>홈페이지</Text>
-            <Text>홈페이지</Text>
+
+            <Text style={styles.userName}>
+              <Text style={styles.userNameText}>김유이</Text>
+              <Text style={styles.userNameSuffixText}>님</Text>
+            </Text>
           </View>
-        </ScrollView>
-      </SafeAreaView>
+
+          {/* 이미지 요소 */}
+          <HomeImage />
+
+          {/* 나의 일정 카드리스트 */}
+          <View style={styles.travelCard}>
+            <View>
+              <Text>양평 여행 (3일)</Text>
+              <Text> 07.24 - 07. 26</Text>
+            </View>
+            <View>
+              <View>
+                <Text>1일차</Text>
+                <Text>양평 패러러브 패러글라이딩</Text>
+              </View>
+              <View>
+                <Text>2일차</Text>
+                <Text>000 드라마 세트장</Text>
+              </View>
+              <View>
+                <Text>3일차</Text>
+                <Text>양평 해수욕장</Text>
+              </View>
+            </View>
+            <View style={styles.cardBottom}>
+              <Text>2인</Text>
+              <Button onPress={() => {}} title="일정보기" />
+            </View>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -51,18 +71,52 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+    backgroundColor: "#EAF2FC",
   },
   scrollContainer: {
-    width: 400,
-    backgroundColor: "#EAF2FC",
+    width: Dimensions.get("window").width,
     alignItems: "center",
   },
   myStatus: {},
-  flightLevel: {},
+  logo: {
+    fontWeight: 900,
+    marginTop: 12,
+  },
+  gliderView: {
+    backgroundColor: "#3A88F4",
+    borderRadius: 100,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    alignSelf: "flex-start",
+    marginTop: 14,
+  },
+  gliderText: {
+    color: "#fff",
+    fontWeight: 700,
+  },
+  userName: {
+    marginTop: 12,
+    marginLeft: 11,
+  },
+  userNameText: {
+    color: "#333",
+    fontFamily: "Pretendard",
+    fontSize: 24,
+    fontWeight: 700,
+    marginRight: 4,
+  },
+  userNameSuffixText: {
+    color: "#333",
+    fontFamily: "Pretendard",
+    fontSize: 20,
+    fontWeight: 400,
+  },
+
   travelCard: {
     width: 354,
     height: 210,
     flexShrink: 0,
+    marginTop: 200,
     borderRadius: 12,
     backgroundColor: "rgba(255, 255, 255, 0.6)",
   },
