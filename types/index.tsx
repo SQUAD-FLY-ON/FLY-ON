@@ -1,0 +1,1 @@
+export type pageRoutes = 'home' | 'explore' | 'user' | 'community' | 'schedule';

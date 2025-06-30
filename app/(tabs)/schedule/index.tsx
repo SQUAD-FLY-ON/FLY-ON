@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function Index() {
   return (
     <View style={styles.container}>
-      <Text>홈 페이지</Text>
+      <Text>여행일정 페이지</Text>
     </View>
   );
 }
