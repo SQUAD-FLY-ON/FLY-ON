@@ -18,7 +18,7 @@ export default function NearActivity() {
             <Carousel
                 data={activities}
                 renderItem={(item) => <ActivityAreaCard item={item} />}
-                style={{ paddingLeft: 16 }}
+                style={{ paddingLeft: 16, marginBottom:32, }}
             />
         </View>
     );
