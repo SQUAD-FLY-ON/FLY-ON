@@ -4,7 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const { height } = Dimensions.get("window");
 
-const MainBackground = () => {
+const HomeLinearBackground = () => {
   return (
     <View style={styles.container}>
       {/* 상단 433px gradient */}
@@ -43,4 +43,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MainBackground;
+export default HomeLinearBackground;
