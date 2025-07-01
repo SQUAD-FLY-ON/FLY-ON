@@ -1,16 +1,9 @@
-import HomeImage from "@/conponents/AnimatedImages/HomeImage";
+import HomeImage from "@/conponents/(tabs)/AnimatedImages/HomeImage";
 import Heading1 from "@/conponents/CustomText/Heading1";
 import Paragraph6 from "@/conponents/CustomText/Paragraph6";
-import MainBackground from "@/conponents/LinearBackground/MainBackground";
-import TravelCard from "@/conponents/TravelCard/TravelCard";
-import {
-  Button,
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import HomeLinearBackground from "@/conponents/(tabs)/LinearBackground/HomeLinearBackground";
+import TravelCard from "@/conponents/(tabs)/TravelCard/TravelCard";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
   return (
@@ -19,7 +12,7 @@ export default function Index() {
         contentContainerStyle={styles.scrollContainer}
         horizontal={false}
       >
-        <MainBackground />
+        <HomeLinearBackground />
         <View style={styles.myStatus}>
           {/* 비행고도 기록 */}
           <View>

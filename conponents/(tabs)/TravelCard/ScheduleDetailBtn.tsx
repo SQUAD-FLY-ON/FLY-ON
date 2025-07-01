@@ -1,37 +1,39 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
 import RightArrow from "./icons/RightArrow";
 import { MainGradient } from "../../LinearGradients/MainGradient";
 
-const ScheduleDetailBtn = () => {
+const ScheduleDetailBtn = ({ style }: { style?: ViewStyle }) => {
   return (
-    <MainGradient style={styles.gradient}>
-      <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={[style, styles.button]} onPress={() => {}}>
+      <MainGradient style={styles.gradient}>
         <Text style={styles.text}>일정보기</Text>
         <RightArrow />
-      </TouchableOpacity>
-    </MainGradient>
+      </MainGradient>
+    </TouchableOpacity>
   );
 };
 
 export default ScheduleDetailBtn;
 
 const styles = StyleSheet.create({
-  gradient: {
-    borderRadius: 100,
-  },
   button: {
     width: "auto",
     height: 34,
+    borderRadius: 100,
+  },
+  gradient: {
+    width: "100%",
+    height: "100%",
+    flexDirection: "row",
     paddingVertical: 8,
     paddingHorizontal: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
     borderRadius: 100,
+    alignItems: "center",
   },
   text: {
     color: "#fff",
     fontSize: 14,
     fontWeight: 400,
+    marginRight: 4,
   },
 });
