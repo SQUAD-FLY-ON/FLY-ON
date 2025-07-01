@@ -2,6 +2,7 @@ import HomeImage from "@/conponents/AnimatedImages/HomeImage";
 import Heading1 from "@/conponents/CustomText/Heading1";
 import Paragraph6 from "@/conponents/CustomText/Paragraph6";
 import MainBackground from "@/conponents/LinearBackground/MainBackground";
+import TravelCard from "@/conponents/TravelCard/TravelCard";
 import {
   Button,
   Dimensions,
@@ -37,7 +38,8 @@ export default function Index() {
           <HomeImage />
 
           {/* 나의 일정 카드리스트 */}
-          <View style={styles.travelCard}>
+          <TravelCard />
+          {/* <View style={styles.travelCard}>
             <View>
               <Text>양평 여행 (3일)</Text>
               <Text> 07.24 - 07. 26</Text>
@@ -60,7 +62,7 @@ export default function Index() {
               <Text>2인</Text>
               <Button onPress={() => {}} title="일정보기" />
             </View>
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </View>
@@ -100,29 +102,13 @@ const styles = StyleSheet.create({
   },
   userNameText: {
     color: "#333",
-    fontFamily: "Pretendard",
     fontSize: 24,
     fontWeight: 700,
     marginRight: 4,
   },
   userNameSuffixText: {
     color: "#333",
-    fontFamily: "Pretendard",
     fontSize: 20,
     fontWeight: 400,
-  },
-
-  travelCard: {
-    width: 354,
-    height: 210,
-    flexShrink: 0,
-    marginTop: 200,
-    borderRadius: 12,
-    backgroundColor: "rgba(255, 255, 255, 0.6)",
-  },
-  cardBottom: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
   },
 });
