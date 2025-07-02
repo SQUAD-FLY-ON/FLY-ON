@@ -14,16 +14,16 @@ export default function TabLayout() {
             <CustomTabButton routeName='home' />
           </TabTrigger>
           <TabTrigger name="explore" href="/explore" asChild>
-            <CustomTabButton routeName='explore' />
+            <CustomTabButton routeName="explore" />
           </TabTrigger>
           <TabTrigger name="air" href="/air" asChild>
             <AirFloatingButton />
           </TabTrigger>
           <TabTrigger name="community" href="/community" asChild>
-            <CustomTabButton routeName='community' />
+            <CustomTabButton routeName="community" />
           </TabTrigger>
           <TabTrigger name="user" href="/user" asChild>
-            <CustomTabButton routeName='user' />
+            <CustomTabButton routeName="user" />
           </TabTrigger>
           <TabTrigger name="schedule" href="/schedule" asChild>
             <CreateFloatingButton />
