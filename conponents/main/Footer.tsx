@@ -17,9 +17,10 @@ const styles = StyleSheet.create({
     container: {
         width: '100%',
         backgroundColor: '#ECF4FE',
+        marginBottom: 98,
     },
     footerContainer: {
-        gap: 8,
+        gap:12,
         marginTop: 41,
         alignItems: 'center',
         marginBottom: 50,
