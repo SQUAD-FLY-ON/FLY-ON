@@ -1,17 +1,17 @@
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TabTriggerSlotProps } from "expo-router/ui";
-import { Image, Pressable, StyleSheet } from "react-native";
-export default function FloatingButton({ isFocused, ...props }: TabTriggerSlotProps) {
+import { Pressable, StyleSheet } from "react-native";
+export default function CreateFloatingButton({ isFocused, ...props }: TabTriggerSlotProps) {
     return (
         <LinearGradient
             colors={['#3A88F4', '#84B8FF']}
-            start={{ x: 0.25, y: 0 }}
+            start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={styles.container}
         >
             <Pressable {...props} >
-
-                <Image source={require("@/assets/images/floatingButtonImage.png")} />
+                <AntDesign name="plus" size={16} color="white" />
             </Pressable>
         </LinearGradient>
 
@@ -22,9 +22,12 @@ export default function FloatingButton({ isFocused, ...props }: TabTriggerSlotPr
 
 const styles = StyleSheet.create({
     container: {
-        padding: 18,
+        padding: 20,
         borderRadius: 999,
         zIndex: 200,
-        marginTop: -44,
+        position: 'absolute',
+        right: 16,
+        bottom: '100%',
+        marginBottom: 16
     }
 })
