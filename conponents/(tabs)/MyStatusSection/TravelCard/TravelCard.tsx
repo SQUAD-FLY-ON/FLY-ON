@@ -1,6 +1,6 @@
+import CustomButton from "@/conponents/CustomButton";
 import { StyleSheet, Text, View } from "react-native";
 import UserGroup from "./icons/UserGroup";
-import ScheduleDetailBtn from "./ScheduleDetailBtn";
 
 const TravelCard = () => {
   // mock data
@@ -29,7 +29,7 @@ const TravelCard = () => {
           <UserGroup />
           <Text style={styles.userGroupText}>2인</Text>
         </View>
-        <ScheduleDetailBtn style={styles.scheduleDetailBtn} />
+        <CustomButton onPress={() => {}} style={styles.scheduleDetailBtn} buttonType={"small"} text = '일정 보기' rightArrow/>
       </View>
     </View>
   );

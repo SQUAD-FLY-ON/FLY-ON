@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
+import CustomButton from "../CustomButton";
 import LikeButton from "../LikeButton";
-import { MainGradient } from "../LinearGradients/MainGradient";
 
 export default function Community() {
     const likeNumber = 132;
@@ -32,7 +32,8 @@ export default function Community() {
             <Text style={styles.postDescription} numberOfLines={2} ellipsizeMode="tail">{dummyPost.description}</Text>
         </View>
         <View style={{ position: 'relative', alignItems: 'center' }}>
-            <MainGradient style = {{paddingVertical:8, paddingHorizontal: 12, borderRadius:100 }}><Text style={{ color: '#ffffff' }}>더보기</Text></MainGradient>
+            
+            <CustomButton onPress={() => {}} style={styles.buttonPosition} text='더보기' bottomArrow buttonType={"small"}/>
         </View>
     </View>);
 }
@@ -91,5 +92,9 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: '#8E9297',
         width: '100%',
+    },
+    buttonPosition: {
+        position:'absolute',
+        zIndex:2,
     }
 })
