@@ -1,6 +1,6 @@
-import { LinearGradient } from "expo-linear-gradient";
 import { Image, StyleSheet, Text, View } from "react-native";
 import LikeButton from "../LikeButton";
+import { MainGradient } from "../LinearGradients/MainGradient";
 
 export default function Community() {
     const likeNumber = 132;
@@ -32,8 +32,7 @@ export default function Community() {
             <Text style={styles.postDescription} numberOfLines={2} ellipsizeMode="tail">{dummyPost.description}</Text>
         </View>
         <View style={{ position: 'relative', alignItems: 'center' }}>
-            <LinearGradient style={{ position: 'absolute', paddingHorizontal: 12, paddingVertical: 8, zIndex: 4, borderRadius: 100 }} colors={['#3A88F4', '#84B8FF']} start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}><Text style={{ color: '#ffffff' }}>더보기</Text></LinearGradient>
+            <MainGradient style = {{paddingVertical:8, paddingHorizontal: 12, borderRadius:100 }}><Text style={{ color: '#ffffff' }}>더보기</Text></MainGradient>
         </View>
     </View>);
 }
