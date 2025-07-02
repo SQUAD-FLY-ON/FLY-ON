@@ -15,6 +15,7 @@ export const MainGradient: React.FC<Props> = ({ children, style }) => {
       locations={Colors.mainGradation.locations}
       start={{ x: 0.1, y: 0 }}
       end={{ x: 0.9, y: 1 }}
+      
       style={style}
     >
       {children}
