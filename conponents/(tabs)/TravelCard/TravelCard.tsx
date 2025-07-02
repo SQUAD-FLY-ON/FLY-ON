@@ -1,5 +1,4 @@
-import { Button, StyleSheet, Text, View } from "react-native";
-import Svg, { Path } from "react-native-svg";
+import { StyleSheet, Text, View } from "react-native";
 import UserGroup from "./icons/UserGroup";
 import ScheduleDetailBtn from "./ScheduleDetailBtn";
 
@@ -38,8 +37,6 @@ const TravelCard = () => {
 
 const styles = StyleSheet.create({
   travelCard: {
-    width: 354,
-    // height: 210,
     height: "auto",
     flexShrink: 0,
     marginTop: 200,

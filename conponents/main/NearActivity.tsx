@@ -26,8 +26,8 @@ export default function NearActivity() {
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: 16,
         gap: 24,
+        marginTop:48,
     },
     titleContainer: {
         paddingHorizontal: 16,

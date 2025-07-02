@@ -1,17 +1,19 @@
 import HomeImage from "@/conponents/(tabs)/AnimatedImages/HomeImage";
-import Heading1 from "@/conponents/CustomText/Heading1";
-import Paragraph6 from "@/conponents/CustomText/Paragraph6";
 import HomeLinearBackground from "@/conponents/(tabs)/LinearBackground/HomeLinearBackground";
 import TravelCard from "@/conponents/(tabs)/TravelCard/TravelCard";
+import Heading1 from "@/conponents/CustomText/Heading1";
+import Paragraph6 from "@/conponents/CustomText/Paragraph6";
+import Community from "@/conponents/main/Community";
+import Footer from "@/conponents/main/Footer";
+import NearActivity from "@/conponents/main/NearActivity";
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
   return (
-    <View style={styles.container}>
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        horizontal={false}
-      >
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+    >
+      <View>
         <HomeLinearBackground />
         <View style={styles.myStatus}>
           {/* 비행고도 기록 */}
@@ -32,47 +34,23 @@ export default function Index() {
 
           {/* 나의 일정 카드리스트 */}
           <TravelCard />
-          {/* <View style={styles.travelCard}>
-            <View>
-              <Text>양평 여행 (3일)</Text>
-              <Text> 07.24 - 07. 26</Text>
-            </View>
-            <View>
-              <View>
-                <Text>1일차</Text>
-                <Text>양평 패러러브 패러글라이딩</Text>
-              </View>
-              <View>
-                <Text>2일차</Text>
-                <Text>000 드라마 세트장</Text>
-              </View>
-              <View>
-                <Text>3일차</Text>
-                <Text>양평 해수욕장</Text>
-              </View>
-            </View>
-            <View style={styles.cardBottom}>
-              <Text>2인</Text>
-              <Button onPress={() => {}} title="일정보기" />
-            </View>
-          </View> */}
         </View>
-      </ScrollView>
-    </View>
+        <NearActivity />
+      </View>
+      <Community />
+      <Footer />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#EAF2FC",
-  },
   scrollContainer: {
     width: Dimensions.get("window").width,
-    alignItems: "center",
+    backgroundColor: "#EAF2FC",
   },
-  myStatus: {},
+  myStatus: {
+    padding: 16,
+  },
   logo: {
     fontWeight: 900,
     marginTop: 12,
