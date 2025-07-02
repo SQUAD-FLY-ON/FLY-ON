@@ -1,7 +1,7 @@
-import CustomTabButton from '@/conponents/CustomTabBar/CustomTabButton';
-import { CustomTabList } from '@/conponents/CustomTabBar/CustomTabList';
-import FloatingButton from '@/conponents/CustomTabBar/FloatingButton';
-import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
+import CustomTabButton from "@/conponents/CustomTabBar/CustomTabButton";
+import { CustomTabList } from "@/conponents/CustomTabBar/CustomTabList";
+import FloatingButton from "@/conponents/CustomTabBar/FloatingButton";
+import { TabList, Tabs, TabSlot, TabTrigger } from "expo-router/ui";
 
 export default function TabLayout() {
   return (
@@ -10,24 +10,22 @@ export default function TabLayout() {
       <TabList asChild>
         <CustomTabList>
           <TabTrigger name="home" href="/" asChild>
-            <CustomTabButton routeName='home'/>
+            <CustomTabButton routeName="home" />
           </TabTrigger>
           <TabTrigger name="explore" href="/explore" asChild>
-            <CustomTabButton routeName='explore' />
+            <CustomTabButton routeName="explore" />
           </TabTrigger>
-           <TabTrigger name="schedule" href="/schedule" asChild>
+          <TabTrigger name="schedule" href="/schedule" asChild>
             <FloatingButton />
           </TabTrigger>
           <TabTrigger name="community" href="/community" asChild>
-            <CustomTabButton routeName='community' />
+            <CustomTabButton routeName="community" />
           </TabTrigger>
           <TabTrigger name="user" href="/user" asChild>
-            <CustomTabButton routeName='user' />
+            <CustomTabButton routeName="user" />
           </TabTrigger>
         </CustomTabList>
-
       </TabList>
     </Tabs>
-    // </SafeAreaView>
   );
 }
