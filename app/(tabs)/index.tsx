@@ -1,16 +1,23 @@
-import { StyleSheet, Text, View } from 'react-native';
+import Community from '@/conponents/main/Community';
+import Footer from '@/conponents/main/Footer';
+import NearActivity from '@/conponents/main/NearActivity';
+import { ScrollView, StyleSheet } from 'react-native';
 
 export default function Index() {
   return (
-    <View style={styles.container}>
-      <Text>홈 페이지</Text>
-    </View>
+   <ScrollView
+      style={styles.container}
+    >
+      <NearActivity />
+      <Community />
+      <Footer />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
+    gap: 16,
+    backgroundColor: '#ECF4FE',
   },
 });
