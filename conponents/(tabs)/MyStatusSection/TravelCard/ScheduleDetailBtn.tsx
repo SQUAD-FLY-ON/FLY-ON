@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity, ViewStyle } from "react-native";
+import { MainGradient } from "../../../LinearGradients/MainGradient";
 import RightArrow from "./icons/RightArrow";
-import { MainGradient } from "../../LinearGradients/MainGradient";
 
 const ScheduleDetailBtn = ({ style }: { style?: ViewStyle }) => {
   return (
