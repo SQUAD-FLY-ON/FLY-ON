@@ -2,7 +2,6 @@
 import { usePathname, useRouter } from 'expo-router';
 import { Children, cloneElement, isValidElement } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { G, Path } from 'react-native-svg';
 
 const { width } = Dimensions.get('window');
@@ -11,17 +10,16 @@ const height = 80;
 export function CustomTabList({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const insets = useSafeAreaInsets();
 
   const triggers = Children.toArray(children).filter(isValidElement);
-  const centerTrigger = triggers.find((c: any) => c.props.name === 'schedule');
+  const centerFloatTrigger = triggers.find((c: any) => c.props.name === 'air');
+  const rightFloatTrigger = triggers.find((c: any) => c.props.name === 'schedule');
   const leftTriggers = triggers.filter((c: any) => c.props.name === 'home' || c.props.name === 'explore');
   const rightTriggers = triggers.filter((c: any) => c.props.name === 'community' || c.props.name === 'user');
 
 
   return (
     <View style={styles.container}>
-      {/* 곡선 SVG 배경 */}
       <Svg
         width={width}
         height={height}
@@ -37,7 +35,6 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
           />
         </G>
       </Svg>
-      {/* 탭 버튼들 */}
       <View style={styles.tabContainer}>
         <View style={styles.leftContainer}>
           {leftTriggers.map((child: any) => {
@@ -45,11 +42,16 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
             return cloneElement(child, { key: child.props.name, isActive, router });
           })}
         </View>
-          {centerTrigger &&
-            cloneElement(centerTrigger as any, {
-              router,
-              isCenter: true,
-            })}
+        {centerFloatTrigger &&
+          cloneElement(centerFloatTrigger as any, {
+            router,
+            isCenter: true,
+          })}
+        {pathname==='/' && rightFloatTrigger &&
+          cloneElement(rightFloatTrigger as any, {
+            router,
+            isCenter: true,
+          })}
         <View style={styles.rightContainer}>
           {rightTriggers.map((child: any, idx: number) => {
             const isActive = pathname === child.props.href;
@@ -66,6 +68,10 @@ const styles = StyleSheet.create({
   container: {
     height: height,
     width: '100%',
+    backgroundColor: 'transparent',
+    position: 'absolute',
+    bottom: 0,
+
   },
   svgBackground: {
     position: 'absolute',
