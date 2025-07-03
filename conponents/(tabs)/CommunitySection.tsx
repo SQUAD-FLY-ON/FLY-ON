@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { Image, StyleSheet, Text, View } from "react-native";
 import CustomButton from "../CustomButton";
 import LikeButton from "../LikeButton";
@@ -14,6 +15,7 @@ export default function Community() {
         title: '[양평 패러글라이딩장 추천] 패러글라이딩 덕분에 몸도, 마음도 훨훨 날았던 하루🌿',
         description: '패러글라이딩은 그냥 하늘을 나는 액티비티라고만 생각했는데, 막상 날아보니 몸뿐 아니라 마음까지도 가벼워지는 느낌이었어요.패러글라이딩은 그냥 하...'
     }
+    const router = useRouter();
     return (<View style={styles.container}>
         <Text style={styles.title}>커뮤니티 인기 게시글</Text>
         <View style={styles.postInfoRow}>
@@ -32,8 +34,7 @@ export default function Community() {
             <Text style={styles.postDescription} numberOfLines={2} ellipsizeMode="tail">{dummyPost.description}</Text>
         </View>
         <View style={{ position: 'relative', alignItems: 'center' }}>
-            
-            <CustomButton onPress={() => {}} style={styles.buttonPosition} text='더보기' bottomArrow buttonType={"small"}/>
+            <CustomButton onPress={() => {router.push('/community')}} style={styles.buttonPosition} text='더보기' bottomArrow buttonType={"small"}/>
         </View>
     </View>);
 }

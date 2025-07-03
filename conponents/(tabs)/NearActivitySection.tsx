@@ -1,8 +1,10 @@
 import { activities } from '@/dummy/activity_area';
+import { Link } from 'expo-router';
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import ActivityAreaCard from '../ActivityAreaCard';
 import Carousel from '../Carousel';
+import ArrowDownIcon from '../icons/DownArrow';
 
 
 export default function NearActivity() {
@@ -11,9 +13,9 @@ export default function NearActivity() {
             <View style={styles.titleContainer}>
                 <View style={styles.titleRow}>
                     <Text style={styles.title}>가까운 체험장 추천</Text>
-                    <Image source={require('@/assets/images/arrow_down.png')} />
+                    <ArrowDownIcon size = {18} />
                 </View>
-                <Text style={styles.link}>체험장 탐색하기</Text>
+                <Link href={'/explore'}><Text style={styles.link}>체험장 탐색하기</Text></Link>
             </View>
             <Carousel
                 data={activities}

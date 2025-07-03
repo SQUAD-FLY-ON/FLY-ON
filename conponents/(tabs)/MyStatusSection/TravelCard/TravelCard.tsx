@@ -1,4 +1,5 @@
 import CustomButton from "@/conponents/CustomButton";
+import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import UserGroup from "./icons/UserGroup";
 
@@ -9,6 +10,7 @@ const TravelCard = () => {
     "000 드라마 세트장",
     "양평 해수욕장",
   ];
+  const router = useRouter();
   return (
     <View style={styles.travelCard}>
       <View style={styles.cardTop}>
@@ -29,7 +31,7 @@ const TravelCard = () => {
           <UserGroup />
           <Text style={styles.userGroupText}>2인</Text>
         </View>
-        <CustomButton onPress={() => {}} style={styles.scheduleDetailBtn} buttonType={"small"} text = '일정 보기' rightArrow/>
+        <CustomButton onPress={() => {router.push('/schedule')}} style={styles.scheduleDetailBtn} buttonType={"small"} text = '일정 보기' rightArrow/>
       </View>
     </View>
   );
