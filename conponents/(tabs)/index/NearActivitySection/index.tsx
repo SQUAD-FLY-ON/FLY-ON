@@ -2,7 +2,7 @@ import ActivityAreaCard from '@/conponents/ActivityAreaCard';
 import Carousel from '@/conponents/Carousel';
 import ArrowDownIcon from '@/conponents/icons/DownArrow';
 import { activities } from '@/dummy/activity_area';
-import BottomSheet from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { Link } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
@@ -15,7 +15,7 @@ const filterOptions = [
 ];
 
 export default function NearActivity() {
-    const filterModalRef = useRef<BottomSheet>(null);
+    const filterModalRef = useRef<BottomSheetModal>(null);
     const [currentKey, setCurrentKey] = useState('near')
     const handlePresentModalPress = useCallback(() => {
         filterModalRef.current?.present();

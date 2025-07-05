@@ -5,7 +5,7 @@ import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from '@gorhom/
 import React, { SetStateAction, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-interface FilterModalProps { ref: React.RefObject<any | null>; currentKey: string; setCurrentKey: React.Dispatch<SetStateAction<string>>; options: { key: string; label: string; }[] }
+interface FilterModalProps { ref: React.RefObject<BottomSheetModal  | null>; currentKey: string; setCurrentKey: React.Dispatch<SetStateAction<string>>; options: { key: string; label: string; }[] }
 const FilterModal = (({ ref, currentKey, setCurrentKey, options }: FilterModalProps) => {
     const [selectedKey, setSelectedKey] = useState<string>(currentKey);
     return (
@@ -38,7 +38,7 @@ const FilterModal = (({ ref, currentKey, setCurrentKey, options }: FilterModalPr
                 <View style={styles.modalButton}>
                     <CustomButton text="선택 완료" onPress={() => {
                         setCurrentKey(selectedKey)
-                        ref?.current.close();
+                        ref?.current?.close();
 
                     }} />
                 </View>
