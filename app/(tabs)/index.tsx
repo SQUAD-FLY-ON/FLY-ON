@@ -1,8 +1,8 @@
-import CommunitySection from "@/conponents/(tabs)/CommunitySection";
-import FooterSection from "@/conponents/(tabs)/FooterSection";
-import MyStatusSection from "@/conponents/(tabs)/MyStatusSection";
-import HomeLinearBackground from "@/conponents/(tabs)/MyStatusSection/LinearBackground/HomeLinearBackground";
-import NearActivitySection from "@/conponents/(tabs)/NearActivitySection";
+import CommunitySection from "@/conponents/(tabs)/index/CommunitySection";
+import FooterSection from "@/conponents/(tabs)/index/FooterSection";
+import MyStatusSection from "@/conponents/(tabs)/index/MyStatusSection";
+import HomeLinearBackground from "@/conponents/(tabs)/index/MyStatusSection/LinearBackground/HomeLinearBackground";
+import NearActivitySection from "@/conponents/(tabs)/index/NearActivitySection";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 
 export default function Index() {
