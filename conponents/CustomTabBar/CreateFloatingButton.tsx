@@ -1,19 +1,16 @@
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { LinearGradient } from 'expo-linear-gradient';
 import { TabTriggerSlotProps } from "expo-router/ui";
 import { Pressable, StyleSheet } from "react-native";
+import { MainGradient } from '../LinearGradients/MainGradient';
 export default function CreateFloatingButton({ isFocused, ...props }: TabTriggerSlotProps) {
     return (
-        <LinearGradient
-            colors={['#3A88F4', '#84B8FF']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+        <MainGradient
             style={styles.container}
         >
             <Pressable {...props} >
                 <AntDesign name="plus" size={16} color="white" />
             </Pressable>
-        </LinearGradient>
+        </MainGradient>
 
     )
 

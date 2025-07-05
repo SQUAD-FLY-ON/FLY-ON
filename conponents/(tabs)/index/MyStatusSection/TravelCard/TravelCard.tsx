@@ -1,7 +1,7 @@
-import { Button, StyleSheet, Text, View } from "react-native";
-import Svg, { Path } from "react-native-svg";
+import CustomButton from "@/conponents/CustomButton";
+import { useRouter } from "expo-router";
+import { StyleSheet, Text, View } from "react-native";
 import UserGroup from "./icons/UserGroup";
-import ScheduleDetailBtn from "./ScheduleDetailBtn";
 
 const TravelCard = () => {
   // mock data
@@ -10,6 +10,7 @@ const TravelCard = () => {
     "000 드라마 세트장",
     "양평 해수욕장",
   ];
+  const router = useRouter();
   return (
     <View style={styles.travelCard}>
       <View style={styles.cardTop}>
@@ -30,7 +31,7 @@ const TravelCard = () => {
           <UserGroup />
           <Text style={styles.userGroupText}>2인</Text>
         </View>
-        <ScheduleDetailBtn style={styles.scheduleDetailBtn} />
+        <CustomButton onPress={() => {router.push('/schedule')}} style={styles.scheduleDetailBtn} buttonType={"small"} text = '일정 보기' rightArrow/>
       </View>
     </View>
   );
@@ -38,8 +39,6 @@ const TravelCard = () => {
 
 const styles = StyleSheet.create({
   travelCard: {
-    width: 354,
-    // height: 210,
     height: "auto",
     flexShrink: 0,
     marginTop: 200,

@@ -7,7 +7,7 @@ export default function ActivityAreaCard({ item }: { item: activityArea }) {
   return (
     <View style={styles.card}>
       <Image source={item.image!} width={160} height={160} />
-      <Text style={styles.text}>{item.title}</Text>
+      <Text style={styles.text} numberOfLines={2}>{item.title}</Text>
       <View style={{ gap: 4, flexDirection: 'row' }}>
         <Image source={require('@/assets/images/star.png')} width={18} height={18} />
         <Text style={styles.score}>{item.score}</Text>

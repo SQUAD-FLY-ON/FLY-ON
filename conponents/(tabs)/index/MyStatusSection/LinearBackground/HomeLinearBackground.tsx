@@ -1,6 +1,6 @@
-import React from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import React from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
 
 const { height } = Dimensions.get("window");
 
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: "100%",
     height: "100%",
-    zIndex: -1,
+    zIndex: 0,
   },
   topGradient: {
     height: 433,

@@ -1,6 +1,6 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 
-export default function Footer() {
+export default function FooterSection() {
     return (<View style={styles.container}>
         <View style={styles.footerContainer}>
             <View style={styles.footerRow}>
