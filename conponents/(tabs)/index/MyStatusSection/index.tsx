@@ -1,5 +1,3 @@
-import Heading1 from "@/conponents/CustomText/Heading1";
-import Paragraph6 from "@/conponents/CustomText/Paragraph6";
 import { StyleSheet, Text, View } from "react-native";
 import HomeImage from "./AnimatedImages/HomeImage";
 import TravelCard from "./TravelCard/TravelCard";
@@ -10,9 +8,9 @@ export default function MyStatusSection() {
     <View style={styles.myStatus}>
       {/* 비행고도 기록 */}
       <View>
-        <Heading1 style={styles.logo}>LOGO</Heading1>
+        <Text style={styles.logo}>LOGO</Text>
         <View style={styles.gliderView}>
-          <Paragraph6 style={styles.gliderText}>설악산 글라이더</Paragraph6>
+          <Text style={styles.gliderText}>설악산 글라이더</Text>
         </View>
 
         <Text style={styles.userName}>
@@ -33,6 +31,9 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   logo: {
+    fontFamily: "Pretendard-Bold",
+    fontSize: 24,
+    color: Colors.text.text100,
     fontWeight: 900,
     marginTop: 12,
   },
@@ -45,6 +46,8 @@ const styles = StyleSheet.create({
     marginTop: 14,
   },
   gliderText: {
+    fontFamily: "Pretendard-Regular",
+    fontSize: 12,
     color: "#fff",
     fontWeight: 700,
   },
