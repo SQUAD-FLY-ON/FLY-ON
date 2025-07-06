@@ -2,6 +2,7 @@ import CustomButton from "@/conponents/CustomButton";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import UserGroup from "./icons/UserGroup";
+import Colors from "@/constants/colors";
 
 const TravelCard = () => {
   // mock data
@@ -31,7 +32,15 @@ const TravelCard = () => {
           <UserGroup />
           <Text style={styles.userGroupText}>2인</Text>
         </View>
-        <CustomButton onPress={() => {router.push('/schedule')}} style={styles.scheduleDetailBtn} buttonType={"small"} text = '일정 보기' rightArrow/>
+        <CustomButton
+          onPress={() => {
+            router.push("/schedule");
+          }}
+          style={styles.scheduleDetailBtn}
+          buttonType={"small"}
+          text="일정 보기"
+          rightArrow
+        />
       </View>
     </View>
   );
@@ -61,7 +70,7 @@ const styles = StyleSheet.create({
     marginLeft: 1,
   },
   period: {
-    color: "#8E9297",
+    color: Colors.text.text50,
     fontSize: 16,
     fontWeight: 600,
     marginLeft: 12,
@@ -84,7 +93,7 @@ const styles = StyleSheet.create({
   },
   scheduleDay: {
     marginRight: 4,
-    color: "#747474",
+    color: Colors.text.text70,
     fontSize: 12,
     fontWeight: 600,
   },
