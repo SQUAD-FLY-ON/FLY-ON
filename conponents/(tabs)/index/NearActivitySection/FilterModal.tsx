@@ -67,36 +67,8 @@ const FilterModal = ({
 };
 export default FilterModal;
 const styles = StyleSheet.create({
-  container: {
-    gap: 24,
-    marginTop: 48,
-  },
-  titleContainer: {
-    paddingHorizontal: 16,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-  },
-  titleRow: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    gap: 4,
-  },
-  title: {
-    fontFamily: "Pretendard-Bold",
-    fontWeight: 700,
-    fontSize: 22,
-    lineHeight: 26,
-  },
-  link: {
-    fontFamily: "Pretendard-Regular",
-    fontSize: 12,
-    textDecorationLine: "underline",
-    color: Colors.text.text50,
-  },
   modalTitle: {
-    fontFamily: "Pretendard",
-    fontWeight: 700,
+    fontFamily: "Pretendard-Bold",
     fontSize: 22,
   },
   modalRadios: {

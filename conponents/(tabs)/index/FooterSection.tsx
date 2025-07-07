@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.text.text70,
-    fontWeight: 400,
+    fontFamily: "Pretendard-Regular",
     fontSize: 14,
     height: 17,
     lineHeight: 17,

@@ -68,7 +68,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: "Pretendard-Bold",
-    fontWeight: 700,
     fontSize: 22,
     lineHeight: 26,
   },
@@ -77,16 +76,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textDecorationLine: "underline",
     color: Colors.text.text50,
-  },
-  modalTitle: {
-    fontFamily: "Pretendard",
-    fontWeight: 700,
-    fontSize: 22,
-  },
-  modalRadios: {
-    paddingHorizontal: 6,
-  },
-  modalButton: {
-    marginTop: 27,
   },
 });

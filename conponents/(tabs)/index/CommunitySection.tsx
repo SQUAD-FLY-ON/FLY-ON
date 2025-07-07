@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 8,
-    fontWeight: 700,
+    fontFamily: "Pretendard-Bold",
     color: Colors.text.text100,
     fontSize: 22,
   },
@@ -100,13 +100,13 @@ const styles = StyleSheet.create({
     height: 300,
   },
   postTitle: {
-    fontWeight: 600,
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 18,
     color: Colors.text.text100,
     width: "100%",
   },
   postDescription: {
-    fontWeight: 400,
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
     color: Colors.text.text50,
     width: "100%",

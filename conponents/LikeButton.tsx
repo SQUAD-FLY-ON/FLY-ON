@@ -1,5 +1,5 @@
+import Colors from "@/constants/colors";
 import { Image, Pressable, StyleSheet, Text } from "react-native";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 export default function LikeButton({ likeNumber }: { likeNumber: number }) {
   return (
@@ -20,7 +20,8 @@ const styles = StyleSheet.create({
   },
   text: {
     color: Colors.main,
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
-    fontWeight: 400,
+    paddingTop: 1,
   },
 });

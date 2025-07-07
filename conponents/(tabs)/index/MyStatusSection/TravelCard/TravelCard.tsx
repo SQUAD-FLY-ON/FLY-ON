@@ -65,14 +65,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   title: {
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 24,
-    fontWeight: 600,
     marginLeft: 1,
   },
   period: {
     color: Colors.text.text50,
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 16,
-    fontWeight: 600,
     marginLeft: 12,
   },
   cardContents: {
@@ -94,12 +94,12 @@ const styles = StyleSheet.create({
   scheduleDay: {
     marginRight: 4,
     color: Colors.text.text70,
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 12,
-    fontWeight: 600,
   },
   scheduleLocation: {
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
-    fontWeight: 400,
   },
   cardBottom: {
     flexDirection: "row",
@@ -117,8 +117,8 @@ const styles = StyleSheet.create({
   },
   userGroupText: {
     color: "#787878",
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
-    fontWeight: 400,
   },
   scheduleDetailBtn: {
     position: "absolute",

@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   logo: {
-    fontFamily: "Pretendard-Bold",
     fontSize: 24,
     color: Colors.text.text100,
     fontWeight: 900,
@@ -49,7 +48,6 @@ const styles = StyleSheet.create({
     fontFamily: "Pretendard-Regular",
     fontSize: 12,
     color: "#fff",
-    fontWeight: 700,
   },
   userName: {
     marginTop: 12,
@@ -57,13 +55,13 @@ const styles = StyleSheet.create({
   },
   userNameText: {
     color: Colors.text.text100,
+    fontFamily: "Pretendard-Bold",
     fontSize: 24,
-    fontWeight: 700,
     marginRight: 4,
   },
   userNameSuffixText: {
     color: Colors.text.text100,
+    fontFamily: "Pretendard-Regular",
     fontSize: 20,
-    fontWeight: 400,
   },
 });
