@@ -89,10 +89,12 @@ const styles = StyleSheet.create({
   info: {},
   nickname: {
     color: Colors.text.text100,
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 14,
   },
   date: {
     color: Colors.text.text50,
+    fontFamily: "Pretendard-Regular",
     fontSize: 14,
   },
   communityImage: {

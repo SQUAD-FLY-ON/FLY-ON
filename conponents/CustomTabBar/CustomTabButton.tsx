@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     overflow: "visible",
   },
   text: {
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
   },
 });
