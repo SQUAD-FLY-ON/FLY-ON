@@ -14,9 +14,7 @@ export default function RootLayout() {
             </Stack>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
-
       </SafeAreaView>
-
     </SafeAreaProvider>
   );
 }
