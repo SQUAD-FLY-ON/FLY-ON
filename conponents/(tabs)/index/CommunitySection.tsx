@@ -47,7 +47,7 @@ export default function Community() {
           onPress={() => {
             router.push("/community");
           }}
-          style={styles.buttonPosition}
+          containerStyle={styles.buttonPosition}
           text="더보기"
           bottomArrow
           buttonType={"small"}
