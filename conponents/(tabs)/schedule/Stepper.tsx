@@ -1,3 +1,4 @@
+import { useScheduleStore } from "@/store/useScheduleStore";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Fragment, useEffect, useRef } from "react";
 import {
@@ -10,9 +11,9 @@ import {
 
 const steps = ['날짜 선택', '여행 지역 선택', '체험장/장소 선택', '여행계획 추천', '여행계획 확정'];
 
-export default function Stepper({ currentStep }: { currentStep: number }) {
+export default function Stepper() {
 	const animatedValues = useRef(steps.map(() => new Animated.Value(0))).current;
-
+	const currentStep = useScheduleStore(state => state.currentStep);
 	useEffect(() => {
 		animatedValues.forEach((anim, index) => {
 			Animated.timing(anim, {
