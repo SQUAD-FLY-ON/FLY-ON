@@ -1,25 +1,36 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Image, Pressable, StyleSheet, Text, ViewStyle } from "react-native";
+import React from 'react';
+import { Image, Pressable, StyleSheet, Text, TextStyle, View, ViewStyle } from "react-native";
 import { MainGradient } from "./LinearGradients/MainGradient";
 
 interface ButtonProps {
     onPress: () => void;
     text: string;
     buttonType?: 'small' | 'default';
+    backgroundColor?: string;
+    containerStyle?: ViewStyle;
     style?: ViewStyle;
+    textStyle?: TextStyle,
     rightArrow?: boolean;
     bottomArrow?: boolean;
+    undo?: boolean;
 }
 
-export default function CustomButton({ onPress, buttonType = 'default', style, rightArrow = false, bottomArrow = false, text }: ButtonProps) {
+export default function CustomButton({ onPress, buttonType = 'default', backgroundColor = 'main', containerStyle, style, textStyle, rightArrow = false, bottomArrow = false, undo = false, text }: ButtonProps) {
+    const Wrapper = backgroundColor !== 'main' ? View : MainGradient;
     return (
-        <Pressable onPress={onPress} style={style}>
-            <MainGradient style={buttonType === 'small'?styles.small: styles.default} >
+        <Pressable onPress={onPress} style={containerStyle}>
+            <Wrapper style={[
+                buttonType === 'small' && styles.small,
+                buttonType === 'default' && styles.default,
+                { backgroundColor: backgroundColor }, style]} >
+                {undo && <Image source={require('@/assets/images/undo.png')} style={{ width: 20, height: 20 }} />}
 
-                <Text style={styles.text}>{text}</Text>
+                <Text style={[styles.text, textStyle]}>{text}</Text>
+
                 {rightArrow && <MaterialIcons name="keyboard-arrow-right" size={18} color="#ffffff" />}
                 {bottomArrow && <Image source={require('@/assets/images/arrow_down.png')} style={{ width: 18, height: 18 }} />}
-            </MainGradient>
+            </Wrapper>
         </Pressable>
     );
 }
@@ -33,19 +44,16 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     default: {
-        width: "100%",
         paddingVertical: 16,
-        borderRadius: 100,
+        flexDirection: "row",
+        borderRadius: 12,
         justifyContent: "center",
-
     },
     text: {
         color: "#fff",
         fontSize: 14,
         fontWeight: 400,
         marginRight: 4,
-        height: 17,
-        lineHeight: 17,
         textAlign: 'center',
     },
 });
