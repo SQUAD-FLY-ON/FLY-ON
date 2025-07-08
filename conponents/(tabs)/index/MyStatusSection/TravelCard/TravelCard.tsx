@@ -31,10 +31,7 @@ const TravelCard = () => {
           <UserGroup />
           <Text style={styles.userGroupText}>2인</Text>
         </View>
-        <CustomButton onPress={() => { router.push('/schedule') }} containerStyle={styles.scheduleDetailBtn} textStyle={{
-          height: 17,
-          lineHeight: 17,
-        }} buttonType={"small"} text='일정 보기' rightArrow />
+        <CustomButton onPress={() => { router.push('/schedule') }} containerStyle={styles.scheduleDetailBtn} buttonType={"small"} text='일정 보기' rightArrow />
       </View>
     </View>
   );

@@ -7,7 +7,7 @@ interface ButtonProps {
     onPress: () => void;
     text: string;
     buttonType?: 'small' | 'default';
-    backgroundColor?: string;
+    backgroundColor?: 'main' | string;
     containerStyle?: ViewStyle;
     style?: ViewStyle;
     textStyle?: TextStyle,
@@ -26,7 +26,7 @@ export default function CustomButton({ onPress, buttonType = 'default', backgrou
                 { backgroundColor: backgroundColor }, style]} >
                 {undo && <Image source={require('@/assets/images/undo.png')} style={{ width: 20, height: 20 }} />}
 
-                <Text style={[styles.text, textStyle]}>{text}</Text>
+                <Text style={[styles.text,buttonType === 'small' && styles.smallText, textStyle]}>{text}</Text>
 
                 {rightArrow && <MaterialIcons name="keyboard-arrow-right" size={18} color="#ffffff" />}
                 {bottomArrow && <Image source={require('@/assets/images/arrow_down.png')} style={{ width: 18, height: 18 }} />}
@@ -42,6 +42,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         borderRadius: 100,
         alignItems: "center",
+        gap:4,
     },
     default: {
         paddingVertical: 16,
@@ -53,9 +54,12 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 14,
         fontWeight: 400,
-        marginRight: 4,
         textAlign: 'center',
     },
+    smallText:{
+        height:17,
+        lineHeight:17,
+    }
 });
 
 
