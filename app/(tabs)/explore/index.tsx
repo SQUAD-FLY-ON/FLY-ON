@@ -1,6 +1,4 @@
-import CustomButton from "@/conponents/CustomButton";
 import CustomDynamicButton from "@/conponents/CustomDynamicButton";
-import Colors from "@/constants/colors";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
@@ -62,7 +60,7 @@ export default function Index() {
             />
           </View>
         </View>
-        <View style={{ width: 354 }}>
+        <View style={{ width: 354, marginBottom: 30 }}>
           <CustomDynamicButton
             text="선택 완료"
             onPress={onPress}
