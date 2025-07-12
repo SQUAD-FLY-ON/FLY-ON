@@ -1,12 +1,12 @@
-import CustomDynamicButton from "@/conponents/CustomDynamicButton";
+import NextButton from "@/conponents/(tabs)/explore/NextButton";
 import { router } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dimensions,
   Image,
-  ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -17,58 +17,78 @@ export default function Index() {
     if (loc === null) return;
     router.push("/(tabs)/explore/map");
   };
+
+  useEffect(() => {
+    return setLoc(null);
+  }, []);
+
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>체험장 탐색하기</Text>
-          <Text style={styles.description}>
-            이번주 날씨 기준 적합한 체험장을 알려드려요
-          </Text>
-          <View style={{ flexDirection: "row", gap: 16 }}>
-            <View style={styles.flyLocView}>
-              <View
-                style={[styles.flyLocColor, { backgroundColor: "#E5E5E4" }]}
-              />
-              <Text>FLY:OFF 지역</Text>
-            </View>
-            <View style={styles.flyLocView}>
-              <View
-                style={[styles.flyLocColor, { backgroundColor: "#C3ECFF" }]}
-              />
-              <Text>FLY:ON 지역</Text>
-            </View>
-          </View>
-        </View>
-        <View style={{ paddingTop: 5, alignItems: "center" }}>
-          {loc === null && (
-            <View style={styles.selectDescriptionView}>
-              <Text style={styles.selectDescription}>
-                체험장을 탐색할 지역을 선택하세요
-              </Text>
-            </View>
-          )}
-          <View
-            style={{
-              width: Dimensions.get("window").width,
-              alignItems: "center",
-            }}
-          >
-            <Image
-              source={require("@/assets/images/explore/map.png")}
-              style={{ resizeMode: "contain", width: 500, height: 535 }}
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>체험장 탐색하기</Text>
+        <Text style={styles.description}>
+          이번주 날씨 기준 적합한 체험장을 알려드려요
+        </Text>
+        <View style={{ flexDirection: "row", gap: 16 }}>
+          <View style={styles.flyLocView}>
+            <View
+              style={[styles.flyLocColor, { backgroundColor: "#E5E5E4" }]}
             />
+            <Text>FLY:OFF 지역</Text>
           </View>
-        </View>
-        <View style={{ width: 354, marginBottom: 30 }}>
-          <CustomDynamicButton
-            text="선택 완료"
-            onPress={onPress}
-            isPressable={loc !== null}
-          />
+          <View style={styles.flyLocView}>
+            <View
+              style={[styles.flyLocColor, { backgroundColor: "#C3ECFF" }]}
+            />
+            <Text>FLY:ON 지역</Text>
+          </View>
         </View>
       </View>
-    </ScrollView>
+      <View style={{ paddingTop: 5, alignItems: "center" }}>
+        {loc === null && (
+          <View style={styles.selectDescriptionView}>
+            <Text style={styles.selectDescription}>
+              체험장을 탐색할 지역을 선택하세요
+            </Text>
+          </View>
+        )}
+        <View
+          style={{
+            width: Dimensions.get("window").width,
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
+          <Image
+            source={require("@/assets/images/explore/map.png")}
+            style={{ resizeMode: "contain", width: 480, height: 480 }}
+          />
+          <TouchableOpacity
+            onPress={() => setLoc("충청북도")}
+            style={{ position: "absolute", top: 118, right: 127 }}
+          >
+            <Image
+              source={require("@/assets/images/map/flyon/충청북도.png")}
+              style={{ resizeMode: "contain", width: 120 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setLoc("경상북도")}
+            style={{ position: "absolute", top: 130, right: 53 }}
+          >
+            <Image
+              source={require(`@/assets/images/map/flyon/경상북도.png`)}
+              style={{ resizeMode: "contain", width: 150 }}
+            />
+          </TouchableOpacity>
+        </View>
+        <NextButton
+          onPress={onPress}
+          style={styles.nextBtn}
+          isPressable={loc !== null}
+        />
+      </View>
+    </View>
   );
 }
 
@@ -110,10 +130,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 18,
     zIndex: 5,
     position: "absolute",
-    top: 5,
+    top: -10,
   },
   selectDescription: {
     fontFamily: "Pretendard-Regular",
     fontSize: 14,
+  },
+  nextBtn: {
+    width: 56,
+    height: 56,
+    borderRadius: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#D2D2D2",
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    zIndex: 10,
   },
 });
