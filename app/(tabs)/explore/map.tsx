@@ -1,12 +1,14 @@
 import ExploreHeader from "@/conponents/(tabs)/explore/ExploreHeader";
-import {
+import BottomSheet, {
   BottomSheetModal,
-  BottomSheetModalProvider,
+  BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { useLocalSearchParams } from "expo-router";
-import { useCallback, useMemo, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { useRef, useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
+import { nearLocations } from "@/dummy/near_locations";
+import LocationContainer from "@/conponents/(tabs)/explore/LocationContainer";
 
 export default function Maps() {
   const { loc } = useLocalSearchParams();
@@ -15,33 +17,59 @@ export default function Maps() {
     longitude: 127.0462765,
   });
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
 
   return (
-    <BottomSheetModalProvider>
-      <View style={{ flex: 1, height: 450 }}>
-        <MapView
-          initialRegion={{
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-          style={{ width: "100%", height: "100%" }}
-        >
-          <Marker coordinate={coordinates} />
-        </MapView>
-        <ExploreHeader text={loc as string} />
-        <BottomSheetModal
-          ref={bottomSheetModalRef}
-          index={1}
-          snapPoints={snapPoints}
-        >
-          <View>
-            <Text>Bottom Sheet Modal</Text>
+    <View style={{ flex: 1, height: 450 }}>
+      <MapView
+        initialRegion={{
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }}
+        style={{ width: "100%", height: "100%" }}
+      >
+        <Marker coordinate={coordinates} />
+      </MapView>
+      <ExploreHeader text={loc as string} />
+
+      <BottomSheet
+        ref={bottomSheetModalRef}
+        snapPoints={["25%", "50%", "80%"]}
+        enablePanDownToClose={false}
+      >
+        <BottomSheetView style={{ paddingHorizontal: 15 }}>
+          <View style={{ paddingTop: 16, paddingBottom: 13 }}>
+            <Text style={styles.bottomSheetTitle}>체험장 추천</Text>
           </View>
-        </BottomSheetModal>
-      </View>
-    </BottomSheetModalProvider>
+          <View>
+            <ScrollView contentContainerStyle={styles.contents}>
+              {nearLocations.map((v) => (
+                <LocationContainer key={v.id} image={v.image} title={v.title} />
+              ))}
+            </ScrollView>
+          </View>
+        </BottomSheetView>
+      </BottomSheet>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    justifyContent: "center",
+    backgroundColor: "grey",
+  },
+  bottomSheetTitle: {
+    // fontFamily: "Pretendard-Bold",
+    fontSize: 24,
+    fontWeight: 700,
+  },
+  contents: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+});
