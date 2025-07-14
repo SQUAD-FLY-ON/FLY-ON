@@ -4,14 +4,14 @@ import { Image, Pressable, StyleSheet, Text, TextStyle, View, ViewStyle } from "
 import { MainGradient } from "./LinearGradients/MainGradient";
 
 interface ButtonProps {
+    backgroundColor?: 'main' | string;
+    containerStyle?: ViewStyle;
     onPress: () => void;
     text: string;
     buttonType?: 'small' | 'default';
-    backgroundColor?: 'main' | string;
-    containerStyle?: ViewStyle;
     style?: ViewStyle;
-    textStyle?: TextStyle,
     rightArrow?: boolean;
+    textStyle?: TextStyle,
     bottomArrow?: boolean;
     undo?: boolean;
 }
@@ -24,8 +24,8 @@ export default function CustomButton({ onPress, buttonType = 'default', backgrou
                 buttonType === 'small' && styles.small,
                 buttonType === 'default' && styles.default,
                 { backgroundColor: backgroundColor }, style]} >
-                {undo && <Image source={require('@/assets/images/undo.png')} style={{ width: 20, height: 20 }} />}
 
+                {undo && <Image source={require('@/assets/images/undo.png')} style={{ width: 20, height: 20 }} />}
                 <Text style={[styles.text,buttonType === 'small' && styles.smallText, textStyle]}>{text}</Text>
 
                 {rightArrow && <MaterialIcons name="keyboard-arrow-right" size={18} color="#ffffff" />}
@@ -36,30 +36,28 @@ export default function CustomButton({ onPress, buttonType = 'default', backgrou
 }
 const styles = StyleSheet.create({
     small: {
-        width: "100%",
         flexDirection: "row",
+        width: "100%",
         paddingVertical: 8,
         paddingHorizontal: 12,
-        borderRadius: 100,
         alignItems: "center",
         gap:4,
+        borderRadius: 100,
     },
     default: {
         paddingVertical: 16,
-        flexDirection: "row",
         borderRadius: 12,
+        flexDirection: "row",
         justifyContent: "center",
     },
     text: {
         color: "#fff",
-        fontSize: 14,
         fontWeight: 400,
-        textAlign: 'center',
+        fontSize: 14,
     },
-    smallText:{
+        textAlign: 'center',
         height:17,
+    smallText:{
         lineHeight:17,
     }
 });
-
-

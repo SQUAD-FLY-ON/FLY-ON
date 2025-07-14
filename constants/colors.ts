@@ -12,6 +12,11 @@ const Colors = {
     colors: ["#EAF2FC", "#FFF"] as [ColorValue, ColorValue],
     locations: [0.7981, 1] as [number, number], // 79.81%, 100%
   },
+  text: {
+    text100: "#333333",
+    text70: "#747474",
+    text50: "#8E9297",
+  },
 };
 
 export default Colors;

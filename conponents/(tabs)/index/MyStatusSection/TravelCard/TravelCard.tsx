@@ -2,6 +2,7 @@ import CustomButton from "@/conponents/CustomButton";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import UserGroup from "./icons/UserGroup";
+import Colors from "@/constants/colors";
 
 const TravelCard = () => {
   // mock data
@@ -31,6 +32,7 @@ const TravelCard = () => {
           <UserGroup />
           <Text style={styles.userGroupText}>2인</Text>
         </View>
+          buttonType={"small"}
         <CustomButton onPress={() => { router.push('/schedule') }} containerStyle={styles.scheduleDetailBtn} buttonType={"small"} text='일정 보기' rightArrow />
       </View>
     </View>
@@ -56,14 +58,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
   },
   title: {
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 24,
-    fontWeight: 600,
     marginLeft: 1,
   },
   period: {
-    color: "#8E9297",
+    color: Colors.text.text50,
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 16,
-    fontWeight: 600,
     marginLeft: 12,
   },
   cardContents: {
@@ -84,13 +86,13 @@ const styles = StyleSheet.create({
   },
   scheduleDay: {
     marginRight: 4,
-    color: "#747474",
+    color: Colors.text.text70,
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 12,
-    fontWeight: 600,
   },
   scheduleLocation: {
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
-    fontWeight: 400,
   },
   cardBottom: {
     flexDirection: "row",
@@ -108,8 +110,8 @@ const styles = StyleSheet.create({
   },
   userGroupText: {
     color: "#787878",
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
-    fontWeight: 400,
   },
   scheduleDetailBtn: {
     position: "absolute",

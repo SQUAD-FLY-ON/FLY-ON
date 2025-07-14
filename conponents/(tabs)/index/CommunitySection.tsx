@@ -2,6 +2,7 @@ import { useRouter } from "expo-router";
 import { Image, StyleSheet, Text, View } from "react-native";
 import CustomButton from "../../CustomButton";
 import LikeButton from "../../LikeButton";
+import Colors from "@/constants/colors";
 
 export default function Community() {
   const likeNumber = 132;
@@ -66,8 +67,8 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 8,
-    fontWeight: 700,
-    color: "#333333",
+    fontFamily: "Pretendard-Bold",
+    color: Colors.text.text100,
     fontSize: 22,
   },
   postInfoRow: {
@@ -87,11 +88,13 @@ const styles = StyleSheet.create({
   },
   info: {},
   nickname: {
-    color: "#333333",
+    color: Colors.text.text100,
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 14,
   },
   date: {
-    color: "#8E9297",
+    color: Colors.text.text50,
+    fontFamily: "Pretendard-Regular",
     fontSize: 14,
   },
   communityImage: {
@@ -99,15 +102,15 @@ const styles = StyleSheet.create({
     height: 300,
   },
   postTitle: {
-    fontWeight: 600,
+    fontFamily: "Pretendard-SemiBold",
     fontSize: 18,
-    color: "#333333",
+    color: Colors.text.text100,
     width: "100%",
   },
   postDescription: {
-    fontWeight: 400,
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
-    color: "#8E9297",
+    color: Colors.text.text50,
     width: "100%",
   },
   buttonPosition: {
