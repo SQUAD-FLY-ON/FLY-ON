@@ -3,11 +3,11 @@ import { useScheduleStore } from "@/store/useScheduleStore";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Fragment, useEffect, useRef } from "react";
 import {
-	Animated,
-	Easing,
-	StyleSheet,
-	Text,
-	View,
+  Animated,
+  Easing,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
 
 const stepLabels = [
@@ -25,7 +25,7 @@ export default function Stepper() {
 
   const currentStep = useScheduleStore(state => state.currentStep); // 0~7
   const currentStepperIndex = Screens[currentStep].step; // 0~4
-
+  const currentStepKey = Screens[currentStep].key;
   useEffect(() => {
     animatedValues.forEach((anim, index) => {
       Animated.timing(anim, {
@@ -38,7 +38,7 @@ export default function Stepper() {
   }, [currentStepperIndex]);
 
   return (
-    <View style={styles.stepper}>
+    <View style={[styles.stepper, currentStepKey.includes('Loading')  && {display:'none'}]}>
       {stepLabels.map((label, index) => {
         const animatedScale = animatedValues[index].interpolate({
           inputRange: [0, 1],

@@ -1,6 +1,7 @@
 import { Screens } from "@/constants/screens";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import CalanderScreen from "./CalanderScreen";
+import GenerateScheduleScreen from "./GenerateScheduleScreen";
 import SelectPlaceScreen from "./SelectPlaceScreen";
 
 export default function Screen() {
@@ -8,6 +9,6 @@ export default function Screen() {
   return (<>
     {Screens[currentStep].key === 'SelectDate' && <CalanderScreen />}
     {Screens[currentStep].key.includes('SelectPlace') && <SelectPlaceScreen />}
-
+    {Screens[currentStep].key === 'LoadingGenerateSchedule' && <GenerateScheduleScreen />}
   </>)
 }

@@ -1,4 +1,5 @@
 import CustomButton from "@/conponents/CustomButton";
+import { Screens } from "@/constants/screens";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -12,7 +13,9 @@ export default function ButtonSection() {
       goToNextStep: state.goToNextStep,
       setCurrentMarkedDates: state.setCurrentMarkedDates,
     }))
-  ); return (<View style={styles.container}>
+  ); 
+  const currentStepKey = Screens[currentStep].key;
+  return (<View style={[styles.container, currentStepKey.includes('Loading') && {display: 'none'}]}>
     {
       currentStep > 0 ? (
         <CustomButton onPress={() => { goToPrevStep() }} text='이전 단계' style={{ paddingHorizontal: 17.5 }} textStyle={{ color: '#747474', fontSize: 20, lineHeight: 20 }} backgroundColor="#D2D2D2" />
