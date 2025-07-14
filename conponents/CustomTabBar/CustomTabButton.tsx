@@ -6,6 +6,7 @@ import CommunityIcon from "./icons/CommunityIcon";
 import ExploreIcon from "./icons/ExploreIcon";
 import HomeIcon from "./icons/HomeIcon";
 import UserIcon from "./icons/UserIcon";
+import Colors from "@/constants/colors";
 
 type CustomTabButtonProps = TabTriggerSlotProps & {
   routeName: pageRoutes;
@@ -13,29 +14,44 @@ type CustomTabButtonProps = TabTriggerSlotProps & {
 
 function getRouteLabel(routeName: pageRoutes) {
   switch (routeName) {
-    case 'home':
-      return '홈';
-    case 'explore':
-      return '탐색';
-    case 'community':
-      return '커뮤니티';
-    case 'user':
-      return '마이';
+    case "home":
+      return "홈";
+    case "explore":
+      return "탐색";
+    case "community":
+      return "커뮤니티";
+    case "user":
+      return "마이";
     default:
-      return '';
+      return "";
   }
 }
 
-export default function CustomTabButton({ routeName, isFocused, ...props }: CustomTabButtonProps) {
+export default function CustomTabButton({
+  routeName,
+  isFocused,
+  ...props
+}: CustomTabButtonProps) {
   // routeName에 따라 아이콘 컴포넌트 결정
-  const isActive = isFocused ? isFocused : false
+  const isActive = isFocused ? isFocused : false;
   return (
-    <Pressable  {...props} style={[styles.button, routeName === 'community' && { marginRight: -18 }]}>
-      {routeName === 'home' && <HomeIcon isFocused={isActive} />}
-      {routeName === 'explore' && <ExploreIcon isFocused={isActive} />}
-      {routeName === 'community' && <CommunityIcon isFocused={isActive} />}
-      {routeName === 'user' && <UserIcon isFocused={isActive} />}
-      <Text style={[styles.text, { color: `${isActive ? '#3A88F4' : '#8E9297'}` }]} numberOfLines={1}>{getRouteLabel(routeName)}</Text>
+    <Pressable
+      {...props}
+      style={[styles.button, routeName === "community" && { marginRight: -18 }]}
+    >
+      {routeName === "home" && <HomeIcon isFocused={isActive} />}
+      {routeName === "explore" && <ExploreIcon isFocused={isActive} />}
+      {routeName === "community" && <CommunityIcon isFocused={isActive} />}
+      {routeName === "user" && <UserIcon isFocused={isActive} />}
+      <Text
+        style={[
+          styles.text,
+          { color: `${isActive ? Colors.main : Colors.text.text50}` },
+        ]}
+        numberOfLines={1}
+      >
+        {getRouteLabel(routeName)}
+      </Text>
     </Pressable>
   );
 }
@@ -43,11 +59,12 @@ export default function CustomTabButton({ routeName, isFocused, ...props }: Cust
 const styles = StyleSheet.create({
   button: {
     gap: 8,
-    alignItems: 'center',
+    alignItems: "center",
     zIndex: 10,
-    overflow: 'visible',
+    overflow: "visible",
   },
   text: {
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
-  }
+  },
 });
