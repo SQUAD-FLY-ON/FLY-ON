@@ -6,11 +6,12 @@ interface FilterProps {
     key: string;
     text: string;
   }[],
+  gap?: number
   currentFilter: string;
   setCurrentFilter: React.Dispatch<SetStateAction<string>>;
 }
-export default function Filter({ filters, currentFilter, setCurrentFilter }: FilterProps) {
-  return (<View style={styles.container}>
+export default function Filter({ filters, gap=12, currentFilter, setCurrentFilter }: FilterProps) {
+  return (<View style={[styles.container,{gap}]}>
     {
       filters.map((item) => (
         <CustomButton backgroundColor={`${(currentFilter === item.key) ? 'main' : '#EFEFEF'}`} key={item.key} textStyle={{ color: `${(currentFilter === item.key) ? '#FFFFFF' : '#333333'}` }} text={item.text} buttonType="small" onPress={() => { setCurrentFilter(item.key) }} />
@@ -22,6 +23,5 @@ export default function Filter({ filters, currentFilter, setCurrentFilter }: Fil
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    gap: 12,
   }
 }) 

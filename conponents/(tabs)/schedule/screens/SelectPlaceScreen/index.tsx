@@ -2,8 +2,8 @@ import { Screens } from "@/constants/screens";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
+import Filter from "../../Filter";
 import TitleHeader from "../TitleHeader";
-import Filter from "./Filter";
 import PlaceCard from "./PlaceCard";
 
 export default function SelectPlaceScreen() {

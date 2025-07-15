@@ -14,12 +14,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    // Heading3
+    fontFamily:'Pretendard-Bold',
     fontWeight: 600,
     fontSize: 22,
   },
   description: {
-    // Paragraph4
+    fontFamily: 'Pretendard-Regular',
     fontSize: 14,
     fontWeight: 400,
     color: '#747474',
