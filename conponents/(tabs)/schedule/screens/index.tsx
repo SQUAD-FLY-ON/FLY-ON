@@ -3,6 +3,7 @@ import { useScheduleStore } from "@/store/useScheduleStore";
 import CalanderScreen from "./CalanderScreen";
 import GenerateScheduleScreen from "./GenerateScheduleScreen";
 import AIRecommendScreen from "./PlanScreen/AIRecommendPlanScreen";
+import EditPlanScreen from "./PlanScreen/EditPlanScreen";
 import SelectPlaceScreen from "./SelectPlaceScreen";
 
 export default function Screen() {
@@ -12,5 +13,6 @@ export default function Screen() {
     {Screens[currentStep].key.includes('SelectPlace') && <SelectPlaceScreen />}
     {Screens[currentStep].key === 'LoadingGenerateSchedule' && <GenerateScheduleScreen />}
     {Screens[currentStep].key === 'AIRecommendPlan' && <AIRecommendScreen />}
+    {Screens[currentStep].key === 'EditPlan' && <EditPlanScreen />}
   </>)
 }

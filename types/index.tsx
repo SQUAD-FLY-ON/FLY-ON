@@ -6,3 +6,10 @@ export type activityArea = {
   score: number;
   reviews: number;
 };
+export type Plan = {
+  key: string,
+  type: string;
+  image: any; 
+  place: string; 
+  address: string;
+}
