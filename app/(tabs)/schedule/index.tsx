@@ -1,20 +1,21 @@
 import ButtonSection from '@/conponents/(tabs)/schedule/ButtonSection';
 import ScheduleTopBar from '@/conponents/(tabs)/schedule/ScheduleTopBar';
 import Screen from '@/conponents/(tabs)/schedule/screens';
+import { FloatingPortalProvider } from '@/conponents/(tabs)/schedule/screens/PlanScreen/ExKanban';
 import Stepper from '@/conponents/(tabs)/schedule/Stepper';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 export default function Index() {
   return (
-    <>
+    <FloatingPortalProvider>
       <ScheduleTopBar />
       <View style={styles.container}>
         <Stepper />
         <Screen  />
         <ButtonSection  />
       </View>
-    </>
+    </FloatingPortalProvider>
   );
 }
 

@@ -1,12 +1,15 @@
-import React, { Fragment, useCallback, useRef, useState } from 'react';
+
+
+import Entypo from '@expo/vector-icons/Entypo';
+import React, { Fragment, useCallback, useContext, useRef, useState } from 'react';
 import {
+  Animated,
   ScrollView,
   StyleSheet,
   Text,
   View
 } from 'react-native';
 import DraggablePlanCard from './DraggablePlanCard';
-
 
 // 타입 정의
 interface Plan {
@@ -25,8 +28,38 @@ interface DayData {
     color: string;
   };
 }
+// 전역 floating layer를 위한 portal 컨텍스트
+export const FloatingPortalContext = React.createContext(null);
 
+// 메인 앱에서 사용할 FloatingPortal Provider
+export const FloatingPortalProvider = ({ children }) => {
+  const [floatingElement, setFloatingElement] = useState(null);
 
+  return (
+    <FloatingPortalContext.Provider value={{ setFloatingElement }}>
+      <View style={{ flex: 1 }}>
+        {children}
+        {/* Floating layer - 최상위에 렌더링 */}
+        {floatingElement && (
+          <View
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              pointerEvents: 'none', // 터치 이벤트 통과
+              zIndex: 9999,
+              elevation: 9999,
+            }}
+          >
+            {floatingElement}
+          </View>
+        )}
+      </View>
+    </FloatingPortalContext.Provider>
+  );
+};
 
 // 메인 여행 계획 칸반 보드
 const TravelPlanKanban = () => {
@@ -38,9 +71,17 @@ const TravelPlanKanban = () => {
 
   const [dayLayouts, setDayLayouts] = useState<{ [key: string]: any }>({});
   const [cardLayouts, setCardLayouts] = useState<{ [key: string]: any[] }>({});
-  const [scrollOffset, setScrollOffset] = useState(0);
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollOffsetRef = useRef(0); // 상태에서 useRef로 변경
+  const [scrollViewLayout, setScrollViewLayout] = useState({ y: 0, height: 0 });
+  const scrollViewLayoutRef = useRef({ y: 0, height: 0 });
+  const isAutoScrollingRef = useRef(false);
+  const autoScrollDirectionRef = useRef<'up' | 'down' | null>(null)
+  const autoScrollOffsetYRef = useRef(0);
   const dayRefs = useRef<{ [key: string]: View }>({});
+  const autoScrollInterval = useRef<NodeJS.Timeout | null>(null);
+
+  // 드래그 시작 시의 스크롤 오프셋을 저장
+  const initialScrollOffsetRef = useRef(0);
 
   const [dayData, setDayData] = useState<DayData>({
     day1: {
@@ -143,23 +184,50 @@ const TravelPlanKanban = () => {
     }
   });
 
+  // ScrollView 레이아웃 측정 - measureInWindow로 화면 기준 절대 좌표 획득
+  const scrollViewRef = useRef<ScrollView>(null);
+  const containerRef = useRef<View>(null);
+
+
+    // 🎯 Floating 관련 새로운 state들
+  const [floatingCardData, setFloatingCardData] = useState<{
+    item: Plan;
+    dayId: string;
+    index: number;
+    layout: { x: number; y: number; width: number; height: number };
+    gestureState: any;
+  } | null>(null);
+  
+  const floatingPan = useRef(new Animated.ValueXY()).current;
+  const floatingOpacity = useRef(new Animated.Value(0)).current;
+  const floatingPortal = useContext(FloatingPortalContext);
+
+  // measureScrollViewPosition 함수 수정 - 정확한 위치 측정
+  const measureScrollViewPosition = useCallback(() => {
+    if (containerRef.current) {
+      containerRef.current.measureInWindow((x, y, width, height) => {
+        console.log('ScrollView position:', { x, y, width, height });
+        const layout = { y, height, x, width };
+        setScrollViewLayout(layout);
+        scrollViewLayoutRef.current = layout; // ref에도 저장
+      });
+    }
+  }, []);
+
   // Day 컬럼의 레이아웃 측정 (ScrollView 기준 절대 좌표)
   const measureDay = useCallback((dayId: string, event: any) => {
     const { x, y, width, height } = event.nativeEvent.layout;
-    // ScrollView 내에서의 절대 좌표로 저장
     setDayLayouts(prev => ({
       ...prev,
       [dayId]: {
-        // x: x + 16, // padding 고려
-        // y: y + 20 + scrollOffset, // padding과 scroll offset 고려
         x,
         y,
         width,
         height,
-        originalY: y // 원본 y 좌표도 저장
+        originalY: y
       }
     }));
-  }, [scrollOffset]);
+  }, []);
 
   // 카드의 레이아웃 측정 (Day 컨테이너 기준 상대 좌표)
   const measureCard = useCallback((dayId: string, index: number, event: any) => {
@@ -168,7 +236,6 @@ const TravelPlanKanban = () => {
       const dayCards = [...(prev[dayId] || [])];
       dayCards[index] = {
         x,
-        // y: y + 16, // Day content padding 고려
         y,
         width,
         height,
@@ -210,110 +277,225 @@ const TravelPlanKanban = () => {
     });
   }, [dayData]);
 
+  // startAutoScroll 함수도 수정 - 이미 스크롤 중인 경우 처리
+  const startAutoScroll = useCallback((direction: 'up' | 'down') => {
+    // 이미 같은 방향으로 스크롤 중이면 무시
+    if (isAutoScrollingRef.current && autoScrollDirectionRef.current === direction) {
+      return;
+    }
+
+    // 기존 스크롤 중지
+    if (autoScrollInterval.current) {
+      clearInterval(autoScrollInterval.current);
+    }
+
+    isAutoScrollingRef.current = true;
+    autoScrollDirectionRef.current = direction;
+
+    const scrollSpeed = 15;
+    const scrollInterval = 16;
+
+    autoScrollInterval.current = setInterval(() => {
+      if (scrollViewRef.current) {
+        const currentOffset = scrollOffsetRef.current;
+        const newOffset = direction === 'up'
+          ? Math.max(0, currentOffset - scrollSpeed)
+          : currentOffset + scrollSpeed;
+
+        // 스크롤 한계 체크
+        if (direction === 'up' && newOffset <= 0) {
+          // 맨 위에 도달하면 자동스크롤 중지
+          stopAutoScroll();
+          return;
+        }
+
+        scrollViewRef.current.scrollTo({
+          y: newOffset,
+          animated: false
+        });
+
+        scrollOffsetRef.current = newOffset;
+        autoScrollOffsetYRef.current += direction === 'up' ? -scrollSpeed : scrollSpeed;
+      }
+    }, scrollInterval);
+  }, []);
+  console.log('scroll', scrollOffsetRef.current);
+  // 자동 스크롤 중지
+  const stopAutoScroll = useCallback(() => {
+    if (autoScrollInterval.current) {
+      clearInterval(autoScrollInterval.current);
+      autoScrollInterval.current = null;
+    }
+    isAutoScrollingRef.current = false;
+    autoScrollDirectionRef.current = null;
+  }, []);
+
   // 스크롤 오프셋 추적
   const handleScroll = useCallback((event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
-    setScrollOffset(offsetY);
+    scrollOffsetRef.current = offsetY; // ref로 직접 업데이트
   }, []);
 
-  // 드래그 시작
-  const handleDragStart = useCallback(async (item: Plan, dayId: string, index: number) => {
+  // handleDragStart 수정 - 측정 타이밍 개선
+// 🎯 드래그 시작 - Floating 카드 생성
+  const handleDragStart = useCallback(async (
+    item: Plan, 
+    dayId: string, 
+    index: number, 
+    cardLayout: { x: number; y: number; width: number; height: number }
+  ) => {
     setDraggingItem({ item, sourceDay: dayId, sourceIndex: index });
+    initialScrollOffsetRef.current = scrollOffsetRef.current;
+
+    // ScrollView 위치 측정
+    measureScrollViewPosition();
     await remeasureDayLayouts();
+
+    // 🎯 Floating 카드 데이터 설정
+    setFloatingCardData({
+      item,
+      dayId,
+      index,
+      layout: cardLayout,
+      gestureState: { dx: 0, dy: 0 }
+    });
+
+    // Floating 카드 생성
+    createFloatingCard(item, dayId, index, cardLayout, { dx: 0, dy: 0 });
+    
+    // Floating 카드 페이드인
+    Animated.timing(floatingOpacity, {
+      toValue: 0.9,
+      duration: 150,
+      useNativeDriver: false,
+    }).start();
   }, []);
 
-  // 드래그 중
-  const handleDragMove = useCallback((x: number, y: number) => {
-    // 여기서 자동 스크롤 로직을 추가할 수 있습니다
-  }, []);
+   const createFloatingCard = useCallback((
+    item: Plan,
+    dayId: string,
+    index: number,
+    layout: { x: number; y: number; width: number; height: number },
+    gestureState: any
+  ) => {
+    const typeToLabel: Record<string, string> = {
+      activity: '체험장 이동',
+      restaurant: '음식점으로 이동',
+      lodging: '숙소로 이동',
+      sightseeing: '관광지로 이동'
+    };
+    const floatingCard = (
+      <Animated.View
+        style={{
+          position: 'absolute',
+          left: layout.x,
+          top: layout.y,
+          width: layout.width,
+          height: layout.height,
+          opacity: floatingOpacity,
+          transform: [
+            { translateX: floatingPan.x },
+            { translateY: floatingPan.y }
+          ],
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 12 },
+          shadowOpacity: 0.3,
+          shadowRadius: 16,
+          elevation: 16,
+          pointerEvents: 'auto',
+        }}
+      >
+        <View style={styles.rowContainer}>
+          <View style={styles.leftContainer}>
+            <View style={styles.indexCircle}>
+              <Text style={styles.index}>{index + 1}</Text>
+            </View>
+          </View>
+          <View style={styles.rightContainer}>
+            <Text style={styles.type}>{typeToLabel[item?.type]}</Text>
+            <View style={styles.card}>
+              <View style={styles.imagePlaceholder}>
+                <Text style={styles.imageText}>IMG</Text>
+              </View>
+              <View style={styles.cardTextContainer}>
+                <Text style={styles.place} numberOfLines={1}>
+                  {item?.place}
+                </Text>
+                <Text style={styles.address} numberOfLines={2} ellipsizeMode="tail">
+                  {item?.address}
+                </Text>
+              </View>
+              <View>
+                <Entypo name="menu" size={24} color="black" />
+              </View>
+            </View>
+          </View>
+        </View>
+      </Animated.View>
+    );
+    
+    if (floatingPortal) {
+      floatingPortal.setFloatingElement(floatingCard);
+    }
+  }, [floatingOpacity, floatingPan, floatingPortal]);
 
-  // 타겟 Day와 위치 찾기 (화면 절대 좌표 기준)
-  // const getDropTarget = useCallback((screenX: number, screenY: number) => {
-  //   // 현재 스크롤 오프셋을 고려한 실제 Y 좌표 계산
-  //   const adjustedY = screenY + scrollOffset;
 
-  //   console.log('Drop coordinates (screen):', screenX, screenY);
-  //   console.log('Scroll offset:', scrollOffset);
-  //   console.log('Adjusted Y:', adjustedY);
-  //   console.log('Day layouts:', dayLayouts);
+// 부모 컴포넌트의 handleDragMove 수정
+const handleDragMove = useCallback((x: number, y: number, gestureState: any, evt: any) => {
+  if (!scrollViewLayout.height) return;
+  
+  // gestureState가 undefined인 경우 방어 처리
+  if (!gestureState) {
+    console.warn('gestureState is undefined in handleDragMove');
+    return;
+  }
 
-  //   const dayIds = Object.keys(dayLayouts).sort(); // day1, day2, day3 순으로 정렬
+  // 자동스크롤 로직 (기존과 동일)
+  const SCROLL_THRESHOLD = 40;
+  const scrollViewTop = scrollViewLayout.y;
+  const scrollViewBottom = scrollViewLayout.y + scrollViewLayout.height;
 
-  //   for (const dayId of dayIds) {
-  //     const dayLayout = dayLayouts[dayId];
-  //     if (!dayLayout) continue;
+  const isInTopScrollZone = y <= scrollViewTop + SCROLL_THRESHOLD;
+  const isInBottomScrollZone = y >= scrollViewBottom - SCROLL_THRESHOLD;
 
-  //     // Day의 실제 위치 계산 (ScrollView content 내에서의 절대 좌표)
-  //     const dayTop = dayLayout.originalY + 20; // ScrollView contentContainer padding
-  //     const dayBottom = dayTop + dayLayout.height;
+  if (isInTopScrollZone && scrollOffsetRef.current > 0) {
+    if (!isAutoScrollingRef.current || autoScrollDirectionRef.current !== 'up') {
+      startAutoScroll('up');
+    }
+  } else if (isInBottomScrollZone) {
+    if (!isAutoScrollingRef.current || autoScrollDirectionRef.current !== 'down') {
+      startAutoScroll('down');
+    }
+  } else {
+    if (isAutoScrollingRef.current) {
+      stopAutoScroll();
+    }
+  }
 
-  //     console.log(`Checking ${dayId}: originalY=${dayLayout.originalY}, dayTop=${dayTop}, dayBottom=${dayBottom}, adjustedY=${adjustedY}`);
+  // Floating 카드 위치 업데이트
+  if (floatingCardData && gestureState.dx !== undefined && gestureState.dy !== undefined) {
+    // gestureState의 변화를 floatingPan에 즉시 반영
+    floatingPan.setValue({ x: gestureState.dx, y: gestureState.dy });
+    
+    // 필요시 floating 카드 재생성 (자동스크롤 상태 변화 등)
+    // if (gestureState.isAutoScrolling !== floatingCardData.gestureState?.isAutoScrolling) {
+    //   console.log('새로생성',gestureState.dy);
+    //   setFloatingCardData(prev => prev ? {
+    //     ...prev,
+    //     gestureState
+    //   } : null);
+      
+    //   createFloatingCard(
+    //     floatingCardData.item,
+    //     floatingCardData.dayId,
+    //     floatingCardData.index,
+    //     floatingCardData.layout,
+    //     gestureState
+    //   );
+    // }
+  }
+}, [scrollViewLayout, floatingCardData, createFloatingCard, startAutoScroll, stopAutoScroll]);
 
-  //     // Day 영역 내에 있는지 확인
-  //     if (adjustedY >= dayTop && adjustedY <= dayBottom) {
-  //       const cards = cardLayouts[dayId] || [];
-  //       console.log(`Inside ${dayId}, cards:`, cards.length);
-
-  //       if (cards.length === 0) {
-  //         console.log(`Empty day, inserting at index 0`);
-  //         return { dayId, insertIndex: 0 };
-  //       }
-
-  //       // Day 헤더 높이 고려 (대략 60px)
-  //       const dayContentTop = dayTop + 60;
-  //       const relativeY = adjustedY - dayContentTop;
-
-  //       console.log(`Day content top: ${dayContentTop}, relative Y: ${relativeY}`);
-
-  //       // 카드들 사이의 위치 찾기
-  //       for (let i = 0; i < cards.length; i++) {
-  //         const card = cards[i];
-  //         if (!card) continue;
-
-  //         const cardCenterY = card.y + card.height / 2;
-  //         console.log(`Card ${i} centerY: ${cardCenterY}, relative Y: ${relativeY}`);
-
-  //         if (relativeY < cardCenterY) {
-  //           console.log(`Inserting at index ${i}`);
-  //           return { dayId, insertIndex: i };
-  //         }
-  //       }
-
-  //       // 마지막 위치에 삽입
-  //       console.log(`Inserting at end, index ${cards.length}`);
-  //       return { dayId, insertIndex: cards.length };
-  //     }
-  //   }
-
-  //   // 가장 가까운 Day 찾기
-  //   let closestDay = null;
-  //   let minDistance = Infinity;
-
-  //   for (const dayId of dayIds) {
-  //     const dayLayout = dayLayouts[dayId];
-  //     if (!dayLayout) continue;
-
-  //     const dayTop = dayLayout.originalY + 20;
-  //     const dayBottom = dayTop + dayLayout.height;
-  //     const dayCenter = (dayTop + dayBottom) / 2;
-
-  //     const distance = Math.abs(adjustedY - dayCenter);
-  //     if (distance < minDistance) {
-  //       minDistance = distance;
-  //       closestDay = dayId;
-  //     }
-  //   }
-
-  //   if (closestDay) {
-  //     const cards = cardLayouts[closestDay] || [];
-  //     console.log(`No exact match, using closest day ${closestDay} with ${cards.length} cards`);
-  //     return { dayId: closestDay, insertIndex: cards.length };
-  //   }
-
-  //   console.log('No target found');
-  //   return null;
-  // }, [dayLayouts, cardLayouts, scrollOffset]);
-  // 타겟 Day와 위치 찾기 (내부용)
   const getDropTargetInternal = useCallback((x: number, y: number) => {
     const dayIds = Object.keys(dayLayouts);
 
@@ -321,10 +503,12 @@ const TravelPlanKanban = () => {
       const dayLayout = dayLayouts[dayId];
       if (!dayLayout) continue;
 
-      const dayTop = dayLayout.y;
-      const dayBottom = dayLayout.y + dayLayout.height;
+      // 스크롤 변화량을 고려한 dayLayout 위치 보정
+      const scrollDelta = scrollOffsetRef.current - initialScrollOffsetRef.current;
+      const adjustedDayTop = dayLayout.y + scrollDelta;
+      const adjustedDayBottom = adjustedDayTop + dayLayout.height;
 
-      if (y >= dayTop - 50 && y <= dayBottom + 50) {
+      if (y >= adjustedDayTop - 50 && y <= adjustedDayBottom + 50) {
         const cards = cardLayouts[dayId] || [];
 
         if (cards.length === 0) {
@@ -335,7 +519,7 @@ const TravelPlanKanban = () => {
           const card = cards[i];
           if (!card) continue;
 
-          const cardScreenY = dayLayout.y + card.y + card.height / 2;
+          const cardScreenY = adjustedDayTop + card.y + card.height / 2;
 
           if (y < cardScreenY) {
             return { dayId, insertIndex: i };
@@ -349,17 +533,16 @@ const TravelPlanKanban = () => {
     return null;
   }, [dayLayouts, cardLayouts]);
 
-
   // 타겟 Day와 위치 찾기 (실시간 스크롤 오프셋 적용)
   const getDropTarget = useCallback((x: number, y: number) => {
     return getDropTargetInternal(x, y);
   }, [getDropTargetInternal]);
 
-  // 드래그 종료
-  const handleDragEnd = useCallback((x: number, y: number) => {
-    if (!draggingItem) return;
+ const handleDragEnd = useCallback((x: number, y: number) => {
+    stopAutoScroll();
 
-    console.log('Drag end at (screen coordinates):', x, y);
+    if (!draggingItem) return;
+    // 드롭 로직 (기존과 동일)
     const dropTarget = getDropTarget(x, y);
     console.log('Drop target:', dropTarget);
 
@@ -372,22 +555,6 @@ const TravelPlanKanban = () => {
       if (targetDay === sourceDay) {
         // 같은 Day 내에서 순서 변경
         if (insertIndex !== sourceIndex && insertIndex !== sourceIndex + 1) {
-          // const newDayData = { ...dayData };
-          // const plans = [...newDayData[sourceDay].plans];
-
-          // console.log('Before move:', plans.map(p => p.place));
-
-          // // 아이템 제거
-          // const [movedItem] = plans.splice(sourceIndex, 1);
-
-          // // 새 위치에 삽입 (인덱스 조정)
-          // const finalInsertIndex = insertIndex > sourceIndex ? insertIndex - 1 : insertIndex;
-          // plans.splice(finalInsertIndex, 0, movedItem);
-
-          // console.log('After move:', plans.map(p => p.place));
-
-          // newDayData[sourceDay].plans = plans;
-          // setDayData(newDayData);
           setDayData(prevData => {
             const newDayData = { ...prevData };
             const plans = [...newDayData[sourceDay].plans];
@@ -429,9 +596,22 @@ const TravelPlanKanban = () => {
         setDayData(newDayData);
       }
     }
+   // 🎯 Floating 카드 제거
+    if (floatingPortal) {
+      Animated.timing(floatingOpacity, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: false,
+      }).start(() => {
+        floatingPortal.setFloatingElement(null);
+        setFloatingCardData(null);
+      });
+    }
 
+    // Pan 리셋
+    floatingPan.setValue({ x: 0, y: 0 });
     setDraggingItem(null);
-  }, [draggingItem, dayData, getDropTarget]);
+  }, [draggingItem, getDropTarget, stopAutoScroll, floatingPortal]);
 
   // Day 컬럼 렌더링
   const renderDayColumn = (dayId: string, index: number) => {
@@ -458,12 +638,11 @@ const TravelPlanKanban = () => {
         <View style={styles.dayContent}>
           {day.plans.map((plan, planIndex) => (
             <Fragment key={plan.key}>
-
               <View
-                key={plan.key}
                 onLayout={(event) => measureCard(dayId, planIndex, event)}
               >
                 <DraggablePlanCard
+                  key={plan.key}
                   item={plan}
                   index={planIndex}
                   dayId={dayId}
@@ -472,29 +651,31 @@ const TravelPlanKanban = () => {
                   onDragMove={handleDragMove}
                   onDragEnd={handleDragEnd}
                   isDragging={draggingItem?.item.key === plan.key}
+                  isAutoScrollingRef={isAutoScrollingRef}
+                  autoScrollDirectionRef={autoScrollDirectionRef}
+                  scrollViewLayoutRef={scrollViewLayoutRef} // 추가
+                  autoScrollOffsetYRef={autoScrollOffsetYRef}
                 />
               </View>
             </Fragment>
-
           ))}
         </View>
       </View>
     );
   };
-
   // 메인 컴포넌트 return
   return (
-    <View style={styles.container}>
-      <ScrollView
-        ref={scrollViewRef}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      >
-        {Object.keys(dayData).sort().map((dayId, index) => renderDayColumn(dayId, index))}
-      </ScrollView>
-    </View>
+      <View style={styles.container} ref={containerRef}>
+        <ScrollView
+          ref={scrollViewRef}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+        >
+          {Object.keys(dayData).sort().map((dayId, index) => renderDayColumn(dayId, index))}
+        </ScrollView>
+      </View>
   );
 };
 
@@ -503,6 +684,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
+    position: 'relative',
   },
   dayColumn: {
     width: '100%',
@@ -618,6 +800,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#747474',
     flexShrink: 1,
+  },
+  portal: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1000,
   },
 });
 
