@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function PlanCard({ index, type, image, place, address, isLast=false }: { index: number, type: string, image: any, place: string, address: string, isLast?:boolean }) {
+export default function PlanCard({ index, item, isLast = false }: { index: number, item:plan, isLast?: boolean }) {
   const typeToLabel: Record<string, string> = {
     activity: '체험장 이동',
     restaurant: '음식점으로 이동',
@@ -12,7 +12,7 @@ export default function PlanCard({ index, type, image, place, address, isLast=fa
     const { height } = event.nativeEvent.layout;
     setComponentHeight(height);
   };
-  return (<View style={styles.container}>
+  return (<TouchableOpacity onLongPress={() => {}} style={styles.container}>
     <View style={styles.rowContainer}>
       <View style={styles.leftContainer}>
         <View style={styles.indexCircle}>
@@ -20,23 +20,23 @@ export default function PlanCard({ index, type, image, place, address, isLast=fa
             {index + 1}
           </Text>
         </View>
-        {!isLast && 
-        <View style={[styles.line, {height: 19+componentHeight}]} />}
+        {!isLast &&
+          <View style={[styles.line, { height: 19 + componentHeight }]} />}
       </View>
       <View style={styles.rightContainer} onLayout={handleLayout}>
         <Text style={styles.type}>
-          {typeToLabel[type]}
+          {typeToLabel[item.type]}
         </Text>
         <View style={styles.card}>
-          <Image source={image} style={styles.image} />
+          <Image source={item.image} style={styles.image} />
           <View style={styles.cardTextContainer}>
-            <Text style={styles.place} numberOfLines={1}>{place}</Text>
-            <Text style={styles.address} numberOfLines={1} ellipsizeMode="tail">{address}</Text>
+            <Text style={styles.place} numberOfLines={1}>{item.place}</Text>
+            <Text style={styles.address} numberOfLines={1} ellipsizeMode="tail">{item.address}</Text>
           </View>
         </View>
       </View>
     </View>
-  </View>)
+  </TouchableOpacity>)
 }
 const styles = StyleSheet.create({
   container: {
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     flexShrink: 0,
-    borderRadius:6,
+    borderRadius: 6,
   },
   rightContainer: {
     gap: 12.5,
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   cardTextContainer: {
     gap: 4,
     flex: 1,
+    maxWidth: '60%',
   },
   place: {
     fontFamily: 'Pretendard-SemiBold',

@@ -77,7 +77,7 @@ export default function AIRecommendPlanScreen() {
       <FlatList style={{ marginVertical: 21, width: '100%', marginLeft: 2, }}
         contentContainerStyle={styles.planContainer}
         data={data}
-        renderItem={({ item, index }) => <PlanCard isLast={index === data.length - 1} key={index} image={item.image} type={item.type} index={index} place={item.place} address={item.address} />} />
+        renderItem={({ item, index }) => <PlanCard isLast={index === data.length - 1} key={index} index= {index} item={item} />} />
     </View>
   )
 }
