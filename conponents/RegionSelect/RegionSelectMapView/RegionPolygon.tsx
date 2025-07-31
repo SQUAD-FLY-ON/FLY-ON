@@ -1,6 +1,6 @@
-import { defaultFillColor, defaultStrokeColor, selectedFillColor } from '@/constants/(tabs)/explore/region';
-import { calculatePolygonCentroid, convertCoordinatesToPoints } from '@/libs/(tabs)/explore';
-import React, { SetStateAction } from 'react';
+import { defaultStrokeColor, flyOnFillColor, selectedFillColor } from '@/constants/regionSelectMap';
+import { calculatePolygonCentroid, convertCoordinatesToPoints } from '@/libs/regionSelectMap';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LatLng, Marker, Polygon } from 'react-native-maps';
 
@@ -17,40 +17,31 @@ type Region = {
 type RegionPolygonProps = {
   region: Region;
   isSelected: boolean;
-  setSelectedRegionName: React.Dispatch<SetStateAction<string>>;
+  onPress: () => void;
 };
 
 const RegionPolygon = ({
   region,
   isSelected,
-  setSelectedRegionName,
+  onPress,
 }: RegionPolygonProps) => {
   const coordinates: LatLng[] = convertCoordinatesToPoints(region.geometry.coordinates);
 
   if (coordinates.length === 0) return null;
 
   const center = calculatePolygonCentroid(coordinates);
-  const regionName = region.properties.CTPRVN_CD ?? '지역이름없음';
-
   return (
     <>
       <Polygon
         coordinates={coordinates}
-        fillColor={isSelected ? selectedFillColor : defaultFillColor}
-        strokeColor={isSelected ? selectedFillColor : defaultStrokeColor
-        }
+        fillColor={isSelected ? selectedFillColor : flyOnFillColor}
+        strokeColor={defaultStrokeColor}
         strokeWidth={isSelected ? 2 : 1}
         tappable
-        onPress={() => {
-          if (isSelected) {
-            setSelectedRegionName('')
-          } else {
-            setSelectedRegionName(regionName);
-          }
-        }}
+        onPress={onPress}
       />
       {isSelected && center && (
-        <Marker coordinate={center} anchor={{ x: 0.5, y: 0.5 }}>
+        <Marker coordinate={center} anchor={{ x: 0.5, y: 0.5 }} onPress = {() =>{}}>
           <View style={styles.centerTextContainer}>
             <Text style={styles.centerText}>{region.properties.CTP_KOR_NM}</Text>
           </View>

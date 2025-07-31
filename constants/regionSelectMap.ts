@@ -1,14 +1,14 @@
-  // 기본 색상과 선택된 색상
+// 기본 색상과 선택된 색상
 export const defaultStrokeColor = '#000000';
-export const defaultFillColor = '#c4edff'
-export const selectedFillColor = '#78b9fb'; // 선택시 빨간색
-
+export const selectedFillColor = '#78b9fb';
+export const flyOffFillColor = '#E5E5E4';
+export const flyOnFillColor = '#C3ECFF'
 export const customMapStyle = [
   {
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#e4e4e4" // 지도 배경색 (땅)을 #84B8FF으로
+        "color": `${flyOffFillColor}`
       }
     ]
   },
@@ -81,7 +81,7 @@ export const customMapStyle = [
     "elementType": "geometry",
     "stylers": [
       {
-        "color": "#FFFFFF" // 물 색상을 하얀색으로 변경
+        "color": "#F7F7F7"
       }
     ]
   },
@@ -95,9 +95,4 @@ export const customMapStyle = [
   }
 ];
 
-export const koreaRegion = {
-    latitude: 35.519406,
-    latitudeDelta: 6.464262,
-    longitude: 127.668015,
-    longitudeDelta: 3.946106,
-  };
+export const koreaRegion = { "latitude": 35.84865455207799, "latitudeDelta": 5.486573594370739, "longitude": 127.60108854621649, "longitudeDelta": 5.225738435983658 };

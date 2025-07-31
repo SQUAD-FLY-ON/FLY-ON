@@ -1,25 +1,32 @@
-import CustomButton from "@/conponents/CustomButton";
-import { router } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { BackButton } from '@/conponents/BackButton';
+import { MainGradient } from '@/conponents/LinearGradients/MainGradient';
+import RegionSelect from '@/conponents/RegionSelect';
+import { useRouter } from 'expo-router';
+import React, { useState } from 'react';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+
+// mapstyle.withgoogle.com 에서 생성한 JSON 스타일 코드
 
 export default function Index() {
+  const [selectedRegionName, setSelectedRegionName] = useState('');
+  const router = useRouter();
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>체험장 탐색하기</Text>
-        <Text style={styles.description}>
-          이번주 날씨 기준 적합한 체험장을 알려드려요
-        </Text>
-        <View style={{ flexDirection: "row", gap: 16 }}>
-          <Text>FLY:OFF 지역</Text>
-          <Text>FLY:ON 지역</Text>
-        </View>
+      <View style={styles.backButtonContainer}>
+        <BackButton />
       </View>
-      <View style={{ width: 354 }}>
-        <CustomButton
-          text="선택 완료"
-          onPress={() => router.push("/(tabs)/explore/map")}
-        />
+      <RegionSelect style={{ marginTop: 35 }} selectedRegionName={selectedRegionName} setSelectedRegionName={setSelectedRegionName} />
+      <View style={{ width: '100%', paddingHorizontal: 14, alignItems: 'flex-end', marginTop: 16 }}>
+        {
+          selectedRegionName === '' ? (
+            <View style={styles.nextButton}><Image source={require('@/assets/images/explore_right_arrow.png')} /></View>
+          ) :
+            (
+              <TouchableOpacity onPress={() => router.push('/(tabs)/explore/map')}>
+                <MainGradient style={styles.nextButton}><Image source={require('@/assets/images/explore_right_arrow.png')} /></MainGradient>
+              </TouchableOpacity>
+            )
+        }
       </View>
     </View>
   );
@@ -27,22 +34,22 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: "center",
-    backgroundColor: "#F7F7F7",
+    ...StyleSheet.absoluteFillObject,
+    alignItems: 'center',
+    backgroundColor: '#F7F7F7',
+    paddingBottom: 117,
   },
-  header: {
-    alignItems: "center",
-    paddingTop: 35,
+  backButtonContainer: {
+    position: 'absolute',
+    top: 12,
+    left: 16,
   },
-  title: {
-    fontFamily: "Pretendard-Bold",
-    fontSize: 24,
-    marginBottom: 16,
-  },
-  description: {
-    fontFamily: "Pretendard-Regular",
-    fontSize: 14,
-    marginBottom: 5,
-  },
+  nextButton: {
+    width: 56,
+    height: 56,
+    borderRadius: 999,
+    backgroundColor: '#D2D2D2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
