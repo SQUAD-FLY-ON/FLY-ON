@@ -1,31 +1,22 @@
 import { defaultStrokeColor, flyOnFillColor, selectedFillColor } from '@/constants/regionSelectMap';
-import { calculatePolygonCentroid, convertCoordinatesToPoints } from '@/libs/regionSelectMap';
+import { calculatePolygonCentroid } from '@/libs/regionSelectMap';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LatLng, Marker, Polygon } from 'react-native-maps';
 
-type Region = {
-  geometry: {
-    coordinates: any;
-  };
-  properties: {
-    CTPRVN_CD: string;
-    CTP_KOR_NM: string;
-  };
-};
-
 type RegionPolygonProps = {
-  region: Region;
+  coordinates: LatLng[];
   isSelected: boolean;
   onPress: () => void;
+  regionName: string;
 };
 
 const RegionPolygon = ({
-  region,
+  coordinates,
   isSelected,
   onPress,
+  regionName
 }: RegionPolygonProps) => {
-  const coordinates: LatLng[] = convertCoordinatesToPoints(region.geometry.coordinates);
 
   if (coordinates.length === 0) return null;
 
@@ -43,7 +34,7 @@ const RegionPolygon = ({
       {isSelected && center && (
         <Marker coordinate={center} anchor={{ x: 0.5, y: 0.5 }} onPress = {() =>{}}>
           <View style={styles.centerTextContainer}>
-            <Text style={styles.centerText}>{region.properties.CTP_KOR_NM}</Text>
+            <Text style={styles.centerText}>{regionName}</Text>
           </View>
         </Marker>
       )}

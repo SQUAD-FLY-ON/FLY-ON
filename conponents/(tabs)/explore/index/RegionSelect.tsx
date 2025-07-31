@@ -1,18 +1,30 @@
+import RegionSelectMapView from '@/conponents/RegionSelectMapView';
 import { flyOffFillColor, flyOnFillColor } from '@/constants/regionSelectMap';
-import React, { SetStateAction } from 'react';
-import { StyleSheet, Text, View, ViewStyle } from 'react-native';
-import RegionSelectMapView from './RegionSelectMapView';
-
+import useExploreStore from '@/store/exploreStore';
+import { selectedRegion } from '@/types';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import RegionSelectHint from './hints/RegionSelectHint';
 // mapstyle.withgoogle.com 에서 생성한 JSON 스타일 코드
 
-export interface RegionSelectProps {
-  style?: ViewStyle 
-  selectedRegionName: string;
-  setSelectedRegionName: React.Dispatch<SetStateAction<string>>;
-}
-export default function RegionSelect({style, selectedRegionName, setSelectedRegionName}:RegionSelectProps) {
+export default function RegionSelect() {
+  const [selectedLocalRegion, setSelectedLocalRegion] = useState<selectedRegion>({ name: '', key: '', coordinates: [] });
+  const setSelectedRegion = useExploreStore(state => state.setSelectedRegion);
+  const [isHintVisible, setIsHintVisible] = useState(selectedLocalRegion.key === '');
+
+  // 5초 후 사라지게
+  useEffect(() => {
+    const isNotSelected = selectedLocalRegion.key === '';
+    setIsHintVisible(isNotSelected);
+    setSelectedRegion(selectedLocalRegion);
+
+    if (isNotSelected) {
+      const timeout = setTimeout(() => setIsHintVisible(false), 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [selectedLocalRegion]);
   return (
-    <View style={[styles.container, style]}>
+    <View style={styles.container}>
       <Text style={styles.title}>체험장 탐색하기</Text>
       <View style={{ gap: 5, alignItems: 'center', marginTop: 16 }}>
         <Text style={styles.guideText}>이번주 날씨 기준 적합한 지역을 알려드려요</Text>
@@ -28,7 +40,8 @@ export default function RegionSelect({style, selectedRegionName, setSelectedRegi
         </View>
       </View>
       <View style={{ flex: 1, marginTop: 17, width: '100%' }}>
-        <RegionSelectMapView selectedRegionName = {selectedRegionName} setSelectedRegionName = {setSelectedRegionName}/>
+        <RegionSelectHint visible={isHintVisible} />
+        <RegionSelectMapView selectedRegion={selectedLocalRegion} setSelectedRegion={setSelectedLocalRegion} />
       </View>
     </View>
   );
@@ -39,6 +52,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     width: '100%',
+    position: 'relative',
+    marginTop: 35,
   },
   title: {
     fontFamily: 'Pretendard-Bold',
@@ -69,5 +84,5 @@ const styles = StyleSheet.create({
     color: '#000000',
     height: 17,
     lineHeight: 17,
-  }
+  },
 });

@@ -1,30 +1,36 @@
+import NextStepHint from '@/conponents/(tabs)/explore/index/hints/NextStepHint';
+import RegionSelect from '@/conponents/(tabs)/explore/index/RegionSelect';
 import { BackButton } from '@/conponents/BackButton';
 import { MainGradient } from '@/conponents/LinearGradients/MainGradient';
-import RegionSelect from '@/conponents/RegionSelect';
+import useExploreStore from '@/store/exploreStore';
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
-// mapstyle.withgoogle.com 에서 생성한 JSON 스타일 코드
-
 export default function Index() {
-  const [selectedRegionName, setSelectedRegionName] = useState('');
+  const selectedRegion = useExploreStore(state => state.selectedRegion);
   const router = useRouter();
+  console.log(selectedRegion);
   return (
     <View style={styles.container}>
       <View style={styles.backButtonContainer}>
         <BackButton />
       </View>
-      <RegionSelect style={{ marginTop: 35 }} selectedRegionName={selectedRegionName} setSelectedRegionName={setSelectedRegionName} />
-      <View style={{ width: '100%', paddingHorizontal: 14, alignItems: 'flex-end', marginTop: 16 }}>
+
+      <RegionSelect />
+      <View style={styles.nextButtonRow}>
+
         {
-          selectedRegionName === '' ? (
+          selectedRegion.key === '' ? (
             <View style={styles.nextButton}><Image source={require('@/assets/images/explore_right_arrow.png')} /></View>
           ) :
             (
-              <TouchableOpacity onPress={() => router.push('/(tabs)/explore/map')}>
-                <MainGradient style={styles.nextButton}><Image source={require('@/assets/images/explore_right_arrow.png')} /></MainGradient>
-              </TouchableOpacity>
+              <>
+                <NextStepHint visible={selectedRegion.key !== ''} />
+                <TouchableOpacity onPress={() => router.push('/(tabs)/explore/map')}>
+                  <MainGradient style={styles.nextButton}><Image source={require('@/assets/images/explore_right_arrow.png')} /></MainGradient>
+                </TouchableOpacity>
+              </>
             )
         }
       </View>
@@ -51,5 +57,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#D2D2D2',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  nextButtonRow:{
+    flexDirection: 'row',
+    width: '100%',
+    paddingHorizontal: 14,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginTop: 16,
+    gap: 5
   }
 });
