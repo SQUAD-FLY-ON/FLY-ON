@@ -10,7 +10,6 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 export default function Index() {
   const selectedRegion = useExploreStore(state => state.selectedRegion);
   const router = useRouter();
-  console.log(selectedRegion);
   return (
     <View style={styles.container}>
       <View style={styles.backButtonContainer}>
@@ -22,11 +21,13 @@ export default function Index() {
 
         {
           selectedRegion.key === '' ? (
-            <View style={styles.nextButton}><Image source={require('@/assets/images/explore_right_arrow.png')} /></View>
+            <View style={styles.nextButton}>
+              <Image source={require('@/assets/images/explore_right_arrow.png')} />
+              </View>
           ) :
             (
               <>
-                <NextStepHint visible={selectedRegion.key !== ''} />
+                <NextStepHint visible={true} />
                 <TouchableOpacity onPress={() => router.push('/(tabs)/explore/map')}>
                   <MainGradient style={styles.nextButton}><Image source={require('@/assets/images/explore_right_arrow.png')} /></MainGradient>
                 </TouchableOpacity>
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  nextButtonRow:{
+  nextButtonRow: {
     flexDirection: 'row',
     width: '100%',
     paddingHorizontal: 14,
