@@ -2,7 +2,7 @@ import RegionPolygon from '@/conponents/RegionSelectMapView/RegionPolygon';
 import { polygons } from '@/constants/polygons';
 import { customMapStyle, koreaRegion } from '@/constants/regionSelectMap';
 import { convertCoordinatesToPoints } from '@/libs/regionSelectMap';
-import { selectedRegion } from '@/types';
+import { RegionCode, selectedRegion } from '@/types';
 import React, { SetStateAction, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
 import MapView, { LatLng, PROVIDER_GOOGLE } from 'react-native-maps';
@@ -52,14 +52,15 @@ export default function RegionSelectMapView({ selectedRegion, setSelectedRegion 
         style={styles.map} // 스타일을 적용합니다.
         region={koreaRegion} // 초기 지도 표시 영역을 한국 전체로 설정합니다.
         customMapStyle={customMapStyle} // 미리 정의된 JSON 스타일을 적용하여 지도의 모습을 커스텀합니다..
-        scrollEnabled={false} // 스크롤(지도 이동) 비활성화
-        zoomEnabled={false} // 줌(확대/축소) 비활성화
+        scrollEnabled={true} // 스크롤(지도 이동) 활성화 (작은 지역 누르기 힘듬)
+        zoomEnabled={true} // 줌(확대/축소) 활성화 (작은 지역 누르기 힘듬)
         pitchEnabled={false} // 기울기 비활성화
         rotateEnabled={false} // 회전 비활성화
         moveOnMarkerPress={false} // 마커 클릭 시 자동으로 이동하는 기능 비활성화
+        loadingEnabled
       >
         {polygons.map((region) => {
-          const regionCode = region.properties.CTPRVN_CD;
+          const regionCode = region.properties.CTPRVN_CD  as RegionCode;
           const selectedRegionCode = selectedRegion?.key;
           const regionName = region.properties.CTP_KOR_NM;
           const isSelected = regionCode === selectedRegionCode; 
