@@ -12,8 +12,8 @@ export type activityArea = {
 export type Plan = {
   key: string,
   type: string;
-  image: any; 
-  place: string; 
+  image: any;
+  place: string;
   address: string;
 }
 
@@ -47,7 +47,7 @@ export type RegionCode =
   | "48"
   | "50";
 
-  export type RegionName =
+export type RegionName =
   | "서울특별시"
   | "부산광역시"
   | "대구광역시"
@@ -64,4 +64,11 @@ export type RegionCode =
   | "경상남도"
   | "제주특별자치도";
 
-  export type selectedRegion = { key:"" | RegionCode; name: string; coordinates: LatLng[] }
+export type selectedRegion = { key: "" | RegionCode; name: string; coordinates: LatLng[] }
+export type ScreenKey = "SelectDate" | "SelectAreaRegion" | "SelectSubRegion" | "SelectPlace1" | "SelectPlace2" | "LoadingGenerateSchedule" | "AIRecommendPlan" | "EditPlan"
+export type ScreenItem = {
+  key: ScreenKey;
+  label: string;
+  step: number;
+  description?: string; // description은 선택 사항이므로 ?를 붙입니다.
+};
