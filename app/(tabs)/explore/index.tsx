@@ -16,9 +16,10 @@ export default function Index() {
   const [loc, setLoc] = useState<string | null>(null);
 
   const onPress = () => {
-    if (loc === null) return;
+    // if (loc === null) return;
     router.push({
-      pathname: "/(tabs)/explore/map",
+      // pathname: "/(tabs)/explore/map",
+      pathname: "/(tabs)/explore/detailtest",
       params: {
         loc: loc,
       },
@@ -60,36 +61,7 @@ export default function Index() {
             </Text>
           </View>
         )}
-        <View
-          style={{
-            width: Dimensions.get("window").width,
-            alignItems: "center",
-            position: "relative",
-          }}
-        >
-          <Image
-            source={require("@/assets/images/explore/map.png")}
-            style={{ resizeMode: "contain", width: 480, height: 465 }}
-          />
-          <TouchableOpacity
-            onPress={() => setLoc("충청북도")}
-            style={{ position: "absolute", top: 118, right: 127 }}
-          >
-            <Image
-              source={require("@/assets/images/map/flyon/충청북도.png")}
-              style={{ resizeMode: "contain", width: 120 }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setLoc("경상북도")}
-            style={{ position: "absolute", top: 130, right: 53 }}
-          >
-            <Image
-              source={require(`@/assets/images/map/flyon/경상북도.png`)}
-              style={{ resizeMode: "contain", width: 150 }}
-            />
-          </TouchableOpacity>
-        </View>
+
         <View style={styles.buttonView}>
           {loc !== null && (
             <>
