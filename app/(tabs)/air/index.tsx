@@ -1,14 +1,22 @@
 import Dropdown from "@/conponents/(tabs)/air/Dropdown";
+import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
 import Close from "@/conponents/icons/Close";
-import FloatingButtonIcon from "@/conponents/icons/FloatingButtonIcon";
 import { MainGradient } from "@/conponents/LinearGradients/MainGradient";
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
   const router = useRouter();
+
+  const [isFlyOn, setIsFlyOn] = useState(false);
+
   const onPressClose = () => {
     router.push("/");
+  };
+
+  const onPressRecordButton = () => {
+    setIsFlyOn(!isFlyOn);
   };
 
   const mockItems = [{ label: "양평 여행(07.22-07.24)", value: "양평여행" }];
@@ -25,12 +33,13 @@ export default function Index() {
           비행 일정을 선택하여 비행모드로 전환하여 비행을 기록해보세요.
         </Text>
         <Dropdown itemProps={mockItems} />
-        <MainGradient style={styles.recordButton}>
-          <FloatingButtonIcon width={61.7} />
-          <Text style={styles.recordButtonText}>FLY: ON</Text>
-        </MainGradient>
+        <FlightRecordButton isFlying={isFlyOn} onPress={onPressRecordButton} />
         <Text style={styles.flightTime}>00 : 01</Text>
       </View>
+      <Image
+        source={require("@/assets/images/backgroundMountain.png")}
+        style={styles.backgroundMountain}
+      />
     </MainGradient>
     // </View>
   );
@@ -65,25 +74,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 40,
   },
-  recordButton: {
-    width: 150,
-    height: 150,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 100,
-    borderColor: "#FFF",
-    borderWidth: 10,
-    marginTop: 49,
-    marginBottom: 56,
-  },
-  recordButtonText: {
-    color: "#FFF",
-    fontFamily: "Pretendard-Bold",
-    fontSize: 20,
-  },
   flightTime: {
     color: "#FFF",
     fontFamily: "Pretendard-Regular",
     fontSize: 24,
+  },
+  backgroundMountain: {
+    position: "absolute",
+    bottom: -127,
+    width: 437,
+    height: 437,
   },
 });
