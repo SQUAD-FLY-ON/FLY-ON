@@ -1,32 +1,28 @@
+import Background from "@/conponents/(tabs)/air/Background";
 import Dropdown from "@/conponents/(tabs)/air/Dropdown";
 import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
-import Close from "@/conponents/icons/Close";
-import { MainGradient } from "@/conponents/LinearGradients/MainGradient";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
   const router = useRouter();
 
   const [isFlyOn, setIsFlyOn] = useState(false);
 
-  const onPressClose = () => {
-    router.push("/");
-  };
-
   const onPressRecordButton = () => {
-    setIsFlyOn(!isFlyOn);
+    if (!isFlyOn) {
+      setIsFlyOn(true);
+    } else {
+      setIsFlyOn(false);
+      router.push("/(tabs)/air/report");
+    }
   };
 
   const mockItems = [{ label: "양평 여행(07.22-07.24)", value: "양평여행" }];
 
   return (
-    // <View style={styles.container}>
-    <MainGradient style={styles.container}>
-      <Pressable onPress={onPressClose} style={styles.closeButton}>
-        <Close />
-      </Pressable>
+    <Background>
       <View style={styles.contentWrapper}>
         <Text style={styles.title}>비행 기록하기</Text>
         <Text style={styles.description}>
@@ -36,26 +32,11 @@ export default function Index() {
         <FlightRecordButton isFlying={isFlyOn} onPress={onPressRecordButton} />
         <Text style={styles.flightTime}>00 : 01</Text>
       </View>
-      <Image
-        source={require("@/assets/images/backgroundMountain.png")}
-        style={styles.backgroundMountain}
-      />
-    </MainGradient>
-    // </View>
+    </Background>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-  },
-  closeButton: {
-    marginTop: 12,
-    marginRight: 16,
-    position: "absolute",
-    right: 0,
-  },
   contentWrapper: {
     alignItems: "center",
   },
@@ -78,11 +59,5 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontFamily: "Pretendard-Regular",
     fontSize: 24,
-  },
-  backgroundMountain: {
-    position: "absolute",
-    bottom: -127,
-    width: 437,
-    height: 437,
   },
 });
