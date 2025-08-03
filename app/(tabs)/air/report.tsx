@@ -1,5 +1,5 @@
 import Background from "@/conponents/(tabs)/air/Background";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Report() {
   return (
@@ -8,6 +8,11 @@ export default function Report() {
       <Text style={styles.description}>
         당신의 비행 데이터를 요약한 리포트를 지금 확인해보세요.
       </Text>
+      <View style={styles.reportContainer}>
+        <View style={styles.reportTitleBox}>
+          <Text style={styles.reportTitle}>REPORT</Text>
+        </View>
+      </View>
     </Background>
   );
 }
@@ -27,5 +32,28 @@ const styles = StyleSheet.create({
     width: 232,
     textAlign: "center",
     marginBottom: 40,
+  },
+  reportContainer: {
+    width: 338,
+    height: 443,
+    borderRadius: 24,
+    paddingHorizontal: 10,
+    paddingVertical: 16,
+    backgroundColor: "#FFF",
+    zIndex: 10,
+    alignItems: "center",
+  },
+  reportTitleBox: {
+    width: "100%",
+    paddingTop: 8,
+    paddingBottom: 23,
+    borderBottomColor: "#D0D0D080",
+    borderBottomWidth: 2,
+    alignItems: "center",
+  },
+  reportTitle: {
+    color: "#3A88F4",
+    fontFamily: "Pretendard-Bold",
+    fontSize: 24,
   },
 });
