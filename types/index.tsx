@@ -72,3 +72,30 @@ export type ScreenItem = {
   step: number;
   description?: string; // description은 선택 사항이므로 ?를 붙입니다.
 };
+
+type WeatherStatus = 'sunny' | 'partlyCloudy' | 'cloudy' | 'overcast' | 'rainy' | 'sleet' | 'snowy';
+
+export type Weather = {
+  date: string;
+  minTemp: number;
+  maxTemp: number;
+  weatherStatus: WeatherStatus;
+}
+
+export type subRegionApiData = {
+  number: number;
+  name: string;
+  weathers: Weather[],
+  distance: number;
+}
+
+export type province = 
+  | 'gyeonggi'
+  | 'gangwon'
+  | 'gyeoungsangbuk'
+  | 'gyeoungsangnam'
+  | 'jeollabuk'
+  | 'jeollanam'
+  | 'jeju'
+  | 'jellanam'
+  | 'chungcheongbuk';

@@ -10,7 +10,7 @@ export default function SelectAreaRegion() {
     <View style={styles.container}>
       <Text style={styles.title}>여행 지역 선택하기(1/2)</Text>
       <View style={{ gap: 5, alignItems: 'center' }}>
-        <Text style={styles.guideText}>이번주 날씨 기준 적합한 지역을 알려드려요</Text>
+        <Text style={styles.guideText}>선택한 날짜 기준 비행하기 좋은 지역을 알려드릴게요</Text>
         <View style={styles.iconsRowContainer}>
           <View style={styles.iconRow}>
             <View style={[styles.square, { backgroundColor: `${flyOffFillColor}` }]}></View>
