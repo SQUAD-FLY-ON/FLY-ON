@@ -1,7 +1,11 @@
 import Background from "@/conponents/(tabs)/air/Background";
+import { useSearchParams } from "expo-router/build/hooks";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function Report() {
+  const params = useSearchParams() as { time?: string };
+  const time = params?.time ? Number(params.time) : 0;
+
   return (
     <Background>
       <Text style={styles.title}>비행기록 리포트</Text>

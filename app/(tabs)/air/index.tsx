@@ -1,6 +1,7 @@
 import Background from "@/conponents/(tabs)/air/Background";
 import Dropdown from "@/conponents/(tabs)/air/Dropdown";
 import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
+import Stopwatch from "@/conponents/(tabs)/air/Stopwatch";
 import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useCallback, useState } from "react";
@@ -11,6 +12,7 @@ export default function Index() {
 
   const [hasValue, setHasValue] = useState(false);
   const [isFlyOn, setIsFlyOn] = useState(false);
+  const [seconds, setSeconds] = useState<number>(0);
 
   const onPressRecordButton = () => {
     if (!hasValue) {
@@ -21,7 +23,10 @@ export default function Index() {
       setIsFlyOn(true);
     } else {
       setIsFlyOn(false);
-      router.push("/(tabs)/air/report");
+      router.push({
+        pathname: "/(tabs)/air/report",
+        params: { time: seconds.toString() },
+      });
     }
   };
 
@@ -31,6 +36,7 @@ export default function Index() {
     useCallback(() => {
       setHasValue(false);
       setIsFlyOn(false);
+      setSeconds(0);
     }, [])
   );
 
@@ -43,7 +49,11 @@ export default function Index() {
         </Text>
         <Dropdown itemProps={mockItems} setHasValue={setHasValue} />
         <FlightRecordButton isFlying={isFlyOn} onPress={onPressRecordButton} />
-        <Text style={styles.flightTime}>00 : 01</Text>
+        <Stopwatch
+          isActive={isFlyOn}
+          seconds={seconds}
+          setSeconds={setSeconds}
+        />
       </View>
     </Background>
   );
@@ -67,10 +77,5 @@ const styles = StyleSheet.create({
     width: 232,
     textAlign: "center",
     marginBottom: 40,
-  },
-  flightTime: {
-    color: "#FFF",
-    fontFamily: "Pretendard-Regular",
-    fontSize: 24,
   },
 });
