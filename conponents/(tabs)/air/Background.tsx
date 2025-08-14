@@ -1,8 +1,8 @@
 import Close from "@/conponents/icons/Close";
-import { MainGradient } from "@/conponents/LinearGradients/MainGradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, StyleSheet } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const Background = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -14,7 +14,12 @@ const Background = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <MainGradient style={styles.container}>
+    <LinearGradient
+      colors={["#62A1F8", "#9EC7FF"]}
+      start={{ x: 0.21, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
       <Pressable onPress={onPressClose} style={styles.closeButton}>
         <Close />
       </Pressable>
@@ -35,7 +40,7 @@ const Background = ({ children }: { children: React.ReactNode }) => {
         source={require("@/assets/images/air/backgroundMountain.png")}
         style={styles.backgroundMountain}
       />
-    </MainGradient>
+    </LinearGradient>
   );
 };
 
