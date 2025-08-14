@@ -2,7 +2,7 @@ import Background from "@/conponents/(tabs)/air/Background";
 import Dropdown from "@/conponents/(tabs)/air/Dropdown";
 import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
