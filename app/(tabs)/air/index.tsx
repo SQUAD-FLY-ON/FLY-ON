@@ -1,16 +1,22 @@
 import Background from "@/conponents/(tabs)/air/Background";
 import Dropdown from "@/conponents/(tabs)/air/Dropdown";
 import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
+import { useFocusEffect } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
   const router = useRouter();
 
+  const [hasValue, setHasValue] = useState(false);
   const [isFlyOn, setIsFlyOn] = useState(false);
 
   const onPressRecordButton = () => {
+    if (!hasValue) {
+      alert("기록하고 싶은 비행 일정을 선택해주세요!");
+      return;
+    }
     if (!isFlyOn) {
       setIsFlyOn(true);
     } else {
@@ -21,6 +27,13 @@ export default function Index() {
 
   const mockItems = [{ label: "양평 여행(07.22-07.24)", value: "양평여행" }];
 
+  useFocusEffect(
+    useCallback(() => {
+      setHasValue(false);
+      setIsFlyOn(false);
+    }, [])
+  );
+
   return (
     <Background>
       <View style={styles.contentWrapper}>
@@ -28,7 +41,7 @@ export default function Index() {
         <Text style={styles.description}>
           비행 일정을 선택하여 비행모드로 전환하여 비행을 기록해보세요.
         </Text>
-        <Dropdown itemProps={mockItems} />
+        <Dropdown itemProps={mockItems} setHasValue={setHasValue} />
         <FlightRecordButton isFlying={isFlyOn} onPress={onPressRecordButton} />
         <Text style={styles.flightTime}>00 : 01</Text>
       </View>

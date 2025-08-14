@@ -1,4 +1,11 @@
-import { useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { StyleSheet, View } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
 
@@ -7,10 +14,27 @@ type TDropdownItem = {
   value: string;
 };
 
-const Dropdown = ({ itemProps }: { itemProps: TDropdownItem[] }) => {
+const Dropdown = ({
+  itemProps,
+  setHasValue,
+}: {
+  itemProps: TDropdownItem[];
+  setHasValue: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState(itemProps);
+
+  useEffect(() => {
+    if (value !== null) setHasValue(true);
+  }, [value]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setOpen(false);
+      setValue(null);
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
