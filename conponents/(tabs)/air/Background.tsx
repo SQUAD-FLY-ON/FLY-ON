@@ -8,7 +8,9 @@ const Background = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
 
   const onPressClose = () => {
-    router.push("/");
+    console.log("close clicked");
+
+    router.navigate("/(tabs)");
   };
 
   return (
