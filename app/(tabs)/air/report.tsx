@@ -1,17 +1,25 @@
 import Background from "@/conponents/(tabs)/air/Background";
 import ReportText from "@/conponents/(tabs)/air/ReportText";
+import SaveModal from "@/conponents/(tabs)/air/SaveModal";
 import { MainGradient } from "@/conponents/LinearGradients/MainGradient";
 import { useSearchParams } from "expo-router/build/hooks";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Report() {
   const params = useSearchParams() as { time?: string };
   const time = params?.time ? Number(params.time) : 0;
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
   const minutes = Math.floor(time / 60);
   const seconds = time - minutes * 60;
   const minutesStr = minutes < 10 ? "0" + minutes : String(minutes);
   const secondsStr = seconds < 10 ? "0" + seconds : String(seconds);
+
+  const onPressSave = () => {
+    console.log("Save Modal Open!");
+    setIsModalVisible(true);
+  };
 
   return (
     <Background>
@@ -40,12 +48,17 @@ export default function Report() {
           <ReportText data={{ label: "평균 비행 속도", value: "00m/s" }} />
         </View>
 
-        <Pressable>
+        <Pressable onPress={onPressSave}>
           <MainGradient style={styles.flightSaveButton}>
             <Text style={styles.flightSaveButtonText}>비행기록 저장하기</Text>
           </MainGradient>
         </Pressable>
       </View>
+
+      <SaveModal
+        isModalVisible={isModalVisible}
+        setIsModalVisible={setIsModalVisible}
+      />
     </Background>
   );
 }
@@ -62,7 +75,7 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontFamily: "Pretendard-Regular",
     fontSize: 14,
-    width: 232,
+    width: 212,
     textAlign: "center",
     marginBottom: 20,
   },
