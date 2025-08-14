@@ -20,7 +20,19 @@ const Background = ({ children }: { children: React.ReactNode }) => {
       </Pressable>
       {children}
       <Image
-        source={require("@/assets/images/backgroundMountain.png")}
+        source={require("@/assets/images/air/cloud2.png")}
+        style={[styles.cloud, { right: -80, top: 200 }]}
+      />
+      <Image
+        source={require("@/assets/images/air/cloud2.png")}
+        style={[styles.cloud, { left: -80, top: 300 }]}
+      />
+      <Image
+        source={require("@/assets/images/air/cloud4.png")}
+        style={[styles.cloud, { width: 117, height: 117, right: 10, top: 500 }]}
+      />
+      <Image
+        source={require("@/assets/images/air/backgroundMountain.png")}
         style={styles.backgroundMountain}
       />
     </MainGradient>
@@ -39,6 +51,12 @@ const styles = StyleSheet.create({
     marginRight: 16,
     position: "absolute",
     right: 0,
+  },
+  cloud: {
+    position: "absolute",
+    width: 205,
+    height: 205,
+    zIndex: -10,
   },
   backgroundMountain: {
     position: "absolute",
