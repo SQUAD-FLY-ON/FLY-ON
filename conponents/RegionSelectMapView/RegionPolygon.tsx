@@ -1,5 +1,5 @@
 import { defaultStrokeColor, flyOnFillColor, selectedFillColor } from '@/constants/regionSelectMap';
-import { calculatePolygonCentroid } from '@/libs/regionSelectMap';
+import { calculatePolygonCentroid } from '@/libs/map';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { LatLng, Marker, Polygon } from 'react-native-maps';
