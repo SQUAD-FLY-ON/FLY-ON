@@ -1,4 +1,3 @@
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { TabTriggerSlotProps } from "expo-router/ui";
 import { Pressable, StyleSheet } from "react-native";
 import { MainGradient } from "../LinearGradients/MainGradient";
