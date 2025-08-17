@@ -13,9 +13,9 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
 
   const triggers = Children.toArray(children).filter(isValidElement);
   const centerFloatTrigger = triggers.find((c: any) => c.props.name === 'air');
-  const rightFloatTrigger = triggers.find((c: any) => c.props.name === 'schedule');
+  // const rightFloatTrigger = triggers.find((c: any) => c.props.name === 'schedule');
   const leftTriggers = triggers.filter((c: any) => c.props.name === 'home' || c.props.name === 'explore');
-  const rightTriggers = triggers.filter((c: any) => c.props.name === 'community' || c.props.name === 'user');
+  const rightTriggers = triggers.filter((c: any) => c.props.name === 'schedule' || c.props.name === 'user');
 
 
   return (
@@ -47,11 +47,11 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
             router,
             isCenter: true,
           })}
-        {pathname==='/' && rightFloatTrigger &&
+        {/* {pathname==='/' && rightFloatTrigger &&
           cloneElement(rightFloatTrigger as any, {
             router,
             isCenter: true,
-          })}
+          })} */}
         <View style={styles.rightContainer}>
           {rightTriggers.map((child: any, idx: number) => {
             const isActive = pathname === child.props.href;

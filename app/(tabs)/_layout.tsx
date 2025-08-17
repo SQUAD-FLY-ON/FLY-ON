@@ -1,8 +1,8 @@
-import AirFloatingButton from '@/conponents/CustomTabBar/AirFloatingButton';
-import CreateFloatingButton from '@/conponents/CustomTabBar/CreateFloatingButton';
-import CustomTabButton from '@/conponents/CustomTabBar/CustomTabButton';
-import { CustomTabList } from '@/conponents/CustomTabBar/CustomTabList';
-import { TabList, Tabs, TabSlot, TabTrigger } from 'expo-router/ui';
+import AirFloatingButton from "@/conponents/CustomTabBar/AirFloatingButton";
+import CreateFloatingButton from "@/conponents/CustomTabBar/CreateFloatingButton";
+import CustomTabButton from "@/conponents/CustomTabBar/CustomTabButton";
+import { CustomTabList } from "@/conponents/CustomTabBar/CustomTabList";
+import { TabList, Tabs, TabSlot, TabTrigger } from "expo-router/ui";
 
 export default function TabLayout() {
   return (
@@ -11,7 +11,7 @@ export default function TabLayout() {
       <TabList asChild>
         <CustomTabList>
           <TabTrigger name="home" href="/" asChild>
-            <CustomTabButton routeName='home' />
+            <CustomTabButton routeName="home" />
           </TabTrigger>
           <TabTrigger name="explore" href="/explore" asChild>
             <CustomTabButton routeName="explore" />
@@ -19,15 +19,15 @@ export default function TabLayout() {
           <TabTrigger name="air" href="/air" asChild>
             <AirFloatingButton />
           </TabTrigger>
-          <TabTrigger name="community" href="/community" asChild>
-            <CustomTabButton routeName="community" />
+          <TabTrigger name="schedule" href="/schedule" asChild>
+            <CustomTabButton routeName="schedule" />
           </TabTrigger>
           <TabTrigger name="user" href="/user" asChild>
             <CustomTabButton routeName="user" />
           </TabTrigger>
-          <TabTrigger name="schedule" href="/schedule" asChild>
+          {/* <TabTrigger name="schedule" href="/schedule" asChild>
             <CreateFloatingButton />
-          </TabTrigger>
+          </TabTrigger> */}
         </CustomTabList>
       </TabList>
     </Tabs>

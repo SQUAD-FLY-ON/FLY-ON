@@ -2,11 +2,12 @@ import { pageRoutes } from "@/types";
 import { TabTriggerSlotProps } from "expo-router/ui";
 import React from "react";
 import { Pressable, StyleSheet, Text } from "react-native";
-import CommunityIcon from "./icons/CommunityIcon";
+// import CommunityIcon from "./icons/CommunityIcon";
 import ExploreIcon from "./icons/ExploreIcon";
 import HomeIcon from "./icons/HomeIcon";
 import UserIcon from "./icons/UserIcon";
 import Colors from "@/constants/colors";
+import ScheduleIcon from "./icons/ScheduleIcon";
 
 type CustomTabButtonProps = TabTriggerSlotProps & {
   routeName: pageRoutes;
@@ -18,8 +19,8 @@ function getRouteLabel(routeName: pageRoutes) {
       return "홈";
     case "explore":
       return "탐색";
-    case "community":
-      return "커뮤니티";
+    case "schedule":
+      return "여행일정";
     case "user":
       return "마이";
     default:
@@ -37,11 +38,11 @@ export default function CustomTabButton({
   return (
     <Pressable
       {...props}
-      style={[styles.button, routeName === "community" && { marginRight: -18 }]}
+      style={[styles.button, routeName === "schedule" && { marginRight: -18 }]}
     >
       {routeName === "home" && <HomeIcon isFocused={isActive} />}
       {routeName === "explore" && <ExploreIcon isFocused={isActive} />}
-      {routeName === "community" && <CommunityIcon isFocused={isActive} />}
+      {routeName === "schedule" && <ScheduleIcon isFocused={isActive} />}
       {routeName === "user" && <UserIcon isFocused={isActive} />}
       <Text
         style={[
