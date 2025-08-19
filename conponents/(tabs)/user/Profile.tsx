@@ -1,12 +1,11 @@
+import LevelBadge from "@/conponents/LevelBadge";
 import { StyleSheet, Text, View } from "react-native";
 
 const Profile = ({ level, nickname }: { level: string; nickname: string }) => {
   return (
     <View style={styles.profileContainer}>
       <View style={styles.profilePicture}></View>
-      <View>
-        <Text>{level}</Text>
-      </View>
+      <LevelBadge text={level} />
       <Text style={styles.profileName}>{nickname}님</Text>
     </View>
   );

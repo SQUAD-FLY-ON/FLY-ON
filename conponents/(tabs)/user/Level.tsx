@@ -1,3 +1,4 @@
+import LevelBadge from "@/conponents/LevelBadge";
 import { StyleSheet, Text, View } from "react-native";
 
 const Level = ({
@@ -12,9 +13,7 @@ const Level = ({
   return (
     <View style={styles.container}>
       <View style={styles.levelContainer}>
-        <View>
-          <Text>LV {level}</Text>
-        </View>
+        <LevelBadge text={`LV ${level}`} />
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.gaugeBackground}>
