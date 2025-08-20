@@ -1,22 +1,25 @@
 import ActivityAreaCard from "@/conponents/ActivityAreaCard";
 import Carousel from "@/conponents/Carousel";
 import ArrowDownIcon from "@/conponents/icons/DownArrow";
+import Colors from "@/constants/colors";
 import { activities } from "@/dummy/activity_area";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { Link } from "expo-router";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import FilterModal from "./FilterModal";
-import Colors from "@/constants/colors";
 
 const filterOptions = [
   { key: "near", label: "가까운 체험장 추천" },
   { key: "sunny", label: "맑은 지역 체험장 추천" },
 ];
 
-export default function NearActivity() {
+export default function RecommendSection() {
   const filterModalRef = useRef<BottomSheetModal>(null);
   const [currentKey, setCurrentKey] = useState("near");
+  useEffect(() => {
+    
+  }, [currentKey])
   const handlePresentModalPress = useCallback(() => {
     filterModalRef.current?.present();
   }, []);
