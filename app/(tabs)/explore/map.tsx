@@ -3,12 +3,11 @@ import ExploreModal from '@/conponents/(tabs)/explore/map/ExploreModal';
 import MapFloatingButton from '@/conponents/(tabs)/explore/map/FloatingButton';
 import { BackButton } from '@/conponents/BackButton';
 import useExploreStore from '@/store/exploreStore';
-import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { useShallow } from 'zustand/shallow';
 
 export default function Index() {
-  const selectedRegion = useExploreStore(state => state.selectedRegion);
-  const [modalVisible, setModalVisible] = useState(false);
+  const {selectedRegion, selectedMarkerSpot} = useExploreStore(useShallow(state => ({selectedRegion: state.selectedRegion, selectedMarkerSpot: state.selectedMarkerSpot})));
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -16,8 +15,8 @@ export default function Index() {
         <Text style={styles.headerText}>{selectedRegion.name}</Text>
       </View>
       <ExploreMap />
-      <MapFloatingButton modalVisible={modalVisible} setModalVisible={setModalVisible} style={styles.floatButtonPosition} />
-      {modalVisible && <ExploreModal/>}
+      <MapFloatingButton style={styles.floatButtonPosition} />
+      {selectedMarkerSpot.id && <ExploreModal/>}
     </View>
   );
 }
@@ -45,5 +44,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 96,
     right: 24,
+    zIndex:999,
   },
 });

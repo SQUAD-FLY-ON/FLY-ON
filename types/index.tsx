@@ -40,7 +40,7 @@ export type RegionCode =
   | "48"
   | "50";
 
-  export type RegionName =
+export type RegionName =
   | "서울특별시"
   | "부산광역시"
   | "대구광역시"
@@ -57,4 +57,14 @@ export type RegionCode =
   | "경상남도"
   | "제주특별자치도";
 
-  export type selectedRegion = { key:"" | RegionCode; name: string; coordinates: LatLng[] }
+export type selectedRegion = { key: "" | RegionCode; name: string; coordinates: LatLng[] }
+
+export interface MarkerSpot {
+  id: string;
+  name: string;
+  fullAddress: string;
+  imgUrl: string;
+  latitude: number;
+  longitude: number;
+}
+

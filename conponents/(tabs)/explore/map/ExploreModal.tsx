@@ -1,10 +1,11 @@
 import { MainGradient } from "@/conponents/LinearGradients/MainGradient";
+import useExploreStore from "@/store/exploreStore";
 import { useEffect, useRef } from "react";
 import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ExploreModal() {
   const slideAnim = useRef(new Animated.Value(100)).current; // 초기값 100 (아래쪽)
-
+  const selectedMarkerSpot = useExploreStore(state => state.selectedMarkerSpot);
   useEffect(() => {
     // 컴포넌트가 마운트되면 슬라이드 업 애니메이션 실행
     Animated.timing(slideAnim, {
@@ -15,13 +16,18 @@ export default function ExploreModal() {
   }, []);
   return (
     <Animated.View style={[styles.overlay, {
-          transform: [{ translateY: slideAnim }],
-        },]}>
+      transform: [{ translateY: slideAnim }],
+    },]}>
       <View style={styles.container}>
-        <Image style={styles.image} source={require('@/assets/images/dummy_image_activity_area.png')} />
+        {
+          selectedMarkerSpot.imgUrl === "" ?
+            <Image style={styles.image} source={require('@/assets/images/dummy_image_activity_area.png')} /> :
+            <Image source={{ uri: selectedMarkerSpot.imgUrl }}
+              style={styles.image} />
+        }
         <View style={styles.textContainer}>
-          <Text style={styles.title}>[양평] 양평 패러러브 패러글라이딩</Text>
-          <Text style={styles.address}>경기 양평군 옥천면 동막길 49 1층</Text>
+          <Text style={styles.title}>{selectedMarkerSpot.name}</Text>
+          <Text style={styles.address}>{selectedMarkerSpot.fullAddress}</Text>
           <View style={styles.row}>
             <Image source={require('@/assets/images/star.png')} style={styles.star} />
             <Text style={[styles.title, { fontSize: 14 }]}>4.9</Text>
@@ -43,10 +49,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 132,
     width: '100%',
+    zIndex:999,
+    paddingHorizontal:16, 
   },
   container: {
     paddingHorizontal: 8,
     paddingVertical: 16,
+    width: '100%',
     alignSelf: 'center',
     backgroundColor: '#ffffff',
     borderRadius: 12,
