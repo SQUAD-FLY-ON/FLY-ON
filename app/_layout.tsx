@@ -1,8 +1,8 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { useFonts } from "expo-font";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -17,7 +17,12 @@ export default function RootLayout() {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <BottomSheetModalProvider>
             <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Protected guard={false}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              </Stack.Protected>
+              <Stack.Protected guard={true}>
+                <Stack.Screen name="intro" options={{ headerShown: false }} />
+              </Stack.Protected>
             </Stack>
           </BottomSheetModalProvider>
         </GestureHandlerRootView>
