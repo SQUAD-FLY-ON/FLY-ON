@@ -26,7 +26,7 @@ export default function CustomButton({ onPress, buttonType = 'default', backgrou
                 { backgroundColor: backgroundColor }, style]} >
 
                 {undo && <Image source={require('@/assets/images/undo.png')} style={{ width: 20, height: 20 }} />}
-                <Text style={[styles.text,buttonType === 'small' && styles.smallText, textStyle]}>{text}</Text>
+                <Text style={[styles.text, buttonType === 'small' && styles.smallText, textStyle]}>{text}</Text>
 
                 {rightArrow && <MaterialIcons name="keyboard-arrow-right" size={18} color="#ffffff" />}
                 {bottomArrow && <Image source={require('@/assets/images/arrow_down.png')} style={{ width: 18, height: 18 }} />}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         paddingHorizontal: 12,
         alignItems: "center",
-        gap:4,
+        gap: 4,
         borderRadius: 100,
     },
     default: {
@@ -55,9 +55,9 @@ const styles = StyleSheet.create({
         fontWeight: 400,
         fontSize: 14,
     },
+    smallText: {
+        lineHeight: 17,
         textAlign: 'center',
-        height:17,
-    smallText:{
-        lineHeight:17,
+        height: 17,
     }
 });
