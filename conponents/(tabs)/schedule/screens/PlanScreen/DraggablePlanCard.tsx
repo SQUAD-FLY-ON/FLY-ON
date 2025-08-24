@@ -2,7 +2,7 @@ import { Plan } from "@/types";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useContext, useRef, useState } from "react";
 import { Animated, PanResponder, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { FloatingPortalContext } from "./ExKanban";
+import { FloatingPortalContext } from "./FloatingPortal";
 
 const DraggablePlanCard = ({
   item,
@@ -90,136 +90,85 @@ const DraggablePlanCard = ({
 
   
 const panResponder = PanResponder.create({
-  onStartShouldSetPanResponder: () => isPanEnabled,
-  onMoveShouldSetPanResponder: () => isPanEnabled,
+    onStartShouldSetPanResponder: () => isPanEnabled,
+    onMoveShouldSetPanResponder: () => isPanEnabled,
 
-  onPanResponderGrant: (evt, gestureState) => {
-    isDraggingRef.current = true;
+    onPanResponderGrant: (evt, gestureState) => {
+      isDraggingRef.current = true;
 
-    // 카드 초기 위치 저장 (화면 절대 좌표)
-    cardInitialPosition.current = {
-      x: evt.nativeEvent.pageX,
-      y: evt.nativeEvent.pageY
-    };
+      // 카드 초기 위치 저장 (화면 절대 좌표)
+      cardInitialPosition.current = {
+        x: evt.nativeEvent.pageX,
+        y: evt.nativeEvent.pageY
+      };
 
-    // 카드 위치 측정 - 콜백으로 처리
-    if (cardRef.current) {
-      cardRef.current.measureInWindow((x, y, width, height) => {
-        const cardLayout = { x, y, width, height };
-        console.log('드래그 시작 - 카드 레이아웃:', cardLayout);
-        
-        // 부모에게 드래그 시작 알림 (측정 완료 후)
-        onDragStart(item, dayId, index, cardLayout);
+      // 카드 위치 측정 - 콜백으로 처리
+      if (cardRef.current) {
+        cardRef.current.measureInWindow((x, y, width, height) => {
+          const cardLayout = { x, y, width, height };
+          console.log('드래그 시작 - 카드 레이아웃:', cardLayout);
+          
+          // 부모에게 드래그 시작 알림 (측정 완료 후)
+          onDragStart(item, dayId, index, cardLayout);
+        });
+      } else {
+        // measureInWindow가 실패한 경우 기본값으로 처리
+        const defaultLayout = { x: 0, y: 0, width: 200, height: 100 };
+        onDragStart(item, dayId, index, defaultLayout);
+      }
+
+      // 원본 카드 흐리게 처리
+      Animated.timing(cardOpacity, {
+        toValue: 0.3,
+        duration: 150,
+        useNativeDriver: false,
+      }).start();
+
+      pan.setOffset({
+        x: pan.x._value,
+        y: pan.y._value,
       });
-    } else {
-      // measureInWindow가 실패한 경우 기본값으로 처리
-      const defaultLayout = { x: 0, y: 0, width: 200, height: 100 };
-      onDragStart(item, dayId, index, defaultLayout);
-    }
+      pan.setValue({ x: 0, y: 0 });
+    },
 
-    // 원본 카드 흐리게 처리
-    Animated.timing(cardOpacity, {
-      toValue: 0.3,
-      duration: 150,
-      useNativeDriver: false,
-    }).start();
-
-    pan.setOffset({
-      x: pan.x._value,
-      y: pan.y._value,
-    });
-    pan.setValue({ x: 0, y: 0 });
-  },
-  onPanResponderMove: (evt, gestureState) => {
-    if (!isDraggingRef.current) return;
-    console.log(gestureState.dy);
-    onDragMove(evt.nativeEvent.pageX, evt.nativeEvent.pageY, {
-        dx: gestureState.dx, // 순수한 PanResponder dx
-        dy: gestureState.dy, // 순수한 PanResponder dy
+    onPanResponderMove: (evt, gestureState) => {
+      if (!isDraggingRef.current) return;
+      
+      console.log(gestureState.dy);
+      onDragMove(evt.nativeEvent.pageX, evt.nativeEvent.pageY, {
+        dx: gestureState.dx,
+        dy: gestureState.dy,
         originalDx: gestureState.dx,
         originalDy: gestureState.dy,
-        isAutoScrolling: isAutoScrollingRef.current, // 스크롤 상태는 여전히 전달
+        isAutoScrolling: isAutoScrollingRef.current,
         autoScrollDirection: autoScrollDirectionRef.current,
         localAutoScrolling: localAutoScrollingRef.current
-    }, evt);
-},
+      }, evt);
+    },
 
-  // onPanResponderMove: (evt, gestureState) => {
-  //   if (!isDraggingRef.current) return;
+    onPanResponderRelease: (evt, gestureState) => {
+      isDraggingRef.current = false;
+      localAutoScrollingRef.current = false;
 
-  //   let finalDx = gestureState.dx;
-  //   let finalDy = gestureState.dy;
+      // 화면 절대 좌표로 드래그 종료 위치 전달
+      onDragEnd(evt.nativeEvent.pageX, evt.nativeEvent.pageY);
 
-  //   // // 기존 자동스크롤 로직 유지
-  //   const isAutoScrolling = isAutoScrollingRef.current;
-  //   const autoScrollDirection = autoScrollDirectionRef.current;
-  //   const scrollViewLayout = scrollViewLayoutRef.current;
-
-  //   // 자동 스크롤이 새로 시작된 경우
-  //   if (isAutoScrolling && !localAutoScrollingRef.current) {
-  //     console.log('자동스크롤 인식했음 - 뷰포트 고정 모드');
-      
-  //     if (autoScrollDirection === 'up') {
-  //       autoScrollFixedY.current = scrollViewLayout.y + 80;
-  //     } else if (autoScrollDirection === 'down') {
-  //       autoScrollFixedY.current = scrollViewLayout.y + scrollViewLayout.height - 120;
-  //     }
-      
-  //     localAutoScrollingRef.current = true;
-  //   }
-
-  //   // 자동 스크롤이 중지된 경우
-  //   if (!isAutoScrolling && localAutoScrollingRef.current) {
-  //     localAutoScrollingRef.current = false;
-  //   }
-
-  //   // 자동 스크롤 중일 때 화면 기준 Y축 고정
-  //   if (isAutoScrolling && localAutoScrollingRef.current) {
-  //     const currentTouchY = evt.nativeEvent.pageY;
-  //     const targetScreenY = autoScrollFixedY.current;
-  //     const initialScreenY = cardInitialPosition.current.y;
-      
-  //     const currentCardScreenY = initialScreenY + gestureState.dy;
-  //     const adjustment = targetScreenY - currentCardScreenY;
-      
-  //     finalDy = gestureState.dy + adjustment;
-  //   }
-
-  //   // 부모에게 드래그 이동 정보 전달
-  //   onDragMove(evt.nativeEvent.pageX, evt.nativeEvent.pageY, {
-  //     dx: finalDx,
-  //     dy: finalDy,
-  //     originalDx: gestureState.dx,
-  //     originalDy: gestureState.dy,
-  //     isAutoScrolling,
-  //     autoScrollDirection,
-  //     localAutoScrolling: localAutoScrollingRef.current
-  //   }, evt);
-  // },
-
-  onPanResponderRelease: (evt, gestureState) => {
-    isDraggingRef.current = false;
-    localAutoScrollingRef.current = false;
-
-    // 화면 절대 좌표로 드래그 종료 위치 전달
-    onDragEnd(evt.nativeEvent.pageX, evt.nativeEvent.pageY);
-
-    // 원본 카드 복원
-    pan.flattenOffset();
-    Animated.parallel([
-      Animated.timing(pan, {
-        toValue: { x: 0, y: 0 },
-        duration: 200,
-        useNativeDriver: false,
-      }),
-      Animated.timing(cardOpacity, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: false,
-      }),
-    ]).start();
-  },
-});
+      // 원본 카드 복원
+      pan.flattenOffset();
+      Animated.parallel([
+        Animated.timing(pan, {
+          toValue: { x: 0, y: 0 },
+          duration: 200,
+          useNativeDriver: false,
+        }),
+        Animated.timing(cardOpacity, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: false,
+        }),
+      ]).start();
+    },
+  });
   const handleLayout = (event: any) => {
     const { height } = event.nativeEvent.layout;
     setComponentHeight(height);

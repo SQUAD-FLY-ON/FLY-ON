@@ -10,6 +10,7 @@ import {
   View
 } from 'react-native';
 import DraggablePlanCard from './DraggablePlanCard';
+import { FloatingPortalContext } from './FloatingPortal';
 
 // 타입 정의
 interface Plan {
@@ -28,39 +29,6 @@ interface DayData {
     color: string;
   };
 }
-// 전역 floating layer를 위한 portal 컨텍스트
-export const FloatingPortalContext = React.createContext(null);
-
-// 메인 앱에서 사용할 FloatingPortal Provider
-export const FloatingPortalProvider = ({ children }) => {
-  const [floatingElement, setFloatingElement] = useState(null);
-
-  return (
-    <FloatingPortalContext.Provider value={{ setFloatingElement }}>
-      <View style={{ flex: 1 }}>
-        {children}
-        {/* Floating layer - 최상위에 렌더링 */}
-        {floatingElement && (
-          <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              pointerEvents: 'none', // 터치 이벤트 통과
-              zIndex: 9999,
-              elevation: 9999,
-            }}
-          >
-            {floatingElement}
-          </View>
-        )}
-      </View>
-    </FloatingPortalContext.Provider>
-  );
-};
-
 // 메인 여행 계획 칸반 보드
 const TravelPlanKanban = () => {
   const [draggingItem, setDraggingItem] = useState<{
