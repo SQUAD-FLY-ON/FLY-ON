@@ -31,7 +31,7 @@ export const signUpSchema = z.object({
     error: (iss) => iss.input === undefined ? "비밀번호가 일치하지 않습니다." : "Invalid input."
   }),
 
-  oauthProviderType: z.string().optional().default('KAKAO'),
+  // oauthProviderType: z.string().optional().default('KAKAO'),
 }).check(z.refine((data) => data.password === data.passwordConfirm, {
   message: '비밀번호가 일치하지 않습니다.',
   path: ['passwordConfirm'], // 에러 메시지가 표시될 필드
