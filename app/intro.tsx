@@ -1,7 +1,9 @@
 import CustomButton from "@/conponents/CustomButton";
+import { useRouter } from "expo-router";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-export default function Login() {
+export default function Index() {
+  const router = useRouter();
   return (<View style={styles.container}>
     <View style={styles.topContainer}>
       <Text style={styles.title}>
@@ -16,9 +18,9 @@ export default function Login() {
       <Image source={require('@/assets/images/glider_charactor.png')} style={styles.charactor} />
     </View>
     <View style={styles.buttons}>
-      <CustomButton onPress={() => { }} style={{ width: '100%' }} text="Fly:on 계정 생성하기" />
-      <CustomButton onPress={() => { }} style={{ width: '100%' }} text="카카오 로그인" />
-      <CustomButton onPress={() => { }} style={{ width: '100%', backgroundColor: '#ffffff' }} textStyle={{color: '#747474'}} backgroundColor="#ffffff" text="기존 계정 생성하기" />
+      <CustomButton onPress={() => {router.push('/signup')}} style={{ width: '100%' }} text="Fly:on 계정 생성하기" />
+      {/* <CustomButton onPress={() => {router.push('/signup')}}style={{ width: '100%' }} text="카카오 로그인" /> */}
+      <CustomButton onPress={() => {router.push('/login')}} style={{ width: '100%', backgroundColor: '#ffffff' }} textStyle={{color: '#747474'}} backgroundColor="#ffffff" text="기존 계정으로 로그인" />
     </View>
   </View>)
 }
