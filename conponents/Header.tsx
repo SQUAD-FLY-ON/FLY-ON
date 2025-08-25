@@ -2,11 +2,11 @@ import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { BackButton } from "./BackButton";
 
-export default function Header() {
+export default function Header({title}: {title: string;}) {
   const router = useRouter();
   return (<View style={styles.container}>
     <BackButton onPress={() => {router.back()}}/>
-    <Text style={styles.text}>일정 추가하기</Text>
+    <Text style={styles.text}>{title}</Text>
   </View>)
 }
 
