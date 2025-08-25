@@ -1,3 +1,4 @@
+import Header from "@/conponents/Header";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -20,8 +21,10 @@ export default function RootLayout() {
               <Stack.Protected guard={false}>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               </Stack.Protected>
-              <Stack.Protected guard={true}>
+              <Stack.Protected guard={true} >
                 <Stack.Screen name="intro" options={{ headerShown: false }} />
+                <Stack.Screen name="login"  options={{ header: () => <Header title="로그인"/>}}/>
+                <Stack.Screen name="signup" options={{ header: () => <Header title="회원가입"/>}}/>
               </Stack.Protected>
             </Stack>
           </BottomSheetModalProvider>
