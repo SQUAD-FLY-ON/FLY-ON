@@ -11,6 +11,11 @@ export interface RecommendSpotsRequest {
   longitude: number;
 }
 
+export interface LoginRequest {
+  loginId: string;
+  password: string;
+}
+
 export interface SignupRequest {
   nickname: string;
   loginId: string;
