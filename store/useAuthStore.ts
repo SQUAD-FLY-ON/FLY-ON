@@ -78,7 +78,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         try {
           const refreshToken = get().refreshToken;
           if (refreshToken) {
-            await apiClient.delete('/tokens').catch((error) => {
+            await apiClient.delete('/tokens', {data: {refreshToken}}).catch((error) => {
               console.warn('서버 로그아웃 요청 실패:', error);
             });
           }
@@ -137,7 +137,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     }),
     {
       name: 'auth-storage',
-      storage: createJSONStorage(() => storage)
+      storage: createJSONStorage(() => storage),
+      partialize: (state) => ({accessToken: state.accessToken, refreshToken: state.refreshToken, memberInfo: state.memberInfo,})
     }
   )
 );
