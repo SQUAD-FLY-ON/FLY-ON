@@ -3,7 +3,7 @@ import { signUpSchema } from "@/schema/signupSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import z from "zod";
 import CustomButton from "../CustomButton";
 import FormInput from "../FormInput";
@@ -23,9 +23,7 @@ export default function SignupForm() {
     const response = await fetchSignup(apiData);
     console.log(response);
     if (response?.status === 201) {
-      // await setAuth(
-      //   response?.data.data
-      // );
+      Alert.alert('회원가입이 완료되었습니다!');
       router.push("/login");
     }
   }
