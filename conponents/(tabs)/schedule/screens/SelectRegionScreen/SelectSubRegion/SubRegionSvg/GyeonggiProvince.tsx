@@ -35,7 +35,6 @@ const GyeonggiProvince = (props: SvgProps) => (
         y1={55.71}
         x2={11.77}
         y2={74.17}
-        xlinkHref="#a"
       />
     </Defs>
     <G id="_레이어_3" data-name="레이어 3">

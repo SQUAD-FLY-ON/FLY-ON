@@ -1,30 +1,34 @@
-import { subRegionApiData } from "@/types";
+import { WeatherInfo, WeatherStatus } from "@/types";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-export default function WeatherCard({ weatherData }: { weatherData: subRegionApiData }) {
-  const imageMap = {
-    sunny: require('@/assets/images/sunny.png'),
-    partlyCloudy: require('@/assets/images/partlyCloudy.png'),
-    cloudy: require('@/assets/images/cloudy.png'),
-    overcast: require('@/assets/images/overcast.png'),
-    rainy: require('@/assets/images/rainy.png'),
-    sleet: require('@/assets/images/sleet.png'),
-    snowy: require('@/assets/images/snowy.png'),
+export default function WeatherCard({ weatherData }: { weatherData: WeatherInfo }) {
+  const imageMap: Record<WeatherStatus, any> = {
+    '맑음' : require('@/assets/images/sunny.png'),
+    '구름조금': require('@/assets/images/partlyCloudy.png'),
+    '구름많음': require('@/assets/images/cloudy.png'),
+    '흐림': require('@/assets/images/overcast.png'),
+    '비': require('@/assets/images/rainy.png'),
+    '흐리고 비': require('@/assets/images/rainy.png'),
+    '비/눈': require('@/assets/images/sleet.png'),
+    '눈': require('@/assets/images/snowy.png'),
   };
-  return (<View style={styles.container}>
+return (<View style={styles.container}>
     <View style={styles.regionContainer}>
-      <Text style={styles.regionTitle}>{weatherData.name}</Text>
-      <Text style={[styles.regionDescription, { marginTop: 4 }]}>{weatherData.distance}km</Text>
-      <Text style={styles.regionDescription}>체험장 수: {weatherData.number}</Text>
+      <Text style={styles.regionTitle}>{weatherData.sigungu}</Text>
+      <Text style={[styles.regionDescription, { marginTop: 4 }]}>20km</Text>
+      <Text style={styles.regionDescription}>체험장 수: 12</Text>
     </View>
     <View style={styles.weatherContainer}>
       {
-        weatherData.weathers.map((a) => {
-
-          return (<View key={a.date} style={styles.weather}>
-            <Text style={styles.date}>{a.date}</Text>
-            <Image style={{ width: 36, height: 33 }} source={imageMap[a.weatherStatus]} resizeMode="contain" />
-            <Text style={styles.temp}>{a.minTemp}° / {a.maxTemp}°</Text>
+        weatherData.dailyWeathers.map((weather) => {
+          const month = parseInt(weather.monthDate.slice(0,2),10);
+          const date = parseInt(weather.monthDate.slice(2,4),10);
+          const minTemp = Math.round(Number(weather.minTemp));
+          const maxTemp = Math.round(Number(weather.maxTemp));
+          return (<View key={weather.monthDate} style={styles.weather}>
+            <Text style={styles.date}>{month}/{date}</Text>
+            <Image style={{ width: 36, height: 33 }} source={imageMap[weather.sky]} resizeMode="contain" />
+            <Text style={styles.temp}>{minTemp}° / {maxTemp}°</Text>
           </View>)
         })
       }

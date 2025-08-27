@@ -64,7 +64,7 @@ export type RegionName =
   | "경상남도"
   | "제주특별자치도";
 
-export type selectedRegion = { key: "" | RegionCode; name: string; coordinates: LatLng[] }
+export type selectedRegion = { key: "" | RegionCode; name: '' | RegionName; coordinates: LatLng[] }
 export type ScreenKey = "SelectDate" | "SelectAreaRegion" | "SelectSubRegion" | "SelectPlace1" | "SelectPlace2" | "LoadingGenerateSchedule" | "AIRecommendPlan" | "EditPlan"
 export type ScreenItem = {
   key: ScreenKey;
@@ -73,29 +73,16 @@ export type ScreenItem = {
   description?: string; // description은 선택 사항이므로 ?를 붙입니다.
 };
 
-type WeatherStatus = 'sunny' | 'partlyCloudy' | 'cloudy' | 'overcast' | 'rainy' | 'sleet' | 'snowy';
+export type WeatherStatus = '맑음' | '구름조금' | '구름많음' | '흐림' | '비' | '흐리고 비' | '눈'| '비/눈';
 
-export type Weather = {
-  date: string;
-  minTemp: number;
-  maxTemp: number;
-  weatherStatus: WeatherStatus;
+export interface DailyWeather {
+  monthDate: string;
+  maxTemp: string;
+  minTemp: string;
+  sky: WeatherStatus;
 }
 
-export type subRegionApiData = {
-  number: number;
-  name: string;
-  weathers: Weather[],
-  distance: number;
+export interface WeatherInfo {
+  sigungu: string;
+  dailyWeathers: DailyWeather[];
 }
-
-export type province = 
-  | 'gyeonggi'
-  | 'gangwon'
-  | 'gyeoungsangbuk'
-  | 'gyeoungsangnam'
-  | 'jeollabuk'
-  | 'jeollanam'
-  | 'jeju'
-  | 'jellanam'
-  | 'chungcheongbuk';

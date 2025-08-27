@@ -1,11 +1,16 @@
 import RegionSelectMapView from "@/conponents/RegionSelectMapView";
 import { flyOffFillColor, flyOnFillColor } from "@/constants/regionSelectMap";
+import { useScheduleStore } from "@/store/useScheduleStore";
 import { selectedRegion } from "@/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 export default function SelectAreaRegion() {
-  const [selectedLocalRegion, setSelectedLocalRegion] = useState<selectedRegion>({ key: '', name: '', coordinates: [] });
+  const [selectedLocalRegion, setSelectedLocalRegion] = useState<selectedRegion>({ key: '' ,name: '', coordinates: [] });
+  const setSelectedRegion = useScheduleStore(state => state.setSelectedRegion);
+  useEffect(() => {
+    setSelectedRegion(selectedLocalRegion);
+  }, [selectedLocalRegion])
   return (
     <View style={styles.container}>
       <Text style={styles.title}>여행 지역 선택하기(1/2)</Text>
