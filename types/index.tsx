@@ -65,7 +65,8 @@ export type RegionName =
   | "제주특별자치도";
 
 export type selectedRegion = { key: "" | RegionCode; name: '' | RegionName; coordinates: LatLng[] }
-export type ScreenKey = "SelectDate" | "SelectAreaRegion" | "SelectSubRegion" | "SelectPlace1" | "SelectPlace2" | "LoadingGenerateSchedule" | "AIRecommendPlan" | "EditPlan"
+export type ScreenKey = "SelectDate" | "SelectAreaRegion" | "SelectSubRegion" | "SelectActivity" | "SelectPlace" | "LoadingGenerateSchedule" | "AIRecommendPlan" | "EditPlan"
+
 export type ScreenItem = {
   key: ScreenKey;
   label: string;
