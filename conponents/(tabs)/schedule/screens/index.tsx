@@ -7,7 +7,6 @@ import AIRecommendScreen from "./PlanScreen/AIRecommendPlanScreen";
 import EditPlanScreen from "./PlanScreen/EditPlanScreen";
 import SelectPlaceScreen from "./SelectPlaceScreen";
 import SelectRegionScreen from "./SelectRegionScreen";
-type ScreenComponent = React.JSX.Element;
 
 const ScreenMap: Record<ScreenKey, React.ComponentType<any>> = {
   'SelectDate': CalanderScreen ,

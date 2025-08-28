@@ -1,4 +1,4 @@
-import { fetchWeather } from "@/libs/(tabs)/schedule/fetchWeather";
+import { fetchWeather } from "@/libs/schedule/fetchWeather";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { RegionName } from "@/types";
 import { useQuery } from "@tanstack/react-query";

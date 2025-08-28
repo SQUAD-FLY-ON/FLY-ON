@@ -6,8 +6,9 @@ import { MainGradient } from "./LinearGradients/MainGradient";
 interface ButtonProps {
     backgroundColor?: 'main' | string;
     containerStyle?: ViewStyle;
-    onPress: () => void;
+    onPress?: () => void;
     text: string;
+    disabled?: boolean;
     buttonType?: 'small' | 'default';
     style?: ViewStyle;
     rightArrow?: boolean;
@@ -16,14 +17,16 @@ interface ButtonProps {
     undo?: boolean;
 }
 
-export default function CustomButton({ onPress, buttonType = 'default', backgroundColor = 'main', containerStyle, style, textStyle, rightArrow = false, bottomArrow = false, undo = false, text }: ButtonProps) {
-    const Wrapper = backgroundColor !== 'main' ? View : MainGradient;
+export default function CustomButton({ onPress, buttonType = 'default', backgroundColor = 'main', containerStyle, style, textStyle, rightArrow = false, bottomArrow = false, undo = false, text, disabled }: ButtonProps) {
+    const Wrapper = backgroundColor !== 'main' || disabled ? View : MainGradient;
     return (
         <Pressable onPress={onPress} style={containerStyle}>
             <Wrapper style={[
                 buttonType === 'small' && styles.small,
                 buttonType === 'default' && styles.default,
-                { backgroundColor: backgroundColor }, style]} >
+                { backgroundColor: backgroundColor }, style,
+                disabled && styles.disabled
+                ]} >
 
                 {undo && <Image source={require('@/assets/images/undo.png')} style={{ width: 20, height: 20 }} />}
                 <Text style={[styles.text, buttonType === 'small' && styles.smallText, textStyle]}>{text}</Text>
@@ -59,5 +62,8 @@ const styles = StyleSheet.create({
         lineHeight: 17,
         textAlign: 'center',
         height: 17,
+    },
+    disabled: {
+        backgroundColor: "#D2D2D2",
     }
 });
