@@ -27,7 +27,6 @@ export interface ScheduleActions {
   goToNextStep: () => void;
 }
 
-// 4. 스토어 구현 수정
 export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, get) => ({
   currentStep: 0,
 
@@ -41,6 +40,7 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
 
   selectedPlaces: [],
   setSelectedPlaces: (places) => set({ selectedPlaces: places }),
+
 
   goToPrevStep: () => set((state) => ({
     currentStep: Screens[state.currentStep - 1].key.includes('Loading') ? state.currentStep - 2 : state.currentStep - 1,

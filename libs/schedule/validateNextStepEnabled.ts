@@ -21,9 +21,9 @@ export const validateNextStepEnabled = (state: ScheduleState): boolean => {
     case 'SelectSubRegion':
       return selectedRegion.key !== '';
 
-    case 'SelectPlace1':
-    case 'SelectPlace2':
-      return selectedPlaces.length > 0;
+    case 'SelectActivity':
+    case 'SelectPlace':
+      return true;
 
     default:
       return true; // 유효성 검사가 필요 없는 단계는 통과

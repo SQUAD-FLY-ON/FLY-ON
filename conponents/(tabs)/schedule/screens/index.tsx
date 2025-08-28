@@ -5,15 +5,16 @@ import CalanderScreen from "./CalanderScreen";
 import GenerateScheduleScreen from "./GenerateScheduleScreen";
 import AIRecommendScreen from "./PlanScreen/AIRecommendPlanScreen";
 import EditPlanScreen from "./PlanScreen/EditPlanScreen";
-import SelectPlaceScreen from "./SelectPlaceScreen";
+import SelectActivityScreen from "./SelectPlaceScreen/SelectActivityScreen";
+import SelectPlaceScreen from "./SelectPlaceScreen/SelectPlaceScreen";
 import SelectRegionScreen from "./SelectRegionScreen";
 
 const ScreenMap: Record<ScreenKey, React.ComponentType<any>> = {
   'SelectDate': CalanderScreen ,
   'SelectAreaRegion': SelectRegionScreen,
   'SelectSubRegion': SelectRegionScreen ,
-  'SelectPlace1': SelectPlaceScreen ,
-  'SelectPlace2': SelectPlaceScreen ,
+  'SelectActivity': SelectActivityScreen ,
+  'SelectPlace': SelectPlaceScreen ,
   'LoadingGenerateSchedule': GenerateScheduleScreen ,
   'AIRecommendPlan': AIRecommendScreen ,
   'EditPlan': EditPlanScreen ,
