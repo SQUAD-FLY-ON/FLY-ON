@@ -1,3 +1,5 @@
+import { ImageSourcePropType } from "react-native";
+
 export type pageRoutes =
   | "home"
   | "explore"
@@ -12,3 +14,27 @@ export type activityArea = {
   score: number;
   reviews: number;
 };
+
+export type TNearLocations = {
+  id: number;
+  image: ImageSourcePropType;
+  title: string;
+};
+
+export interface RecommendSpots {
+  id: number;
+  spotName: string;
+  imgUrl: string;
+}
+
+export interface MemberInfo {
+  imgUrl: string | null;
+  memberId: string;
+  nickname: string;
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  memberInfo: MemberInfo;
+  refreshToken: string;
+}
