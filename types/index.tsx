@@ -87,3 +87,10 @@ export interface WeatherInfo {
   sigungu: string;
   dailyWeathers: DailyWeather[];
 }
+
+export interface SelectedPlace {
+  id: string;
+  image?: string;
+  title: string;
+  address: string;
+}

@@ -6,10 +6,10 @@ export default function SelectActivityScreen() {
     { key: 'popular', text: '인기순' },
     { key: 'score', text: '별점순' },
   ]
-  const dummyActivity = [{ id: 1, image: require('@/assets/images/dummy_image_activity_area.png'), title: '양평 패러러브 패러글라이딩', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 },
-  { id: 2, image: require('@/assets/images/dummy_image_activity_area.png'), title: '양평 패러러브 패러글라이딩', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 },
-  { id: 3, image: require('@/assets/images/dummy_image_activity_area.png'), title: '양평 패러러브 패러글라이딩', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 },
-  { id: 4, image: require('@/assets/images/dummy_image_activity_area.png'), title: '양평 패러러브 패러글라이딩', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 }
+  const dummyActivity = [{ id: '1', image: require('@/assets/images/dummy_image_activity_area.png'), title: '양평 패러러브 패러글라이딩', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 },
+  { id: '2', image: require('@/assets/images/dummy_image_activity_area.png'), title: '양평 패러러브 패러글라이딩', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 },
+  { id: '3', image: require('@/assets/images/dummy_image_activity_area.png'), title: '양평 패러러브 패러글라이딩', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 },
+  { id: '4', image: require('@/assets/images/dummy_image_activity_area.png'), title: '양평 패러러브 패러글라이딩', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 }
   ]
   const [selectedActivity, setSelectedActivity] = useState(0);
   return (
@@ -19,8 +19,6 @@ export default function SelectActivityScreen() {
       description="일정에 추가하고 싶은 체험장을 선택해주세요."
       filters={filters}
       data={dummyActivity}
-      onSelect={setSelectedActivity}
-      selectedId={selectedActivity}
     />
     </>
   )

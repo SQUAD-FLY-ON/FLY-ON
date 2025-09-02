@@ -1,18 +1,44 @@
 import CustomButton from "@/conponents/CustomButton";
+import { Screens } from "@/constants/screens";
+import { useScheduleStore } from "@/store/useScheduleStore";
+import { PlaceCardType } from "@/types";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useShallow } from "zustand/react/shallow";
 
 interface PlaceCardProps {
-  selected: boolean;
-  image?: string; // 현재는 안 쓰이고 있음
+  id: string;
+  image?: string;
   title: string;
   address: string;
   score: number | string;
   review: number | string;
-  onPress: () => void; // 현재는 미사용
 };
-export default function PlaceCard({ selected, image, title, address, score, review, onPress }: PlaceCardProps) {
+export default function PlaceCard({ id, image, title, address, score, review }: PlaceCardType) {
+  const { selectedActivities, selectedPlaces, setSelectedActivities, setSelectedPlaces, currentStep } =
+    useScheduleStore(
+      useShallow(state => ({
+        selectedActivities: state.selectedActivities,
+        selectedPlaces: state.selectedPlaces,
+        setSelectedActivities: state.setSelectedActivities,
+        setSelectedPlaces: state.setSelectedPlaces,
+        currentStep: state.currentStep
+      })))
+  const currentKey = Screens[currentStep].key;
+  const currentPlace = { id, title, address };
+  const getter = (currentKey === 'SelectActivity') ? selectedActivities : selectedPlaces;
+  const setter = (currentKey === 'SelectActivity') ? setSelectedActivities : setSelectedPlaces;
+  console.log(getter);
+  const onPress = () => {
+    if (currentKey === 'SelectActivity') {
+      setter(currentPlace)
+    } else {
+      setter(currentPlace)
+    }
+  }
+  const selected = getter.some(place => place.id === id) ? true : false;
+  console.log(getter);
   return (
-    <Pressable onPress={onPress} style={[styles.container,{ backgroundColor : selected? '#ECF4FE': '#ffffff'}]}>
+    <Pressable onPress={onPress} style={[styles.container, { backgroundColor: selected ? '#ECF4FE' : '#ffffff' }]}>
       <Image style={styles.image} source={image} />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>{title}</Text>
@@ -39,7 +65,7 @@ const styles = StyleSheet.create({
   image: {
     width: 88,
     height: 88,
-    borderRadius:8.8,
+    borderRadius: 8.8,
   },
   contentContainer: {
     gap: 4,

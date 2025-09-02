@@ -1,19 +1,13 @@
 import { Screens } from '@/constants/screens';
-import { selectedRegion } from '@/types';
+import { SelectedPlace, selectedRegion } from '@/types';
 import { create } from 'zustand';
-
-
-interface SelectedPlace {
-  id: number;
-  name: string;
-  // ...
-}
 
 export interface ScheduleState {
   currentStep: number;
   currentMarkedDates: Record<string, any>;
   selectedRegion: selectedRegion;
   selectedPlaces: SelectedPlace[];
+  selectedActivities: SelectedPlace[];
 }
 
 /**
@@ -22,7 +16,8 @@ export interface ScheduleState {
 export interface ScheduleActions {
   setCurrentMarkedDates: (dates: Record<string, any>) => void;
   setSelectedRegion: (region: selectedRegion) => void;
-  setSelectedPlaces: (places: SelectedPlace[]) => void;
+  setSelectedPlaces: (places: SelectedPlace) => void;
+  setSelectedActivities: (places: SelectedPlace) => void;
   goToPrevStep: () => void;
   goToNextStep: () => void;
 }
@@ -38,9 +33,45 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
   selectedRegion: { key: '', name: '', coordinates: [] },
   setSelectedRegion: (region) => set({ selectedRegion: region }),
 
-  selectedPlaces: [],
-  setSelectedPlaces: (places) => set({ selectedPlaces: places }),
+  selectedActivities: [],
+  setSelectedActivities: (place) =>
+    set((state) => {
+      const isAlreadySelected = state.selectedActivities.some(
+        (activity) => activity.id === place.id
+      );
 
+      if (isAlreadySelected) {
+        return {
+          selectedActivities: state.selectedActivities.filter(
+            (activity) => activity.id !== place.id
+          ),
+        };
+      } else {
+        return {
+          selectedActivities: [...state.selectedActivities, place],
+        };
+      }
+    }),
+
+  selectedPlaces: [],
+  setSelectedPlaces: (place) =>
+    set((state) => {
+      const isAlreadySelected = state.selectedPlaces.some(
+        (activity) => activity.id === place.id
+      );
+
+      if (isAlreadySelected) {
+        return {
+          selectedPlaces: state.selectedPlaces.filter(
+            (activity) => activity.id !== place.id
+          ),
+        };
+      } else {
+        return {
+          selectedPlaces: [...state.selectedPlaces, place],
+        };
+      }
+    }),
 
   goToPrevStep: () => set((state) => ({
     currentStep: Screens[state.currentStep - 1].key.includes('Loading') ? state.currentStep - 2 : state.currentStep - 1,
