@@ -3,6 +3,7 @@ import MenuList from "@/conponents/(tabs)/user/MenuList";
 import Profile from "@/conponents/(tabs)/user/Profile";
 import PageHeader from "@/conponents/PageHeader";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const mockData = {
   level: "1",
@@ -21,7 +22,7 @@ export default function Index() {
   return (
     <View>
       <PageHeader title="마이페이지" isFirst={true} />
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Profile level={mockData.title} nickname={mockData.nickname} />
         <Level
           level={mockData.level}
@@ -37,10 +38,8 @@ export default function Index() {
 const styles = StyleSheet.create({
   scrollContainer: {
     width: Dimensions.get("window").width,
-  },
-  container: {
+    paddingBottom: 200,
     alignItems: "center",
     paddingHorizontal: 19,
-    marginBottom: 69,
   },
 });
