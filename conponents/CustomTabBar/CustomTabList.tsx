@@ -20,13 +20,11 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
     (c: any) => c.props.name === "home" || c.props.name === "explore"
   );
   const rightTriggers = triggers.filter(
-    (c: any) => c.props.name === "community" || c.props.name === "user"
+    (c: any) => c.props.name === "my-schedules" || c.props.name === "user"
   );
 
   return (
-    <View
-      style={styles.container}
-    >
+    <View style={styles.container}>
       <Svg
         width={width}
         height={height}

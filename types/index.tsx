@@ -4,7 +4,7 @@ export type pageRoutes =
   | "home"
   | "explore"
   | "user"
-  | "community"
+  | "my-schedules"
   | "schedule"
   | "air";
 export type activityArea = {
@@ -25,7 +25,7 @@ export interface RecommendSpots {
   id: number;
   spotName: string;
   imgUrl: string;
-} 
+}
 
 export interface MemberInfo {
   imgUrl: string | null;

@@ -2,16 +2,15 @@ import { StyleSheet, Text, View } from "react-native";
 import HomeImage from "./AnimatedImages/HomeImage";
 import TravelCard from "./TravelCard/TravelCard";
 import Colors from "@/constants/colors";
+import LevelBadge from "@/conponents/LevelBadge";
 
 export default function MyStatusSection() {
   return (
     <View style={styles.myStatus}>
       {/* 비행고도 기록 */}
-      <View>
+      <View style={{ alignItems: "flex-start" }}>
         <Text style={styles.logo}>LOGO</Text>
-        <View style={styles.gliderView}>
-          <Text style={styles.gliderText}>설악산 글라이더</Text>
-        </View>
+        <LevelBadge text={"설악산 글라이더"} />
 
         <Text style={styles.userName}>
           <Text style={styles.userNameText}>김유이</Text>
@@ -35,6 +34,7 @@ const styles = StyleSheet.create({
     color: Colors.text.text100,
     fontWeight: 900,
     marginTop: 12,
+    marginBottom: 14,
   },
   gliderView: {
     backgroundColor: Colors.main,
