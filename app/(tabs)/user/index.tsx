@@ -2,7 +2,7 @@ import Level from "@/conponents/(tabs)/user/Level";
 import MenuList from "@/conponents/(tabs)/user/MenuList";
 import Profile from "@/conponents/(tabs)/user/Profile";
 import PageHeader from "@/conponents/PageHeader";
-import { StyleSheet, View } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 
 const mockData = {
   level: "1",
@@ -21,7 +21,7 @@ export default function Index() {
   return (
     <View>
       <PageHeader title="마이페이지" isFirst={true} />
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <Profile level={mockData.title} nickname={mockData.nickname} />
         <Level
           level={mockData.level}
@@ -29,14 +29,18 @@ export default function Index() {
           left={mockData.left}
         />
         <MenuList menuItem={innerPages} />
-      </View>
+      </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    width: Dimensions.get("window").width,
+  },
   container: {
     alignItems: "center",
     paddingHorizontal: 19,
+    marginBottom: 69,
   },
 });
