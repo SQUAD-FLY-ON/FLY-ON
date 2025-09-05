@@ -1,3 +1,5 @@
+
+import { RegionName, WeatherInfo } from ".";
 // types/api.ts
 export interface ApiResponse<T> {
   httpStatusCode: number;
@@ -21,4 +23,14 @@ export interface SignupRequest {
   loginId: string;
   password: string;
   oauthProviderType?: 'KAKAO' | 'GOOGLE' | 'NAVER'; // 소셜 로그인 타입은 선택 사항이고, 특정 값만 허용하도록 지정
+}
+
+export interface WeatherRequest{
+  sido: RegionName;
+  tripStart: string;
+  tripEnd: string;
+}
+
+export interface WeatherResponse {
+  weatherInfos: WeatherInfo[];
 }
