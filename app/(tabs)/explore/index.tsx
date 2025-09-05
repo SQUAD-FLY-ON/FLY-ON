@@ -19,7 +19,7 @@ export default function Index() {
     // if (loc === null) return;
     router.push({
       // pathname: "/(tabs)/explore/map",
-      pathname: "/(tabs)/explore/detailtest",
+      pathname: "/(tabs)/explore/explore-list",
       params: {
         loc: loc,
       },
