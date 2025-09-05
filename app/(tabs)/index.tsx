@@ -26,5 +26,6 @@ const styles = StyleSheet.create({
   scrollContainer: {
     width: Dimensions.get("window").width,
     backgroundColor: "#EAF2FC",
+    marginBottom: 80,
   },
 });
