@@ -12,7 +12,7 @@ export async function fetchSignup(request: SignupRequest): Promise<any> {
     const response: ApiResponse<any> = await apiClient.post(
       "/members",
       request,
-      { headers: {"Content-Type": "application/json"}}
+      { headers: { "Content-Type": "application/json" } }
     );
     return response;
   } catch (error) {

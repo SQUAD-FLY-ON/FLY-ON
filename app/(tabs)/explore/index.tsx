@@ -16,9 +16,7 @@ export default function Index() {
   const [loc, setLoc] = useState<string | null>(null);
 
   const onPress = () => {
-    // if (loc === null) return;
     router.push({
-      // pathname: "/(tabs)/explore/map",
       pathname: "/(tabs)/explore/explore-list",
       params: {
         loc: loc,

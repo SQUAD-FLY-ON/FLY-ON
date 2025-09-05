@@ -1,4 +1,5 @@
 import CustomButton from "@/conponents/CustomButton";
+import { useRouter } from "expo-router";
 import {
   Image,
   ImageSourcePropType,
@@ -25,6 +26,7 @@ const PlaceCard = ({
   score,
   review,
 }: PlaceCardProps) => {
+  const router = useRouter();
   return (
     <View style={[styles.container]}>
       <Image style={styles.image} source={image} />
@@ -45,7 +47,11 @@ const PlaceCard = ({
         buttonType="small"
         text="자세히보기"
         textStyle={{ lineHeight: 14, fontSize: 14 }}
-        onPress={() => {}}
+        onPress={() => {
+          router.push({
+            pathname: "/(tabs)/explore/detail",
+          });
+        }}
       />
     </View>
   );
