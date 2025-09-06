@@ -26,14 +26,14 @@ const level = {
   백두산: 10,
 };
 
-export type Level = keyof typeof level;
+export type FlightLevel = keyof typeof level;
 
 export default function Index() {
   const [memberInfo, setMemberInfo] = useState<MemberProfileInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  function getValue(key: Level) {
+  function getValue(key: FlightLevel) {
     return level[key];
   }
 
