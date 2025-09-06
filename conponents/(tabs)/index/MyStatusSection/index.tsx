@@ -3,17 +3,48 @@ import HomeImage from "./AnimatedImages/HomeImage";
 import TravelCard from "./TravelCard/TravelCard";
 import Colors from "@/constants/colors";
 import LevelBadge from "@/conponents/LevelBadge";
+import { useEffect, useState } from "react";
+import { fetchMembers } from "@/libs/fetchMember";
+import { ApiResponse } from "@/types/api";
+
+interface MemberInfo {
+  nickname: string;
+  gliderBadge: string;
+  badgeAltitude: number;
+  totalJumpAltitude: number;
+}
 
 export default function MyStatusSection() {
+  const [memberInfo, setMemberInfo] = useState<MemberInfo | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const getMemberInfo = async () => {
+    try {
+      const response: ApiResponse<MemberInfo> = await fetchMembers();
+      setMemberInfo(response.data);
+    } catch (err: any) {
+      setError(err.message || "에러 발생");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getMemberInfo();
+  }, []);
+
   return (
     <View style={styles.myStatus}>
       {/* 비행고도 기록 */}
       <View style={{ alignItems: "flex-start" }}>
         <Text style={styles.logo}>LOGO</Text>
-        <LevelBadge text={"설악산 글라이더"} />
+        <LevelBadge text={`${memberInfo?.gliderBadge} 글라이더`} />
 
         <Text style={styles.userName}>
-          <Text style={styles.userNameText}>김유이</Text>
+          <Text style={styles.userNameText}>
+            {memberInfo?.nickname ? memberInfo.nickname : "날으는 강아지"}
+          </Text>
           <Text style={styles.userNameSuffixText}>님</Text>
         </Text>
       </View>

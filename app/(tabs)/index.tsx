@@ -3,20 +3,19 @@ import FooterSection from "@/conponents/(tabs)/index/FooterSection";
 import MyStatusSection from "@/conponents/(tabs)/index/MyStatusSection";
 import HomeLinearBackground from "@/conponents/(tabs)/index/MyStatusSection/LinearBackground/HomeLinearBackground";
 import NearActivitySection from "@/conponents/(tabs)/index/NearActivitySection";
+import { fetchMembers } from "@/libs/fetchMember";
+import { store } from "expo-router/build/global-state/router-store";
+import { useEffect, useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 
 export default function Index() {
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-    >
-      {/* 상단 LinearBackground 적용을 위한 View */}
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View>
         <HomeLinearBackground />
         <MyStatusSection />
         <NearActivitySection />
       </View>
-      <CommunitySection />
       <FooterSection />
     </ScrollView>
   );
