@@ -7,22 +7,16 @@ import { useEffect, useState } from "react";
 import { fetchMembers } from "@/libs/fetchMember";
 import { ApiResponse } from "@/types/api";
 import Logo from "@/conponents/icons/Logo";
-
-interface MemberInfo {
-  nickname: string;
-  gliderBadge: string;
-  badgeAltitude: number;
-  totalJumpAltitude: number;
-}
+import { MemberProfileInfo } from "@/types";
 
 export default function MyStatusSection() {
-  const [memberInfo, setMemberInfo] = useState<MemberInfo | null>(null);
+  const [memberInfo, setMemberInfo] = useState<MemberProfileInfo | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   const getMemberInfo = async () => {
     try {
-      const response: ApiResponse<MemberInfo> = await fetchMembers();
+      const response: ApiResponse<MemberProfileInfo> = await fetchMembers();
       setMemberInfo(response.data);
     } catch (err: any) {
       setError(err.message || "에러 발생");

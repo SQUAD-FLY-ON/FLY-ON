@@ -1,3 +1,4 @@
+import { Level } from "@/app/(tabs)/user";
 import { ImageSourcePropType } from "react-native";
 
 export type pageRoutes =
@@ -37,4 +38,11 @@ export interface AuthResponse {
   accessToken: string;
   memberInfo: MemberInfo;
   refreshToken: string;
+}
+
+export interface MemberProfileInfo {
+  nickname: string;
+  gliderBadge: Level;
+  badgeAltitude: number;
+  totalJumpAltitude: number;
 }
