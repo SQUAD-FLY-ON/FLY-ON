@@ -1,16 +1,18 @@
 // components/MyCard.tsx
-import { activityArea } from "@/types";
+import { RecommendSpots } from "@/types";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-export default function ActivityAreaCard({ item }: { item: activityArea }) {
+export default function ActivityAreaCard({ item }: { item: RecommendSpots }) {
   return (
     <View style={styles.card}>
-      <Image source={item.image!} width={160} height={160} />
+      <Image source={
+    item?.imgUrl
+      ? { uri: item.imgUrl }: require('@/assets/images/dummy_image_activity_area.png')  } style = {{width:160, height:160, borderRadius:16}} />
       <Text style={styles.text} numberOfLines={2}>
-        {item.title}
+        {item?.spotName}
       </Text>
-      <View style={{ gap: 4, flexDirection: "row" }}>
+      {/* <View style={{ gap: 4, flexDirection: "row" }}>
         <Image
           source={require("@/assets/images/star.png")}
           width={18}
@@ -18,7 +20,7 @@ export default function ActivityAreaCard({ item }: { item: activityArea }) {
         />
         <Text style={styles.score}>{item.score}</Text>
         <Text style={styles.review}>({item.reviews})</Text>
-      </View>
+      </View> */}
     </View>
   );
 }

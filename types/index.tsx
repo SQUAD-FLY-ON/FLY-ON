@@ -1,4 +1,5 @@
 import { ImageSourcePropType } from "react-native";
+import { LatLng } from "react-native-maps";
 
 export type pageRoutes =
   | "home"
@@ -21,6 +22,8 @@ export type TNearLocations = {
   image: ImageSourcePropType;
   title: string;
 };
+
+export type RecommendSpotCreteria = 'DISTANCE' | 'WEATHER'
 
 export interface RecommendSpots {
   id: number;
