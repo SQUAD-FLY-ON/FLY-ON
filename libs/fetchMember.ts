@@ -4,10 +4,11 @@ import { ApiResponse } from "@/types/api";
 import { Alert } from "react-native";
 
 export async function fetchMembers(): Promise<any> {
-  const memberId = await useAuthStore.getState().memberInfo?.memberId;
+  const memberId = useAuthStore.getState().memberInfo?.memberId;
+  console.log(memberId);
   try {
     const response: ApiResponse<any> = await apiClient.get(
-      `/members/${memberId}`
+      `/members?memberId=${memberId}`
     );
     return response;
   } catch (error) {
