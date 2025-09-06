@@ -6,6 +6,7 @@ import LevelBadge from "@/conponents/LevelBadge";
 import { useEffect, useState } from "react";
 import { fetchMembers } from "@/libs/fetchMember";
 import { ApiResponse } from "@/types/api";
+import Logo from "@/conponents/icons/Logo";
 
 interface MemberInfo {
   nickname: string;
@@ -38,7 +39,9 @@ export default function MyStatusSection() {
     <View style={styles.myStatus}>
       {/* 비행고도 기록 */}
       <View style={{ alignItems: "flex-start" }}>
-        <Text style={styles.logo}>LOGO</Text>
+        <View style={styles.logo}>
+          <Logo />
+        </View>
         <LevelBadge text={`${memberInfo?.gliderBadge} 글라이더`} />
 
         <Text style={styles.userName}>
@@ -61,9 +64,6 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   logo: {
-    fontSize: 24,
-    color: Colors.text.text100,
-    fontWeight: 900,
     marginTop: 12,
     marginBottom: 14,
   },
