@@ -1,23 +1,35 @@
+import { calculatePolygonCentroid } from "@/libs/regionSelectMap";
+import { fetchTourism } from "@/libs/schedule/fetchTourism";
+import { useScheduleStore } from "@/store/useScheduleStore";
+import { useQuery } from "@tanstack/react-query";
+import { StyleSheet, Text } from "react-native";
 import PlaceList from "./PlaceList";
-
 export default function SelectPlaceScreen() {
-  const filters = [
-    { key: 'popular', text: '인기순' },
-    { key: 'score', text: '별점순' },
-  ]
-  const dummyPlace = [{ id: '1', image: require('@/assets/images/dummy_image_place.png'), title: '산음 자연 휴양림', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 },
-  { id: '2', image: require('@/assets/images/dummy_image_place.png'), title: '산음 자연 휴양림', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 },
-  { id: '3', image: require('@/assets/images/dummy_image_place.png'), title: '산음 자연 휴양림', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 },
-  { id: '4', image: require('@/assets/images/dummy_image_place.png'), title: '산음 자연 휴양림', address: '경기 양평군 옥천면 동막길 49 1층', score: 4.9, review: 19 }
-  ]
+
+  const selectedRegion = useScheduleStore(state => state.selectedRegion);
+  const center = calculatePolygonCentroid(selectedRegion.coordinates);
+  const { data, isLoading } = useQuery({ queryKey: ['place', center?.latitude, center?.longitude], queryFn: () => fetchTourism({ lat: center?.latitude, lon: center?.longitude, }), enabled: !!center });
   return (
     <>
-      <PlaceList
-        title="체험장/장소 선택하기(2/2)"
-        description="일정에 추가하고 싶은 장소를 선택해주세요."
-        filters={filters}
-        data={dummyPlace}
-      />
+      {
+        isLoading ? (
+          <Text style = {styles.loadingText}>데이터를 불러오고 있습니다..</Text>
+        ) :
+
+          <PlaceList
+            title="체험장/장소 선택하기(2/2)"
+            description="일정에 추가하고 싶은 장소를 선택해주세요."
+            // filters={filters}
+            data={data ? data : []}
+          />
+      }
     </>
   )
 }
+const styles = StyleSheet.create({
+  loadingText: {
+    alignSelf: 'center',
+    fontSize: 18,
+    fontFamily: 'Pretendard-bold'
+  }
+})
