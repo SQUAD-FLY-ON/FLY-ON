@@ -8,7 +8,7 @@ export default function ActivityAreaCard({ item }: { item: RecommendSpots }) {
     <View style={styles.card}>
       <Image source={
     item?.imgUrl
-      ? { uri: item.imgUrl }: require('@/assets/images/dummy_image_activity_area.png')  } width={160} height={160} />
+      ? { uri: item.imgUrl }: require('@/assets/images/dummy_image_activity_area.png')  } style = {{width:160, height:160, borderRadius:16}} />
       <Text style={styles.text} numberOfLines={2}>
         {item?.spotName}
       </Text>
