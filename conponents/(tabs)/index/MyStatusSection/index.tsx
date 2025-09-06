@@ -39,9 +39,7 @@ export default function MyStatusSection() {
         <LevelBadge text={`${memberInfo?.gliderBadge} 글라이더`} />
 
         <Text style={styles.userName}>
-          <Text style={styles.userNameText}>
-            {memberInfo?.nickname ? memberInfo.nickname : "날으는 강아지"}
-          </Text>
+          <Text style={styles.userNameText}>{memberInfo?.nickname}</Text>
           <Text style={styles.userNameSuffixText}>님</Text>
         </Text>
       </View>
