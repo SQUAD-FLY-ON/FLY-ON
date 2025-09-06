@@ -1,4 +1,3 @@
-import CommunitySection from "@/conponents/(tabs)/index/CommunitySection";
 import FooterSection from "@/conponents/(tabs)/index/FooterSection";
 import MyStatusSection from "@/conponents/(tabs)/index/MyStatusSection";
 import HomeLinearBackground from "@/conponents/(tabs)/index/MyStatusSection/LinearBackground/HomeLinearBackground";
@@ -16,7 +15,7 @@ export default function Index() {
         <MyStatusSection />
         <RecommendSection />
       </View>
-      <CommunitySection />
+      {/* <CommunitySection /> */}
       <FooterSection />
     </ScrollView>
   );
