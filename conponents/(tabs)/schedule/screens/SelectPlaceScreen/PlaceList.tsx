@@ -13,7 +13,6 @@ interface PlaceListProps {
 }
 
 export default function PlaceList({ title, description, data }: PlaceListProps) {
- 
   return (
     <View style={{ flex: 1 }}>
       <TitleHeader title={title} description={description} />

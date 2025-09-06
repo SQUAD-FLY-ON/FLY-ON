@@ -1,7 +1,7 @@
 import { fetchSpotMarkers } from "@/libs/fetchSpots";
-import { calculatePolygonCentroid, getCorners } from "@/libs/regionSelectMap";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { useQuery } from "@tanstack/react-query";
+import { useShallow } from "zustand/shallow";
 import ActivityList from "./ActivityList";
 
 export default function SelectActivityScreen() {
@@ -9,11 +9,14 @@ export default function SelectActivityScreen() {
     { key: 'popular', text: '인기순' },
     { key: 'score', text: '별점순' },
   ]
-  const selectedRegion = useScheduleStore(state => state.selectedRegion);
-  const center = calculatePolygonCentroid(selectedRegion.coordinates); 
-  const corner = getCorners(selectedRegion.coordinates);
+  const { selectedRegion, refreshSelectedPlaces } = 
+  useScheduleStore(useShallow(state => ({ selectedRegion: state.selectedRegion, refreshSelectedPlaces: state.refreshSelectedPlaces })));
+  console.log(selectedRegion.name);
   const { data } = useQuery({
-    queryKey: ['spotMarkers', center?.latitude, center?.longitude], queryFn: async () => await fetchSpotMarkers({ centerLatitude: center?.latitude, centerLongitude: center?.longitude, cornerLatitude: corner?.cornerLatitude, cornerLongitude: corner?.cornerLongitude}),
+    queryKey: ['spotMarkers', selectedRegion.name], queryFn: async () => {
+      refreshSelectedPlaces();
+      return await fetchSpotMarkers({ sido: selectedRegion.name })
+    },
     // enabled: currentLocation !== null
   })
   return (

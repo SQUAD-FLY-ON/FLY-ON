@@ -3,17 +3,26 @@ import { fetchTourism } from "@/libs/schedule/fetchTourism";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { useQuery } from "@tanstack/react-query";
 import { StyleSheet, Text } from "react-native";
+import { useShallow } from "zustand/shallow";
 import PlaceList from "./PlaceList";
 export default function SelectPlaceScreen() {
-
-  const selectedRegion = useScheduleStore(state => state.selectedRegion);
+  
+  const { selectedRegion, refreshSelectedPlaces } = useScheduleStore(useShallow(state => ({ selectedRegion: state.selectedRegion, refreshSelectedPlaces: state.refreshSelectedPlaces })));
   const center = calculatePolygonCentroid(selectedRegion.coordinates);
-  const { data, isLoading } = useQuery({ queryKey: ['place', center?.latitude, center?.longitude], queryFn: () => fetchTourism({ lat: center?.latitude, lon: center?.longitude, }), enabled: !!center });
+  const { data, isLoading } =
+    useQuery({
+      queryKey: ['place', selectedRegion.key],
+      queryFn: async () => {
+        refreshSelectedPlaces();
+        return await fetchTourism({ lat: center?.latitude, lon: center?.longitude, })
+      },
+      enabled: !!center
+      });
   return (
     <>
       {
         isLoading ? (
-          <Text style = {styles.loadingText}>데이터를 불러오고 있습니다..</Text>
+          <Text style={styles.loadingText}>데이터를 불러오고 있습니다..</Text>
         ) :
 
           <PlaceList

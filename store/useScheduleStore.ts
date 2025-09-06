@@ -20,6 +20,8 @@ export interface ScheduleActions {
   setSelectedActivities: (activity: Spot) => void;
   goToPrevStep: () => void;
   goToNextStep: () => void;
+  refreshSelectedActivities: () => void;
+  refreshSelectedPlaces: () => void;
 }
 
 export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, get) => ({
@@ -27,7 +29,6 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
 
   currentMarkedDates: {},
   setCurrentMarkedDates: (dates) => {
-    console.log('setCurrentMarkedDates 호출됨!', dates); // <-- 로그 추가
     set({ currentMarkedDates: dates });
   },
   selectedRegion: { key: '', name: '', coordinates: [] },
@@ -45,13 +46,13 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
   setSelectedPlaces: (place) =>
     set((state) => {
       const isAlreadySelected = state.selectedPlaces.some(
-        (activity) => activity.addr1 === place.addr1
+        (activity) => activity.fullAddress === place.fullAddress
       );
 
       if (isAlreadySelected) {
         return {
           selectedPlaces: state.selectedPlaces.filter(
-            (activity) => activity.addr1 !== place.addr1
+            (activity) => activity.fullAddress !== place.fullAddress
           ),
         };
       } else {
@@ -60,6 +61,23 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
         };
       }
     }),
+  refreshSelectedPlaces: () => {
+    set({ selectedPlaces: [] });
+  },
+
+  // selectedActivities를 초기 상태로 리셋하는 함수
+  refreshSelectedActivities: () => {
+    set({
+      selectedActivities: {
+        id: '',
+        imgUrl: '',
+        latitude: 0,
+        longitude: 0,
+        name: '',
+        fullAddress: ''
+      }
+    });
+  },
 
   goToPrevStep: () => set((state) => ({
     currentStep: Screens[state.currentStep - 1].key.includes('Loading') ? state.currentStep - 2 : state.currentStep - 1,

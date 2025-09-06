@@ -126,14 +126,26 @@ export interface SelectedPlace {
   address: string;
 }
 
+export enum TourismType {
+  ATTRACTION_SPOT = 'ATTRACTION_SPOT',
+  RESTAURANT = 'RESTAURANT',
+  ACCOMMODATION = 'ACCOMMODATION',
+  SHOPPING = 'SHOPPING',
+  CULTURE = 'CULTURE',
+  FESTIVAL = 'FESTIVAL',
+  LEISURE = 'LEISURE',
+}
+
+// 관광 아이템 기본 인터페이스
 export interface TourismItem {
-  title: string;
-  addr1: string;
-  addr2: string;
-  mapX: string;
-  mapY: string;
-  tel?: string; // tel 프로퍼티는 있을 수도 있고, 없을 수도 있습니다.
-  firstImage?: string; // firstImage도 마찬가지입니다.
+  fullAddress: string;
+  id: string | null;
+  imgUrl: string;
+  latitude: string;
+  longitude: string;
+  name: string;
+  phoneNumber: string;
+  tourismType: TourismType;
 }
 
 export interface Spot {

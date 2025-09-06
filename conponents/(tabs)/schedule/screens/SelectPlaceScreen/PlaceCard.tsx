@@ -18,7 +18,7 @@ export default function PlaceCard({data}: {data: TourismItem}) {
   };
 
   const selected = Array.isArray(selectedPlaces) && 
-    selectedPlaces.some(place => place.addr1 === data.addr1);
+    selectedPlaces.some(place => place.fullAddress === data.fullAddress);
 
   return (
     <Pressable 
@@ -27,14 +27,14 @@ export default function PlaceCard({data}: {data: TourismItem}) {
     >
       <Image 
         style={styles.image} 
-        source={data?.firstImage 
-          ? { uri: data?.firstImage } 
+        source={data?.imgUrl 
+          ? { uri: data?.imgUrl } 
           : require('@/assets/images/dummy_image_place.png')
         } 
       />
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>{data.title}</Text>
-        <Text style={styles.address}>{data.addr1}</Text>
+        <Text style={styles.title}>{data.name}</Text>
+        <Text style={styles.address}>{data.fullAddress}</Text>
       </View>
       <CustomButton 
         containerStyle={styles.buttonPosition} 
