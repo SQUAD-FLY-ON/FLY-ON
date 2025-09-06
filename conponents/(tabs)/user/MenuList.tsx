@@ -1,5 +1,12 @@
 import { useRouter } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Alert,
+  Linking,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 type TMenuItem = {
   name: string;
@@ -7,14 +14,21 @@ type TMenuItem = {
 };
 
 const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
-  const router = useRouter();
-  const onPress = (idx: number) => {
+  const onPress = async (idx: number) => {
     console.log(menuItem[idx].link);
-    // router.push(menuItem[idx].link)
+    const url = menuItem[idx].link;
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`이 URL을 열 수 없습니다: ${url}`);
+    }
   };
+
   return (
     <View style={styles.container}>
-      {Array(3)
+      {Array(2)
         .fill(0)
         .map((_, idx) => (
           <Pressable

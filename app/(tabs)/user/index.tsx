@@ -7,11 +7,9 @@ import { MemberProfileInfo } from "@/types";
 import { ApiResponse } from "@/types/api";
 import { useEffect, useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const innerPages = [
-  { name: "프로필 정보 수정하기", link: "/user/profile-edit" },
-  { name: "비행 기록", link: "/user/flight-records" },
+  { name: "개발자 페이지", link: "https://github.com/SQUAD-FLY-ON" },
   { name: "개인정보처리방침", link: "/user/privacy" },
 ];
 
