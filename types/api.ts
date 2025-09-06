@@ -1,5 +1,5 @@
 
-import { RegionName, WeatherInfo } from ".";
+import { RegionName, TourismItem, WeatherInfo } from ".";
 // types/api.ts
 export interface ApiResponse<T> {
   httpStatusCode: number;
@@ -33,4 +33,21 @@ export interface WeatherRequest{
 
 export interface WeatherResponse {
   weatherInfos: WeatherInfo[];
+}
+
+
+
+export interface TourismResponse {
+  content: TourismItem[];
+}
+export interface TourismRequest {
+  lat: number;
+  lon: number;
+}
+
+export interface SpotRequest {
+  centerLatitude: number;
+  centerLongitude: number;
+  cornerLatitude: number;
+  cornerLongitude: number;
 }

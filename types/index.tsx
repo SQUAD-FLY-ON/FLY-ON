@@ -125,3 +125,22 @@ export interface SelectedPlace {
   title: string;
   address: string;
 }
+
+export interface TourismItem {
+  title: string;
+  addr1: string;
+  addr2: string;
+  mapX: string;
+  mapY: string;
+  tel?: string; // tel 프로퍼티는 있을 수도 있고, 없을 수도 있습니다.
+  firstImage?: string; // firstImage도 마찬가지입니다.
+}
+
+export interface Spot {
+  id: string;
+  name: string;
+  fullAddress: string;
+  imgUrl: string;
+  latitude: number;
+  longitude: number;
+}

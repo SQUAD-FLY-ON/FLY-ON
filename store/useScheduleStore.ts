@@ -1,13 +1,13 @@
 import { Screens } from '@/constants/screens';
-import { SelectedPlace, selectedRegion } from '@/types';
+import { selectedRegion, Spot, TourismItem } from '@/types';
 import { create } from 'zustand';
 
 export interface ScheduleState {
   currentStep: number;
   currentMarkedDates: Record<string, any>;
   selectedRegion: selectedRegion;
-  selectedPlaces: SelectedPlace[];
-  selectedActivities: SelectedPlace[];
+  selectedPlaces: TourismItem[];
+  selectedActivities: Spot;
 }
 
 /**
@@ -16,8 +16,8 @@ export interface ScheduleState {
 export interface ScheduleActions {
   setCurrentMarkedDates: (dates: Record<string, any>) => void;
   setSelectedRegion: (region: selectedRegion) => void;
-  setSelectedPlaces: (places: SelectedPlace) => void;
-  setSelectedActivities: (places: SelectedPlace) => void;
+  setSelectedPlaces: (places: TourismItem) => void;
+  setSelectedActivities: (activity: Spot) => void;
   goToPrevStep: () => void;
   goToNextStep: () => void;
 }
@@ -32,38 +32,26 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
   },
   selectedRegion: { key: '', name: '', coordinates: [] },
   setSelectedRegion: (region) => set({ selectedRegion: region }),
-
-  selectedActivities: [],
-  setSelectedActivities: (place) =>
-    set((state) => {
-      const isAlreadySelected = state.selectedActivities.some(
-        (activity) => activity.id === place.id
-      );
-
-      if (isAlreadySelected) {
-        return {
-          selectedActivities: state.selectedActivities.filter(
-            (activity) => activity.id !== place.id
-          ),
-        };
-      } else {
-        return {
-          selectedActivities: [...state.selectedActivities, place],
-        };
-      }
-    }),
-
+  selectedActivities: {
+  id: '',
+  imgUrl: '',
+  latitude: 0,
+  longitude: 0,
+  name: '',
+  fullAddress: ''
+},
+  setSelectedActivities: (activity) => set({ selectedActivities: activity }),
   selectedPlaces: [],
   setSelectedPlaces: (place) =>
     set((state) => {
       const isAlreadySelected = state.selectedPlaces.some(
-        (activity) => activity.id === place.id
+        (activity) => activity.addr1 === place.addr1
       );
 
       if (isAlreadySelected) {
         return {
           selectedPlaces: state.selectedPlaces.filter(
-            (activity) => activity.id !== place.id
+            (activity) => activity.addr1 !== place.addr1
           ),
         };
       } else {
