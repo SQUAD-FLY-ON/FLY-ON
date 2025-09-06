@@ -40,6 +40,12 @@ export default {
           backgroundColor: "#3A88F4"
         }
       ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ],
       // react-native-maps 플러그인에서 API 키를 제거합니다.
       // 대신 ios.config.googleMapsApiKey 및 android.config.googleMaps.apiKey를 사용합니다.
       [
