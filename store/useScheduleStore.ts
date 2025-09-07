@@ -30,7 +30,7 @@ export interface ScheduleActions {
 }
 
 export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, get) => ({
-  currentStep: 8,
+  currentStep: 0,
 
   currentMarkedDates: {},
   setCurrentMarkedDates: (dates) => {
