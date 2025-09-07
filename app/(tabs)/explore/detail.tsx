@@ -1,10 +1,10 @@
-import CesiumView from "@/conponents/(tabs)/explore/CesiumView";
-import { useEffect, useRef } from "react";
-import { Button, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import WebView, { WebViewMessageEvent } from "react-native-webview";
+import { useRef } from "react";
+import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import WebView from "react-native-webview";
 import { WebView as WebViewType } from "react-native-webview";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
+import SpotCard from "@/conponents/(tabs)/explore/SpotCard";
 
 export default function Detail() {
   const webviewRef = useRef<WebViewType>(null);
@@ -66,9 +66,18 @@ export default function Detail() {
         />
       </View>
       <View style={styles.cardContainer}>
-        <View>
-          <Text>양평 패러리브 패러글라이딩</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>양평 패러리브 패러글라이딩</Text>
+          <View style={styles.scoreContainer}>
+            <Image
+              source={require("@/assets/images/star.png")}
+              style={styles.star}
+            />
+            <Text style={styles.score}>4.9</Text>
+            <Text style={styles.review}>(19)</Text>
+          </View>
         </View>
+        <SpotCard />
       </View>
     </SafeAreaView>
   );
@@ -97,6 +106,38 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     paddingBottom: 14,
-    backgroundColor: "green",
+    position: "absolute",
+    bottom: 40,
+    width: "100%",
+    height: 300,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    gap: 8,
+    marginBottom: 16,
+  },
+  title: {
+    fontFamily: "Pretendard-Bold",
+    fontSize: 24,
+  },
+  scoreContainer: {
+    gap: 4,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  star: {
+    width: 18,
+    height: 18,
+    marginRight: -3,
+  },
+  score: {
+    fontFamily: "Pretendard-SemiBold",
+    fontSize: 14,
+  },
+  review: {
+    fontFamily: "Pretendard-Regular",
+    fontSize: 14,
+    color: "#8E9297",
   },
 });
