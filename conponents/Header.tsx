@@ -2,10 +2,10 @@ import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import { BackButton } from "./BackButton";
 
-export default function Header({title}: {title: string;}) {
+export default function Header({title, backButton = true}: {title: string; backButton?: boolean}) {
   const router = useRouter();
-  return (<View style={styles.container}>
-    <BackButton onPress={() => {router.back()}}/>
+  return (<View style={[styles.container,!backButton && {paddingHorizontal:24}]}>
+    {backButton && <BackButton onPress={() => {router.back()}}/>}
     <Text style={styles.text}>{title}</Text>
   </View>)
 }
