@@ -1,15 +1,40 @@
 import LoadingComponent from "@/conponents/LoadingComponent";
+import { fetchGptSchedule } from "@/libs/schedule/fetchGptSchedule";
 import { useScheduleStore } from "@/store/useScheduleStore";
-import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { useShallow } from "zustand/shallow";
 import BottomAnimationSection from "./BottomAnimation";
 import GreenWaveSvg from "./GreenWaveSvg";
 
 export default function GenerateScheduleScreen() {
-  const gotoNextStep = useScheduleStore(state => state.goToNextStep);
-  setTimeout(() => {
-    gotoNextStep();
-  }, 1000)
+  const { gotoNextStep, currentMarkedDates, selectedPlaces, selectedActivities, setSchedule} = useScheduleStore(
+    useShallow(state => (
+      {
+        gotoNextStep: state.goToNextStep,
+        currentMarkedDates: state.currentMarkedDates,
+        selectedPlaces: state.selectedPlaces,
+        selectedActivities: state.selectedActivities,
+        setSchedule: state.setSchedule,
+      })));
+  const dates = Object.keys(currentMarkedDates);
+  const scheduleStart = dates[0];
+  const scheduleEnd = dates[dates.length - 1];
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['gptschedule',scheduleStart,scheduleEnd,selectedPlaces,selectedActivities.id],
+    queryFn: async () => {
+      const apiData = { scheduleStart, scheduleEnd, tourismSpotList: selectedPlaces, paraglidingSpotId: Number(selectedActivities.id)}
+      return await fetchGptSchedule(apiData);
+    },
+  })
+  useEffect(() => {
+    if(data && !isLoading) {
+      setSchedule(data);
+      gotoNextStep();
+    }
+  },[data, isLoading])
   return (<View style={styles.container}>
     <View style={styles.textContainer}>
       <Text style={[styles.text, { marginTop: 72 }]}>선택한 장소를 기반으로</Text>

@@ -40,13 +40,23 @@ export interface AuthResponse {
   refreshToken: string;
 }
 
-export type Plan = {
-  key: string,
-  type: string;
-  image: any;
-  place: string;
+interface PlaceData {
   address: string;
+  day: string;
+  fullAddress: string;
+  id: string | null;
+  image: string;
+  imgUrl: string;
+  key: string;
+  latitude: number;
+  longitude: number;
+  name: string;
+  phoneNumber: string;
+  place: string;
+  tourismType: TourismType;
+  type: TourismType;
 }
+
 
 export type GeoJSONCoordinates = number[][][] | number[][][][];
 
@@ -96,7 +106,7 @@ export type RegionName =
   | "제주특별자치도";
 
 export type selectedRegion = { key: "" | RegionCode; name: '' | RegionName; coordinates: LatLng[] }
-export type ScreenKey = "SelectDate" | "SelectAreaRegion" | "SelectSubRegion" | "SelectActivity" | "SelectPlace" | "LoadingGenerateSchedule" | "AIRecommendPlan" | "EditPlan"
+export type ScreenKey = "SelectDate" | "SelectAreaRegion" | "SelectSubRegion" | "SelectActivity" | "SelectPlace" | "LoadingGenerateSchedule" | "AIRecommendPlan" | "EditPlan" | "Complete"
 
 export type ScreenItem = {
   key: ScreenKey;
@@ -128,6 +138,7 @@ export interface SelectedPlace {
 
 export enum TourismType {
   ATTRACTION_SPOT = 'ATTRACTION_SPOT',
+  PARAGLIDING_SPOT = 'PARAGLIDING_SPOT',
   RESTAURANT = 'RESTAURANT',
   ACCOMMODATION = 'ACCOMMODATION',
   SHOPPING = 'SHOPPING',
@@ -155,4 +166,30 @@ export interface Spot {
   imgUrl: string;
   latitude: number;
   longitude: number;
+}
+
+// 개별 스케줄 아이템 타입
+export interface ScheduleItem {
+  id: number;
+  tourismType: TourismType;
+  name: string;
+  fullAddress: string;
+  longitude: number;
+  latitude: number;
+  phoneNumber: string;
+  imgUrl: string;
+}
+
+// 하루 일정 타입 (ScheduleItem 배열)
+export type DaySchedule = ScheduleItem[];
+
+// 전체 일정 타입 (여러 날의 일정 배열)
+export type Schedules = DaySchedule[];
+
+export interface DayData {
+  [dayId: string]: {
+    title: string;
+    plans: Plan[];
+    color: string;
+  };
 }

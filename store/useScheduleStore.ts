@@ -1,5 +1,5 @@
 import { Screens } from '@/constants/screens';
-import { selectedRegion, Spot, TourismItem } from '@/types';
+import { DayData, Schedules, selectedRegion, Spot, TourismItem } from '@/types';
 import { create } from 'zustand';
 
 export interface ScheduleState {
@@ -8,6 +8,8 @@ export interface ScheduleState {
   selectedRegion: selectedRegion;
   selectedPlaces: TourismItem[];
   selectedActivities: Spot;
+  schedule: Schedules;
+  dayData: DayData
 }
 
 /**
@@ -18,14 +20,17 @@ export interface ScheduleActions {
   setSelectedRegion: (region: selectedRegion) => void;
   setSelectedPlaces: (places: TourismItem) => void;
   setSelectedActivities: (activity: Spot) => void;
+  setDayData: (scheduledayDataOrUpdater: DayData | ((prevData: DayData) => DayData)) => void;
+  setSchedule: (schedule: Schedules) => void;
   goToPrevStep: () => void;
   goToNextStep: () => void;
   refreshSelectedActivities: () => void;
   refreshSelectedPlaces: () => void;
+  resetAllStates: () => void;
 }
 
 export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, get) => ({
-  currentStep: 0,
+  currentStep: 8,
 
   currentMarkedDates: {},
   setCurrentMarkedDates: (dates) => {
@@ -34,13 +39,13 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
   selectedRegion: { key: '', name: '', coordinates: [] },
   setSelectedRegion: (region) => set({ selectedRegion: region }),
   selectedActivities: {
-  id: '',
-  imgUrl: '',
-  latitude: 0,
-  longitude: 0,
-  name: '',
-  fullAddress: ''
-},
+    id: '',
+    imgUrl: '',
+    latitude: 0,
+    longitude: 0,
+    name: '',
+    fullAddress: ''
+  },
   setSelectedActivities: (activity) => set({ selectedActivities: activity }),
   selectedPlaces: [],
   setSelectedPlaces: (place) =>
@@ -61,6 +66,16 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
         };
       }
     }),
+  schedule: [],
+  setSchedule: (schedule: Schedules) => set({ schedule: schedule }),
+
+  dayData: {},
+  setDayData: (dayDataOrUpdater: DayData | ((prevData: DayData) => DayData)) =>
+    set((state) => ({
+      dayData: typeof dayDataOrUpdater === 'function'
+        ? dayDataOrUpdater(state.dayData)
+        : dayDataOrUpdater
+    })),
   refreshSelectedPlaces: () => {
     set({ selectedPlaces: [] });
   },
@@ -79,6 +94,24 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
     });
   },
 
+  resetAllStates: () => {
+    set({
+      currentStep: 0,
+      currentMarkedDates: {},
+      selectedRegion: { key: '', name: '', coordinates: [] },
+      selectedPlaces: [],
+      selectedActivities: {
+        id: '',
+        imgUrl: '',
+        latitude: 0,
+        longitude: 0,
+        name: '',
+        fullAddress: ''
+      },
+      schedule: [],
+      dayData: {}
+    });
+  },
   goToPrevStep: () => set((state) => ({
     currentStep: Screens[state.currentStep - 1].key.includes('Loading') ? state.currentStep - 2 : state.currentStep - 1,
   })),
@@ -86,4 +119,5 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
   goToNextStep: () => {
     set((state) => ({ currentStep: state.currentStep + 1 }));
   },
+
 }));
