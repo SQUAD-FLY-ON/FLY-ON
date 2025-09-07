@@ -12,7 +12,6 @@ export default function PlaceCard({data}: {data: TourismItem}) {
       setSelectedPlaces: state.setSelectedPlaces,
     }))
   );
-  console.log(selectedPlaces);
   const onPress = () => {
     setSelectedPlaces(data);
   };

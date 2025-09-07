@@ -9,7 +9,7 @@ export const FloatingPortalContext = React.createContext<{
 // 메인 앱에서 사용할 FloatingPortal Provider
 export const FloatingPortalProvider = ({ children }: { children: React.ReactNode }) => {
   const [floatingElement, setFloatingElement] = useState<React.ReactElement | null>(null);
-
+  console.log('floatingElement',floatingElement);
   return (
     <FloatingPortalContext.Provider value={{ setFloatingElement }}>
       <View style={{ flex: 1 }}>
@@ -24,7 +24,6 @@ export const FloatingPortalProvider = ({ children }: { children: React.ReactNode
               right: 0,
               bottom: 0,
               pointerEvents: 'none', // 터치 이벤트 통과
-              zIndex: 9999,
               elevation: 9999,
             }}
           >
