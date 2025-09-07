@@ -38,3 +38,12 @@ export interface AuthResponse {
   memberInfo: MemberInfo;
   refreshToken: string;
 }
+
+export interface paraglidingSpot {
+  id: string;
+  name: string;
+  fullAddress: string;
+  imgUrl: string;
+  phoneNumber: string;
+  websiteUrl: string;
+}

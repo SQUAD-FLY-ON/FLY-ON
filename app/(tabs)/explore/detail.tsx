@@ -6,6 +6,15 @@ import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
 import SpotCard from "@/conponents/(tabs)/explore/SpotCard";
 
+const mockdata = {
+  id: "1234",
+  name: "양평 패러러브 패러글라이딩",
+  fullAddress: "경기 양평군 옥천면 동막길 49 1층",
+  imgUrl: "",
+  phoneNumber: "010-1234-5678",
+  webkitURL: "https://para114.com/",
+};
+
 export default function Detail() {
   const webviewRef = useRef<WebViewType>(null);
 
@@ -67,7 +76,7 @@ export default function Detail() {
       </View>
       <View style={styles.cardContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>양평 패러리브 패러글라이딩</Text>
+          <Text style={styles.title}>{mockdata.name}</Text>
           <View style={styles.scoreContainer}>
             <Image
               source={require("@/assets/images/star.png")}
@@ -77,7 +86,11 @@ export default function Detail() {
             <Text style={styles.review}>(19)</Text>
           </View>
         </View>
-        <SpotCard />
+        <SpotCard
+          address={mockdata.fullAddress}
+          phoneNumber={mockdata.phoneNumber}
+          webURL={mockdata.webkitURL}
+        />
       </View>
     </SafeAreaView>
   );

@@ -10,15 +10,22 @@ import LinkIcon from "./icons/LinkIcon";
 import PhoneIcon from "./icons/PhoneIcon";
 import MapPinIcon from "./icons/MapPinIcon";
 
-const SpotCard = () => {
+const SpotCard = ({
+  address,
+  phoneNumber,
+  webURL,
+}: {
+  address: string;
+  phoneNumber: string;
+  webURL: string;
+}) => {
   const openSite = async () => {
-    const url = "https://naver.com";
-    const supported = await Linking.canOpenURL(url);
+    const supported = await Linking.canOpenURL(webURL);
 
     if (supported) {
-      await Linking.openURL(url);
+      await Linking.openURL(webURL);
     } else {
-      Alert.alert(`이 URL을 열 수 없습니다: ${url}`);
+      Alert.alert(`이 URL을 열 수 없습니다: ${webURL}`);
     }
   };
   return (
@@ -29,13 +36,11 @@ const SpotCard = () => {
       <View style={styles.contentsContainer}>
         <View style={styles.contents}>
           <MapPinIcon />
-          <Text style={styles.contentsText}>
-            경기 양평군 옥천면 동막길 49 1층
-          </Text>
+          <Text style={styles.contentsText}>{address}</Text>
         </View>
         <View style={styles.contents}>
           <PhoneIcon />
-          <Text style={styles.contentsText}>000-0000-0000</Text>
+          <Text style={styles.contentsText}>{phoneNumber}</Text>
         </View>
         <View style={styles.contents}>
           <LinkIcon />
