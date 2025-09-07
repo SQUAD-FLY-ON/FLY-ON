@@ -22,9 +22,9 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
   const rightTriggers = triggers.filter(
     (c: any) => c.props.name === "my-schedules" || c.props.name === "user"
   );
-
   return (
-    <View style={styles.container}>
+
+    <View style={[styles.container, pathname === '/schedule' && {display:'none'} ]}>
       <Svg
         width={width}
         height={height}

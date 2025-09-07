@@ -1,7 +1,7 @@
 import FooterSection from "@/conponents/(tabs)/index/FooterSection";
 import MyStatusSection from "@/conponents/(tabs)/index/MyStatusSection";
 import HomeLinearBackground from "@/conponents/(tabs)/index/MyStatusSection/LinearBackground/HomeLinearBackground";
-import NearActivitySection from "@/conponents/(tabs)/index/NearActivitySection";
+import RecommendSection from "@/conponents/(tabs)/index/RecommendSection";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 
 export default function Index() {
@@ -10,8 +10,9 @@ export default function Index() {
       <View>
         <HomeLinearBackground />
         <MyStatusSection />
-        <NearActivitySection />
+        <RecommendSection />
       </View>
+      {/* <CommunitySection /> */}
       <FooterSection />
     </ScrollView>
   );
@@ -21,5 +22,6 @@ const styles = StyleSheet.create({
   scrollContainer: {
     width: Dimensions.get("window").width,
     backgroundColor: "#EAF2FC",
+    marginBottom: 80,
   },
 });
