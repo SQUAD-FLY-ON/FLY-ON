@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import WebView from "react-native-webview";
 import { WebView as WebViewType } from "react-native-webview";
@@ -15,6 +15,12 @@ const mockdata = {
   webkitURL: "https://para114.com/",
 };
 
+interface IFlightPath {
+  lat: number;
+  lon: number;
+  alt: number;
+}
+
 export default function Detail() {
   const webviewRef = useRef<WebViewType>(null);
 
@@ -27,16 +33,12 @@ export default function Detail() {
     throw new Error("CESIUM_WEB_URL이 설정되지 않았습니다");
   }
 
-  const cesiumAccessToken = CESIUM_TOKEN;
+  const cesiumAccessToken = `
+    window.CESIUM_ACCESS_TOKEN = "${CESIUM_TOKEN}";
+    true;
+  `;
 
-  const sendFlightData = () => {
-    const flightPath = [
-      { lat: 37.5, lon: 128.2, alt: 1000 },
-      { lat: 37.51, lon: 128.21, alt: 900 },
-      { lat: 37.52, lon: 128.22, alt: 700 },
-      { lat: 37.53, lon: 128.23, alt: 300 },
-    ];
-
+  const sendFlightData = (flightPath: IFlightPath[]) => {
     const message = {
       type: "SET_FLIGHT",
       flightPath,
@@ -45,13 +47,19 @@ export default function Detail() {
     webviewRef.current?.postMessage(JSON.stringify(message));
   };
 
-  const handleWebViewLoad = () => {
-    const message = JSON.stringify({
-      type: "SET_TOKEN",
-      token: cesiumAccessToken,
-    });
-    webviewRef.current?.postMessage(message);
-  };
+  useEffect(() => {
+    const flightPath = [
+      { lat: 37.5, lon: 128.2, alt: 1000 },
+      { lat: 37.51, lon: 128.21, alt: 900 },
+      { lat: 37.52, lon: 128.22, alt: 700 },
+      { lat: 37.53, lon: 128.23, alt: 300 },
+    ];
+    if (flightPath) {
+      setTimeout(() => sendFlightData(flightPath), 500);
+    }
+  }, []);
+
+  console.log("로드");
 
   return (
     <SafeAreaView style={styles.container}>
@@ -61,10 +69,10 @@ export default function Detail() {
           source={{
             uri: CESIUM_WEB_URL,
           }}
+          injectedJavaScriptBeforeContentLoaded={cesiumAccessToken}
           javaScriptEnabled={true}
           originWhitelist={["*"]}
           style={styles.webview}
-          onLoadEnd={handleWebViewLoad}
         />
         <LinearGradient
           colors={["rgba(245, 245, 245, 0)", "#F5F5F5"]}
