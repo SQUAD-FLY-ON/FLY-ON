@@ -9,9 +9,12 @@ import { useEffect, useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const innerPages = [
-  { name: "개인정보처리방침", link: "https://github.com/SQUAD-FLY-ON" },
-  { name: "로그아웃", link: ""},
-  { name: "회원탈퇴", link: ""},
+  {
+    name: "개인정보처리방침",
+    link: "https://caring-terrier-504.notion.site/Fly-On-268edf14ec908039a2f2dae5dd9e94c1?source=copy_link",
+  },
+  { name: "로그아웃", link: "" },
+  { name: "회원탈퇴", link: "" },
 ];
 
 const level = {

@@ -59,7 +59,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         try {
           // 액세스 토큰 유효성 검사 (예: 사용자 정보 요청)
           const userResponse = await apiClient.get("/members");
-          if (userResponse.status === 200) {
+          if (userResponse.httpStatusCode === 200) {
             console.log(userResponse);
 
             set({
