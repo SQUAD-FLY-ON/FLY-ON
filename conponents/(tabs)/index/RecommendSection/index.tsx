@@ -1,25 +1,44 @@
 import ActivityAreaCard from "@/conponents/ActivityAreaCard";
 import Carousel from "@/conponents/Carousel";
 import ArrowDownIcon from "@/conponents/icons/DownArrow";
-import { activities } from "@/dummy/activity_area";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { Link } from "expo-router";
-import React, { useCallback, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import FilterModal from "./FilterModal";
 import Colors from "@/constants/colors";
-
+import { fetchRecommendSpots } from "@/libs/(tabs)/index/fetchRecommendSpots";
+import { useLocationStore } from "@/store/locationStore";
+import { RecommendSpotCreteria } from "@/types";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "expo-router";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useShallow } from "zustand/shallow";
+import FilterModal from "./FilterModal";
 const filterOptions = [
-  { key: "near", label: "가까운 체험장 추천" },
-  { key: "sunny", label: "맑은 지역 체험장 추천" },
+  { key: "DISTANCE", label: "가까운 체험장 추천" },
+  { key: "WEATHER", label: "맑은 지역 체험장 추천" },
 ];
 
-export default function NearActivity() {
+export default function RecommendSection() {
   const filterModalRef = useRef<BottomSheetModal>(null);
-  const [currentKey, setCurrentKey] = useState("near");
+  const [currentKey, setCurrentKey] = useState<RecommendSpotCreteria>("DISTANCE");
+  const { location: currentLocation, initializeLocation } = useLocationStore(useShallow((state) => ({ location: state.location, initializeLocation: state.initializeLocation })));
+  const { data, isLoading } = useQuery({
+    queryKey: ['recommendSpots', currentKey], queryFn: () =>
+      fetchRecommendSpots({
+        criteria: currentKey,
+        latitude: currentLocation?.latitude,
+        longitude: currentLocation?.longitude
+      }),
+    enabled: !!currentLocation?.latitude && !!currentLocation?.longitude
+  })
+  useEffect(() => {
+    // 앱 시작 시 위치 정보 초기화
+    initializeLocation();
+  }, []);
+
   const handlePresentModalPress = useCallback(() => {
     filterModalRef.current?.present();
   }, []);
+  console.log(data);
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -35,11 +54,17 @@ export default function NearActivity() {
           <Text style={styles.link}>체험장 탐색하기</Text>
         </Link>
       </View>
+      {isLoading ?
+       (
+        <Text style = {styles.loadingText}>로딩중..</Text>
+      ):
+       (
       <Carousel
-        data={activities}
+        data={data}
         renderItem={(item) => <ActivityAreaCard item={item} />}
-        style={{ paddingLeft: 16, marginBottom: 32 }}
+        style={{ paddingLeft: 16, marginBottom: 40 }}
       />
+      )}
       <FilterModal
         ref={filterModalRef}
         options={filterOptions}
@@ -77,4 +102,10 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     color: Colors.text.text50,
   },
+  loadingText: {
+    fontFamily: "Pretendard-Bold",
+    fontSize: 22,
+    alignSelf:'center',
+    marginBottom:100,
+  }
 });
