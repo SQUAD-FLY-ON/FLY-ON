@@ -7,7 +7,7 @@ const STORAGE_KEY = "FLIGHT_LOG";
 export const saveFlightLog = async (
   id: string,
   data: TLocationData[]
-): Promise<void> => {
+): Promise<{ success: boolean }> => {
   try {
     // 기존 데이터 불러오기
     const existing = await AsyncStorage.getItem(STORAGE_KEY);
@@ -20,8 +20,10 @@ export const saveFlightLog = async (
 
     // 다시 저장
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+    return { success: true };
   } catch (error) {
     console.error("Failed to save location data:", error);
+    return { success: false };
   }
 };
 

@@ -72,17 +72,19 @@ export default function Report() {
 
     // const response = await postFlightLog(memberId as string, data);
     // console.log(response);
-    // if (response?.httpStatusCode === 200) {
-    //   setIsModalVisible(true);
-    // }
 
     // API response로 받은 id값과 비행 경로 저장
     const mockId = Math.abs(Math.random() * 10000);
-    const flightLog = saveFlightLog(`${mockId}`, locationData);
-    console.log(`ID ${mockId}: `, flightLog);
+    const flightLog = await saveFlightLog(`${mockId}`, locationData);
+    console.log(`ID ${mockId}: `, flightLog.success);
 
-    const allFlightLogs = getAllFlightLogs();
+    const allFlightLogs = await getAllFlightLogs();
     console.log("전체 비행 기록:", allFlightLogs);
+
+    let responseStatus = 200; // mock response status
+    if (responseStatus === 200 && flightLog.success) {
+      setIsModalVisible(true);
+    }
   }
 
   return (
