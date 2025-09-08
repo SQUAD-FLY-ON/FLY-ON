@@ -1,8 +1,8 @@
+import { typeToLabel } from "@/constants/screens";
 import { Plan } from "@/types";
 import Entypo from "@expo/vector-icons/Entypo";
-import { useContext, useRef, useState } from "react";
-import { Animated, PanResponder, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { FloatingPortalContext } from "./FloatingPortal";
+import { useRef, useState } from "react";
+import { Animated, PanResponder, PanResponderGestureState, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const DraggablePlanCard = ({
   item,
@@ -22,8 +22,8 @@ const DraggablePlanCard = ({
   index: number;
   dayId: string;
   isLast: boolean;
-  onDragStart: (item: Plan, dayId: string, index: number) => void;
-  onDragMove: (x: number, y: number) => void;
+  onDragStart: (item: Plan, dayId: string, index: number, cardLayout: { x: number; y: number; width: number; height: number }) => void;
+  onDragMove: (x: number, y: number, gestureState: PanResponderGestureState, evt: any) => void;
   onDragEnd: (x: number, y: number) => void;
   isDragging: boolean;
   isAutoScrollingRef: React.MutableRefObject<boolean>;
@@ -31,62 +31,18 @@ const DraggablePlanCard = ({
   scrollViewLayoutRef: React.MutableRefObject<{ y: number; height: number }>;
   autoScrollOffsetYRef: React.RefObject<number>;
 }) => {
+  console.log(item.type);
   const pan = useRef(new Animated.ValueXY()).current;
   const cardOpacity = useRef(new Animated.Value(1)).current;
   const floatingCardOpacity = useRef(new Animated.Value(0)).current;
   const [componentHeight, setComponentHeight] = useState(0);
   const [isPanEnabled, setIsPanEnabled] = useState(false);
-  
-  // Floating 관련 새로운 state들
-  const [cardPosition, setCardPosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
-  const cardRef = useRef<View>(null);
-  const floatingPortal = useContext(FloatingPortalContext);
-  
+  const cardRef = useRef<View>(null);  
   // 기존 자동스크롤 관련 refs
   const isDraggingRef = useRef(false);
   const localAutoScrollingRef = useRef(false);
-  const autoScrollFixedY = useRef(0);
   const cardInitialPosition = useRef({ x: 0, y: 0 });
   
-  const typeToLabel: Record<string, string> = {
-    activity: '체험장 이동',
-    restaurant: '음식점으로 이동',
-    lodging: '숙소로 이동',
-    sightseeing: '관광지로 이동'
-  };
-  
-  // 카드 위치 측정 함수
-  const measureCardPosition = () => {
-    if (cardRef.current) {
-      cardRef.current.measureInWindow((x, y, width, height) => {
-        console.log('카드 위치 측정:', { x, y, width, height });
-        setCardPosition({ x, y, width, height });
-      });
-    }
-  };
-
-  // 카드 내용 렌더링 함수 (원본과 floating에서 공유)
-  const renderCardContent = () => (
-    <View style={styles.card}>
-      <View style={styles.imagePlaceholder}>
-        <Text style={styles.imageText}>IMG</Text>
-      </View>
-      <View style={styles.cardTextContainer}>
-        <Text style={styles.place} numberOfLines={1}>
-          {item?.place}
-        </Text>
-        <Text style={styles.address} numberOfLines={2} ellipsizeMode="tail">
-          {item?.address}
-        </Text>
-      </View>
-      <TouchableOpacity
-        onLongPress={() => setIsPanEnabled(true)}
-        onPressOut={() => setIsPanEnabled(false)}
-        delayLongPress={100}>
-        <Entypo style={styles.menu} name="menu" size={24} color="black" />
-      </TouchableOpacity>
-    </View>
-  );
 
   
 const panResponder = PanResponder.create({
@@ -101,17 +57,14 @@ const panResponder = PanResponder.create({
         x: evt.nativeEvent.pageX,
         y: evt.nativeEvent.pageY
       };
-
       // 카드 위치 측정 - 콜백으로 처리
       if (cardRef.current) {
         cardRef.current.measureInWindow((x, y, width, height) => {
           const cardLayout = { x, y, width, height };
-          console.log('드래그 시작 - 카드 레이아웃:', cardLayout);
-          
-          // 부모에게 드래그 시작 알림 (측정 완료 후)
           onDragStart(item, dayId, index, cardLayout);
         });
       } else {
+      
         // measureInWindow가 실패한 경우 기본값으로 처리
         const defaultLayout = { x: 0, y: 0, width: 200, height: 100 };
         onDragStart(item, dayId, index, defaultLayout);
@@ -134,16 +87,7 @@ const panResponder = PanResponder.create({
     onPanResponderMove: (evt, gestureState) => {
       if (!isDraggingRef.current) return;
       
-      console.log(gestureState.dy);
-      onDragMove(evt.nativeEvent.pageX, evt.nativeEvent.pageY, {
-        dx: gestureState.dx,
-        dy: gestureState.dy,
-        originalDx: gestureState.dx,
-        originalDy: gestureState.dy,
-        isAutoScrolling: isAutoScrollingRef.current,
-        autoScrollDirection: autoScrollDirectionRef.current,
-        localAutoScrolling: localAutoScrollingRef.current
-      }, evt);
+      onDragMove(evt.nativeEvent.pageX, evt.nativeEvent.pageY,gestureState, evt);
     },
 
     onPanResponderRelease: (evt, gestureState) => {

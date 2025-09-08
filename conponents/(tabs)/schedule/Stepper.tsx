@@ -1,6 +1,6 @@
+import StepCircle from "@/conponents/(tabs)/schedule/StepCircle";
 import { Screens } from "@/constants/screens";
 import { useScheduleStore } from "@/store/useScheduleStore";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { Fragment, useEffect, useRef } from "react";
 import {
   Animated,
@@ -9,7 +9,6 @@ import {
   Text,
   View,
 } from "react-native";
-
 const stepLabels = [
   '날짜 선택',
   '여행 지역 선택',
@@ -58,23 +57,12 @@ export default function Stepper() {
         return (
           <Fragment key={label}>
             <View style={styles.stepContainer}>
-              <Animated.View
-                style={[
-                  styles.circle,
-                  currentStepperIndex > index && {
-                    backgroundColor: '#007AFF',
-                    borderWidth: 0,
-                  },
-                  { transform: [{ scale: animatedScale }] },
-                ]}
-              >
-                {currentStepperIndex > index && (
-                  <Animated.View style={{ opacity: animatedOpacity }}>
-                    <AntDesign name="check" size={10} color="white" />
-                  </Animated.View>
-                )}
-                {currentStepperIndex === index && <View style={styles.innerCircle} />}
-              </Animated.View>
+               <StepCircle
+                isCompleted={currentStepperIndex > index}
+                isCurrent={currentStepperIndex === index}
+                animatedScale={animatedScale}
+                animatedOpacity={animatedOpacity}
+              />
 
               {currentStepperIndex === index && (
                 <Text style={styles.label} numberOfLines={1}>

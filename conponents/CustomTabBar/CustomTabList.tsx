@@ -24,7 +24,7 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
   );
   return (
 
-    <View style={[styles.container, pathname === '/schedule' && {display:'none'} ]}>
+    <View style={[styles.container, pathname === "/air" || pathname === "/air/report" ||  pathname === '/schedule && {display:'none'} ]}>
       <Svg
         width={width}
         height={height}

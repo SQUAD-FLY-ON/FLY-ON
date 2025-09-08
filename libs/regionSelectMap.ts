@@ -25,6 +25,20 @@ export const convertCoordinatesToPoints = (coordinates: GeoJSONCoordinates) => {
     longitude: coord[0]
   }));
 };
+
+export const getCorners = (coords) => {
+  // 위도와 경도 배열 추출
+  const latitudes = coords.map(coord => coord.latitude);
+  const longitudes = coords.map(coord => coord.longitude);
+
+  // 최대/최소값 계산
+  const minLat = Math.min(...latitudes);
+  const minLon = Math.min(...longitudes);
+
+  return {cornerLatitude: minLat, cornerLongitude: minLon}
+}
+
+
 // 폴리곤 중심 계산
 export const calculatePolygonCentroid = (coords: LatLng[]): LatLng | null => {
   if (coords.length < 3) return null;

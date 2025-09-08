@@ -1,55 +1,47 @@
+// PlaceCard.tsx
 import CustomButton from "@/conponents/CustomButton";
-import { Screens } from "@/constants/screens";
 import { useScheduleStore } from "@/store/useScheduleStore";
-import { PlaceCardType } from "@/types";
+import { TourismItem } from "@/types";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useShallow } from "zustand/react/shallow";
 
-interface PlaceCardProps {
-  id: string;
-  image?: string;
-  title: string;
-  address: string;
-  score: number | string;
-  review: number | string;
-};
-export default function PlaceCard({ id, image, title, address, score, review }: PlaceCardType) {
-  const { selectedActivities, selectedPlaces, setSelectedActivities, setSelectedPlaces, currentStep } =
-    useScheduleStore(
-      useShallow(state => ({
-        selectedActivities: state.selectedActivities,
-        selectedPlaces: state.selectedPlaces,
-        setSelectedActivities: state.setSelectedActivities,
-        setSelectedPlaces: state.setSelectedPlaces,
-        currentStep: state.currentStep
-      })))
-  const currentKey = Screens[currentStep].key;
-  const currentPlace = { id, title, address };
-  const getter = (currentKey === 'SelectActivity') ? selectedActivities : selectedPlaces;
-  const setter = (currentKey === 'SelectActivity') ? setSelectedActivities : setSelectedPlaces;
-  console.log(getter);
+export default function PlaceCard({data}: {data: TourismItem}) {
+  const { selectedPlaces, setSelectedPlaces } = useScheduleStore(
+    useShallow(state => ({
+      selectedPlaces: state.selectedPlaces,
+      setSelectedPlaces: state.setSelectedPlaces,
+    }))
+  );
   const onPress = () => {
-    if (currentKey === 'SelectActivity') {
-      setter(currentPlace)
-    } else {
-      setter(currentPlace)
-    }
-  }
-  const selected = getter.some(place => place.id === id) ? true : false;
-  console.log(getter);
+    setSelectedPlaces(data);
+  };
+
+  const selected = Array.isArray(selectedPlaces) && 
+    selectedPlaces.some(place => place.fullAddress === data.fullAddress);
+
   return (
-    <Pressable onPress={onPress} style={[styles.container, { backgroundColor: selected ? '#ECF4FE' : '#ffffff' }]}>
-      <Image style={styles.image} source={image} />
+    <Pressable 
+      onPress={onPress} 
+      style={[styles.container, { backgroundColor: selected ? '#ECF4FE' : '#ffffff' }]}
+    >
+      <Image 
+        style={styles.image} 
+        source={data?.imgUrl 
+          ? { uri: data?.imgUrl } 
+          : require('@/assets/images/dummy_image_place.png')
+        } 
+      />
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.address}>{address}</Text>
-        <View style={styles.scoreContainer}>
-          <Image source={require('@/assets/images/star.png')} style={styles.star} />
-          <Text style={styles.score}>{score}</Text>
-          <Text style={styles.review}>({review})</Text>
-        </View>
+        <Text style={styles.title}>{data.name}</Text>
+        <Text style={styles.address}>{data.fullAddress}</Text>
       </View>
-      <CustomButton containerStyle={styles.buttonPosition} buttonType="small" text="자세히보기" textStyle={{ lineHeight: 14, fontSize: 14 }} onPress={() => { }} />
+      <CustomButton 
+        containerStyle={styles.buttonPosition} 
+        buttonType="small" 
+        text="자세히보기" 
+        textStyle={{ lineHeight: 14, fontSize: 14 }} 
+        onPress={() => {}} 
+      />
     </Pressable>
   );
 }
