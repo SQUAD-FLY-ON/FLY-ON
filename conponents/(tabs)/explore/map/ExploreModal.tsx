@@ -1,8 +1,7 @@
-import { MainGradient } from "@/conponents/LinearGradients/MainGradient";
 import useExploreStore from "@/store/exploreStore";
 import { useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
-import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Image, StyleSheet, Text, View } from "react-native";
 
 export default function ExploreModal() {
   const slideAnim = useRef(new Animated.Value(100)).current; // 초기값 100 (아래쪽)
@@ -36,11 +35,11 @@ export default function ExploreModal() {
             <Text style={styles.review}>(19)</Text>
           </View> */}
         </View>
-        <TouchableOpacity onPress = {() => {router.push('/(tabs)/explore/detail')}} style={styles.buttonPosition}>
+        {/* <TouchableOpacity onPress = {() => {router.push('/(tabs)/explore/detail')}} style={styles.buttonPosition}>
           <MainGradient  style={styles.button}>
             <Text style={styles.buttonText}>자세히 보기</Text>
           </MainGradient>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </Animated.View>
   )

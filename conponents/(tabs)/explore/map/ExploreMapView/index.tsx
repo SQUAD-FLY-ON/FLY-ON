@@ -16,6 +16,7 @@ export default function ExploreMap() {
   const northEast = { latitude: Math.max(...latitudes), longitude: Math.max(...longitudes) };
   const southWest = { latitude: Math.min(...latitudes), longitude: Math.min(...longitudes) };
   const center = calculatePolygonCentroid(selectedRegion.coordinates);
+  console.log(selectedRegion);
   // 현재 해당하는 지역으로 우선 고정
   // const getBoundaries = async (region: Region) => {
   //   if (mapRef.current) {

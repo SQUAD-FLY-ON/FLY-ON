@@ -1,4 +1,3 @@
-import CustomButton from "@/conponents/CustomButton";
 import { useRouter } from "expo-router";
 import {
   Image,
@@ -41,7 +40,7 @@ const PlaceCard = ({
           <Text style={styles.review}>({review})</Text>
         </View> */}
       </View>
-      <CustomButton
+      {/* <CustomButton
         containerStyle={styles.buttonPosition}
         buttonType="small"
         text="자세히보기"
@@ -52,7 +51,7 @@ const PlaceCard = ({
             params: { id: `${id}` }
           });
         }}
-      />
+      /> */}
     </View>
   );
 };

@@ -25,7 +25,7 @@ export default function ExploreList() {
               <PlaceCard
                 key={item.id}
                 id="1"
-                image={require("@/assets/images/dummy_image_activity_area.png")}
+                image={item.imgUrl !== "" ? {uri:item.imgUrl} :require("@/assets/images/dummy_image_activity_area.png")}
                 title={item.name}
                 address={item.fullAddress}
                 score={4.9}
