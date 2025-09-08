@@ -5,10 +5,12 @@ const Level = ({
   level,
   title,
   left,
+  proportion,
 }: {
-  level: string;
+  level: number;
   title: string;
   left: number;
+  proportion: number;
 }) => {
   return (
     <View style={styles.container}>
@@ -17,7 +19,7 @@ const Level = ({
         <Text style={styles.title}>{title}</Text>
       </View>
       <View style={styles.gaugeBackground}>
-        <View style={styles.gaugeFill} />
+        <View style={[styles.gaugeFill, { width: `${proportion}%` }]} />
       </View>
       <View style={styles.leftContainer}>
         <Text style={styles.leftText}>다음 레벨까지 {left}m</Text>
@@ -56,7 +58,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
   gaugeFill: {
-    width: "81%",
     height: 6,
     backgroundColor: "#3A88F4",
     borderRadius: 100,

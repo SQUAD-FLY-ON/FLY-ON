@@ -12,17 +12,18 @@ export default function Header({title, backButton = true}: {title: string; backB
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    flexDirection: 'row',
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
     paddingHorizontal: 16,
     paddingVertical: 12,
     gap: 8,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   text: {
     //Heading1
     fontWeight: 700,
     fontSize: 24,
-    fontFamily: 'Pretendard-Bold',
-  }
+    fontFamily: "Pretendard-Bold",
+  },
 });

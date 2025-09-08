@@ -2,32 +2,77 @@ import Level from "@/conponents/(tabs)/user/Level";
 import MenuList from "@/conponents/(tabs)/user/MenuList";
 import Profile from "@/conponents/(tabs)/user/Profile";
 import PageHeader from "@/conponents/PageHeader";
-import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-const mockData = {
-  level: "1",
-  title: "설악산 글라이더",
-  left: 100,
-  nickname: "날으는 강아지",
-};
+import { fetchMembers } from "@/libs/fetchMember";
+import { MemberProfileInfo } from "@/types";
+import { ApiResponse } from "@/types/api";
+import { useEffect, useState } from "react";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const innerPages = [
-  { name: "프로필 정보 수정하기", link: "/user/profile-edit" },
-  { name: "비행 기록", link: "/user/flight-records" },
+  { name: "개발자 페이지", link: "https://github.com/SQUAD-FLY-ON" },
   { name: "개인정보처리방침", link: "/user/privacy" },
 ];
 
+const level = {
+  남산: 1,
+  관악산: 2,
+  인왕산: 3,
+  북한산: 4,
+  무등산: 5,
+  치악산: 6,
+  태백산: 7,
+  설악산: 6,
+  한라산: 9,
+  백두산: 10,
+};
+
+export type FlightLevel = keyof typeof level;
+
 export default function Index() {
+  const [memberInfo, setMemberInfo] = useState<MemberProfileInfo | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  function getValue(key: FlightLevel) {
+    return level[key];
+  }
+
+  const getMemberInfo = async () => {
+    try {
+      const response: ApiResponse<MemberProfileInfo> = await fetchMembers();
+      setMemberInfo(response.data);
+    } catch (err: any) {
+      setError(err.message || "에러 발생");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getMemberInfo();
+  }, []);
+
+  if (loading || memberInfo === null) {
+    return (
+      <View>
+        <Text>로딩중</Text>
+      </View>
+    );
+  }
+
   return (
     <View>
       <PageHeader title="마이페이지" isFirst={true} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Profile level={mockData.title} nickname={mockData.nickname} />
+        <Profile
+          level={memberInfo.gliderBadge}
+          nickname={memberInfo.nickname}
+        />
         <Level
-          level={mockData.level}
-          title={mockData.title}
-          left={mockData.left}
+          level={getValue(memberInfo.gliderBadge)}
+          title={memberInfo.gliderBadge}
+          left={memberInfo.badgeAltitude - memberInfo.totalJumpAltitude}
+          proportion={memberInfo.totalJumpAltitude / memberInfo.badgeAltitude}
         />
         <MenuList menuItem={innerPages} />
       </ScrollView>

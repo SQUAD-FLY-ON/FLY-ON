@@ -11,7 +11,8 @@ export async function fetchSignup(request: SignupRequest): Promise<any> {
     console.log(process.env.EXPO_PUBLIC_API_URL);
     const response: ApiResponse<any> = await apiClient.post(
       "/members",
-      request
+      request,
+      { headers: { "Content-Type": "application/json" } }
     );
     return response;
   } catch (error) {
