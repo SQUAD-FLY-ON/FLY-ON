@@ -13,13 +13,13 @@ export default function ExploreList() {
   return (
     <View>
       <Header title="체험장 목록" />
-      <ScrollView contentContainerStyle={styles.scrollViewStyle}>
+      <ScrollView contentContainerStyle={styles.scrollViewStyle} >
         <View style={styles.TopView}>
           <Text style={styles.TopTitle}>
             &nbsp;&nbsp;•&nbsp;&nbsp;{selectedRegion.name} 체험장 ({query.data?.length})
           </Text>
         </View>
-        <View>
+        <View style = {styles.exploreContainer}>
           {
             spotMarkers?.map((item) => (
               <PlaceCard
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   scrollViewStyle: {
     paddingHorizontal: 16,
     paddingTop: 24,
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
   TopView: {
     flexDirection: "row",
@@ -55,4 +55,7 @@ const styles = StyleSheet.create({
     fontFamily: "Pretendard-SemiBold",
     fontSize: 22,
   },
+  exploreContainer: {
+    gap:12,
+  }
 });
