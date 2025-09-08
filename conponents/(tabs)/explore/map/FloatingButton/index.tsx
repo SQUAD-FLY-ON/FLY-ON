@@ -6,8 +6,9 @@ import MenuIcon from "./MenuIcon";
 
 interface MapFloatingButtonProps {
   style?: StyleProp<ViewStyle>;
+  onPress: () =>void;
 }
-export default function MapFloatingButton({ style }: MapFloatingButtonProps) {
+export default function MapFloatingButton({ style, onPress }: MapFloatingButtonProps) {
   const translateY = useRef(new Animated.Value(0)).current;
   const selectedMarkerSpot = useExploreStore(state => state.selectedMarkerSpot);
   const modalVisible = selectedMarkerSpot.id === '' ? false : true;
@@ -22,7 +23,9 @@ export default function MapFloatingButton({ style }: MapFloatingButtonProps) {
   return (<TouchableOpacity
     style={[style, {
       transform: [{ translateY: translateY }],
-    },]}>
+    },]}
+    onPress={onPress}
+    >
     <MainGradient style={styles.container}>
       <MenuIcon />
     </MainGradient>

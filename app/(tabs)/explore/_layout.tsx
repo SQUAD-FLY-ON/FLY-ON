@@ -10,6 +10,9 @@ export default function ExploreLayout() {
     >
       <Stack.Screen name = 'index' />
       <Stack.Screen name = 'map' />
+      <Stack.Screen name = 'explore-list' />
+      <Stack.Screen name="detail/[id]" />
+
       </Stack>
   );
 }

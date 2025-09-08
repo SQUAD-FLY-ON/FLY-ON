@@ -3,11 +3,13 @@ import ExploreModal from '@/conponents/(tabs)/explore/map/ExploreModal';
 import MapFloatingButton from '@/conponents/(tabs)/explore/map/FloatingButton';
 import { BackButton } from '@/conponents/BackButton';
 import useExploreStore from '@/store/exploreStore';
+import { useRouter } from 'expo-router';
 import { StyleSheet, Text, View } from 'react-native';
 import { useShallow } from 'zustand/shallow';
 
 export default function Index() {
   const {selectedRegion, selectedMarkerSpot} = useExploreStore(useShallow(state => ({selectedRegion: state.selectedRegion, selectedMarkerSpot: state.selectedMarkerSpot})));
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -15,7 +17,7 @@ export default function Index() {
         <Text style={styles.headerText}>{selectedRegion.name}</Text>
       </View>
       <ExploreMap />
-      <MapFloatingButton style={styles.floatButtonPosition} />
+      <MapFloatingButton onPress={() => {router.push('/(tabs)/explore/explore-list')}} style={styles.floatButtonPosition} />
       {selectedMarkerSpot.id && <ExploreModal/>}
     </View>
   );

@@ -1,11 +1,13 @@
 import { MainGradient } from "@/conponents/LinearGradients/MainGradient";
 import useExploreStore from "@/store/exploreStore";
+import { useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
 import { Animated, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ExploreModal() {
   const slideAnim = useRef(new Animated.Value(100)).current; // 초기값 100 (아래쪽)
   const selectedMarkerSpot = useExploreStore(state => state.selectedMarkerSpot);
+  const router = useRouter();
   useEffect(() => {
     // 컴포넌트가 마운트되면 슬라이드 업 애니메이션 실행
     Animated.timing(slideAnim, {
@@ -28,14 +30,14 @@ export default function ExploreModal() {
         <View style={styles.textContainer}>
           <Text style={styles.title}>{selectedMarkerSpot.name}</Text>
           <Text style={styles.address}>{selectedMarkerSpot.fullAddress}</Text>
-          <View style={styles.row}>
+          {/* <View style={styles.row}>
             <Image source={require('@/assets/images/star.png')} style={styles.star} />
             <Text style={[styles.title, { fontSize: 14 }]}>4.9</Text>
             <Text style={styles.review}>(19)</Text>
-          </View>
+          </View> */}
         </View>
-        <TouchableOpacity style={styles.buttonPosition}>
-          <MainGradient style={styles.button}>
+        <TouchableOpacity onPress = {() => {router.push('/(tabs)/explore/detail')}} style={styles.buttonPosition}>
+          <MainGradient  style={styles.button}>
             <Text style={styles.buttonText}>자세히 보기</Text>
           </MainGradient>
         </TouchableOpacity>

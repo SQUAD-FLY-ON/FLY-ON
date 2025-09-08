@@ -1,29 +1,39 @@
 import PlaceCard from "@/conponents/(tabs)/explore/PlaceCard";
 import Header from "@/conponents/Header";
+import { fetchSpotMarkers } from "@/libs/fetchSpots";
+import useExploreStore from "@/store/exploreStore";
+import { useQuery } from "@tanstack/react-query";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useShallow } from "zustand/shallow";
 
 export default function ExploreList() {
+  const { selectedRegion, selectedMarkerSpot } = useExploreStore(useShallow(state => ({ selectedRegion: state.selectedRegion, selectedMarkerSpot: state.selectedMarkerSpot })));
+  const query = useQuery({ queryKey: ['spotMarkers', selectedRegion.name], queryFn: async () => await fetchSpotMarkers({ sido: selectedRegion.name! }) })
+  const spotMarkers = query.data;
   return (
     <View>
       <Header title="체험장 목록" />
       <ScrollView contentContainerStyle={styles.scrollViewStyle}>
         <View style={styles.TopView}>
           <Text style={styles.TopTitle}>
-            &nbsp;&nbsp;•&nbsp;&nbsp;수도권 체험장 (10)
+            &nbsp;&nbsp;•&nbsp;&nbsp;{selectedRegion.name} 체험장 ({query.data?.length})
           </Text>
-          <View>
-            <Text>별점 순</Text>
-          </View>
         </View>
         <View>
-          <PlaceCard
-            id="1"
-            image={require("@/assets/images/dummy_image_activity_area.png")}
-            title="양평 패러러브 패러글라이딩"
-            address="경기 양평군 옥천면 동막길 49 1층"
-            score={4.9}
-            review={19}
-          />
+          {
+            spotMarkers?.map((item) => (
+              <PlaceCard
+                key={item.id}
+                id="1"
+                image={require("@/assets/images/dummy_image_activity_area.png")}
+                title={item.name}
+                address={item.fullAddress}
+                score={4.9}
+                review={19}
+              />
+            ))
+          }
+
         </View>
       </ScrollView>
     </View>
