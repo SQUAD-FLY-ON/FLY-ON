@@ -9,8 +9,9 @@ import { useEffect, useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const innerPages = [
-  { name: "개발자 페이지", link: "https://github.com/SQUAD-FLY-ON" },
-  { name: "개인정보처리방침", link: "/user/privacy" },
+  { name: "개인정보처리방침", link: "https://github.com/SQUAD-FLY-ON" },
+  { name: "로그아웃", link: ""},
+  { name: "회원탈퇴", link: ""},
 ];
 
 const level = {

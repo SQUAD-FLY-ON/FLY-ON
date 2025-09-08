@@ -1,4 +1,6 @@
-import { useRouter } from "expo-router";
+import { fetchSignout } from "@/libs/(tabs)/user/fetchSignout";
+import { useAuthStore } from "@/store/useAuthStore";
+import { router, useRouter } from "expo-router";
 import {
   Alert,
   Linking,
@@ -7,6 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useShallow } from "zustand/shallow";
 
 type TMenuItem = {
   name: string;
@@ -14,15 +17,39 @@ type TMenuItem = {
 };
 
 const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
+  const { logout, clearAuthState } = useAuthStore(
+    useShallow((state) => ({
+      logout: state.logout,
+      clearAuthState: state.clearAuthState,
+    }))
+  );
   const onPress = async (idx: number) => {
-    console.log(menuItem[idx].link);
-    const url = menuItem[idx].link;
-    const supported = await Linking.canOpenURL(url);
+    if (idx === 1) {
+      const url = menuItem[idx].link;
+      const supported = await Linking.canOpenURL(url);
 
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      Alert.alert(`이 URL을 열 수 없습니다: ${url}`);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert(`이 URL을 열 수 없습니다: ${url}`);
+      }
+    } else if (idx === 2) {
+      // 로그아웃
+      const response = await logout();
+      const accessToken = useAuthStore.getState().accessToken;
+      if (!accessToken) {
+        router.replace("/intro");
+      }
+    } else if (idx === 3) {
+      // 회원탈퇴
+      const response = await fetchSignout();
+      console.log(response);
+      if (response?.status === 200) {
+        console.log("회원탈퇴 성공");
+        Alert.alert("회원탈퇴가 완료되었습니다");
+        clearAuthState();
+        router.replace("/intro");
+      }
     }
   };
 
