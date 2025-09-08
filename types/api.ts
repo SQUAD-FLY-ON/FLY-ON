@@ -1,5 +1,4 @@
-
-import { RegionName, Schedules, TourismItem, WeatherInfo } from ".";
+import { RegionName, Schedules, TourismItem, WeatherInfo, RecommendSpotCreteria, RecommendSpots, RegionName, } from ".";
 // types/api.ts
 export interface ApiResponse<T> {
   httpStatusCode: number;
@@ -8,9 +7,13 @@ export interface ApiResponse<T> {
 }
 
 export interface RecommendSpotsRequest {
-  criteria: 'DISTANCE' | 'WEATHER';
+  criteria: RecommendSpotCreteria;
   latitude: number;
   longitude: number;
+}
+
+export interface RecommendSpotsResponse {
+  recommendSpotList: RecommendSpots[];
 }
 
 export interface LoginRequest {

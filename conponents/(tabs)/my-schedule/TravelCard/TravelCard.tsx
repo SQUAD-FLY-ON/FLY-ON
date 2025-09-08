@@ -1,71 +1,53 @@
-import CustomButton from "@/conponents/CustomButton";
 import Colors from "@/constants/colors";
+import { TourismSchedule } from "@/types";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import UserGroup from "./icons/UserGroup";
-import { useEffect, useState } from "react";
-import { ApiResponse } from "@/types/api";
-import { fetchTourSchedule } from "@/libs/fetchTourSchedule";
-import { TourismSchedule, TourismScheduleData } from "@/types";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 import CardContents from "./CardContents";
-import mockSchedule from "@/dummy/mock_schdule";
+import UserGroup from "./icons/UserGroup";
 
-const TravelCard = () => {
+const TravelCard = ({ 
+  containerStyle, 
+  button = true,
+  schedule,
+  loading = false
+}: { 
+  containerStyle?: ViewStyle, 
+  button?: boolean,
+  schedule: TourismSchedule | null,
+  loading?: boolean
+}) => {
   const router = useRouter();
-
-  const [schedule, setSchedule] = useState<TourismSchedule[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const getSchedule = async () => {
-    try {
-      const response: ApiResponse<TourismScheduleData> =
-        await fetchTourSchedule();
-      setSchedule(response.data.tourismSchedules);
-    } catch (err: any) {
-      setError(err.message || "에러 발생");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onPress = () => {
-    const route = schedule?.length ? "/my-schedules" : "/schedule";
-    router.push(route);
-  };
-
-  useEffect(() => {
-    getSchedule();
-    // setSchedule(mockSchedule);
-  }, []);
+  console.log(schedule);
 
   return (
-    <View style={styles.travelCard}>
+    <View style={[styles.travelCard, containerStyle]}>
       <CardContents loading={loading} schedule={schedule} />
       <View style={styles.cardBottom}>
-        {schedule?.length ? (
+        {schedule ? (
           <View style={styles.userGroupView}>
             <UserGroup />
             <Text style={styles.userGroupText}>2인</Text>
           </View>
         ) : null}
-        <CustomButton
+        {/* {button && <CustomButton
           onPress={onPress}
           containerStyle={styles.scheduleDetailBtn}
           buttonType={"small"}
-          text={schedule?.length ? "일정보기" : "일정생성"}
+          text={schedule ? "일정보기" : "일정생성"}
           rightArrow
         />
+        } */}
       </View>
     </View>
   );
 };
 
+export default TravelCard;
+
 const styles = StyleSheet.create({
   travelCard: {
     height: "auto",
     flexShrink: 0,
-    marginTop: 200,
     borderRadius: 12,
     backgroundColor: "rgba(255, 255, 255, 0.6)",
     zIndex: 4,
@@ -142,4 +124,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TravelCard;

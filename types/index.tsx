@@ -1,4 +1,6 @@
+import { FlightLevel } from "@/app/(tabs)/user";
 import { ImageSourcePropType } from "react-native";
+import { LatLng } from "react-native-maps";
 
 export type pageRoutes =
   | "home"
@@ -21,6 +23,8 @@ export type TNearLocations = {
   image: ImageSourcePropType;
   title: string;
 };
+
+export type RecommendSpotCreteria = "DISTANCE" | "WEATHER";
 
 export interface RecommendSpots {
   id: number;
@@ -56,6 +60,14 @@ interface PlaceData {
   tourismType: TourismType;
   type: TourismType;
 }
+
+export type Plan = {
+  key: string;
+  type: string;
+  image: any;
+  place: string;
+  address: string;
+};
 
 
 export type GeoJSONCoordinates = number[][][] | number[][][][];
@@ -115,7 +127,15 @@ export type ScreenItem = {
   description?: string; // description은 선택 사항이므로 ?를 붙입니다.
 };
 
-export type WeatherStatus = '맑음' | '구름조금' | '구름많음' | '흐림' | '비' | '흐리고 비' | '눈'| '비/눈';
+export type WeatherStatus =
+  | "맑음"
+  | "구름조금"
+  | "구름많음"
+  | "흐림"
+  | "비"
+  | "흐리고 비"
+  | "눈"
+  | "비/눈";
 
 export interface DailyWeather {
   monthDate: string;
@@ -172,6 +192,26 @@ export interface Spot {
 export interface ScheduleItem {
   id: number;
   tourismType: TourismType;
+}
+  export interface paraglidingSpot {
+  id: string;
+  name: string;
+  fullAddress: string;
+  imgUrl: string;
+  phoneNumber: string;
+  websiteUrl: string;
+}
+
+export interface MemberProfileInfo {
+  nickname: string;
+  gliderBadge: FlightLevel;
+  badgeAltitude: number;
+  totalJumpAltitude: number;
+}
+
+interface TourismSpot {
+  id: number;
+  tourismType: string;
   name: string;
   fullAddress: string;
   longitude: number;
@@ -192,4 +232,15 @@ export interface DayData {
     plans: Plan[];
     color: string;
   };
+}
+export interface TourismSchedule {
+  id: string;
+  memberId: number;
+  scheduleStart: string;
+  scheduleEnd: string;
+  dailyTourismSpots: TourismSpot[][];
+}
+
+export interface TourismScheduleData {
+  tourismSchedules: TourismSchedule[];
 }

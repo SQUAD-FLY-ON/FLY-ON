@@ -1,22 +1,18 @@
-import CommunitySection from "@/conponents/(tabs)/index/CommunitySection";
 import FooterSection from "@/conponents/(tabs)/index/FooterSection";
 import MyStatusSection from "@/conponents/(tabs)/index/MyStatusSection";
 import HomeLinearBackground from "@/conponents/(tabs)/index/MyStatusSection/LinearBackground/HomeLinearBackground";
-import NearActivitySection from "@/conponents/(tabs)/index/NearActivitySection";
+import RecommendSection from "@/conponents/(tabs)/index/RecommendSection";
 import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 
 export default function Index() {
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-    >
-      {/* 상단 LinearBackground 적용을 위한 View */}
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View>
         <HomeLinearBackground />
         <MyStatusSection />
-        <NearActivitySection />
+        <RecommendSection />
       </View>
-      <CommunitySection />
+      {/* <CommunitySection /> */}
       <FooterSection />
     </ScrollView>
   );
