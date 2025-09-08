@@ -1,7 +1,6 @@
 import { apiClient } from '@/api/apiClient';
 import { AuthResponse, MemberInfo } from '@/types';
 import { ApiResponse, LoginRequest } from '@/types/api';
-import axios from 'axios';
 import * as SecureStore from 'expo-secure-store';
 import { Alert } from 'react-native';
 import { create } from 'zustand';
@@ -146,11 +145,10 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             get().clearAuthState();
             return false;
           }
-          const response: ApiResponse<AuthResponse> = await axios.post('/tokens', {
+          const response: ApiResponse<AuthResponse> = await apiClient.post('/tokens', {
             refreshToken,
           });
-          console.log(response);
-          if (response.httpStatusCode === 200 && response.data) {
+          if (response.httpStatusCode === 201 && response.data) {
             const { accessToken, refreshToken: newRefreshToken, memberInfo } = response.data;
 
             set({
