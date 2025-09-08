@@ -1,3 +1,4 @@
+import { FlightLevel } from "@/app/(tabs)/user";
 import { ImageSourcePropType } from "react-native";
 import { LatLng } from "react-native-maps";
 
@@ -156,4 +157,34 @@ export interface paraglidingSpot {
   imgUrl: string;
   phoneNumber: string;
   websiteUrl: string;
+}
+
+export interface MemberProfileInfo {
+  nickname: string;
+  gliderBadge: FlightLevel;
+  badgeAltitude: number;
+  totalJumpAltitude: number;
+}
+
+interface TourismSpot {
+  id: number;
+  tourismType: string;
+  name: string;
+  fullAddress: string;
+  longitude: number;
+  latitude: number;
+  phoneNumber: string;
+  imgUrl: string;
+}
+
+export interface TourismSchedule {
+  id: string;
+  memberId: number;
+  scheduleStart: string;
+  scheduleEnd: string;
+  dailyTourismSpots: TourismSpot[][];
+}
+
+export interface TourismScheduleData {
+  tourismSchedules: TourismSchedule[];
 }
