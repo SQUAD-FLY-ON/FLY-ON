@@ -23,9 +23,8 @@ const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
       clearAuthState: state.clearAuthState,
     }))
   );
-  const onPress = async (idx: number) => {
-    if (idx === 1) {
-      const url = menuItem[idx].link;
+  const onPress = async (name: string, url: string) => {
+    if (name === "개인정보처리방침") {
       const supported = await Linking.canOpenURL(url);
 
       if (supported) {
@@ -33,18 +32,16 @@ const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
       } else {
         Alert.alert(`이 URL을 열 수 없습니다: ${url}`);
       }
-    } else if (idx === 2) {
-      // 로그아웃
+    } else if (name === "로그아웃") {
       const response = await logout();
       const accessToken = useAuthStore.getState().accessToken;
       if (!accessToken) {
         router.replace("/intro");
       }
-    } else if (idx === 3) {
-      // 회원탈퇴
+    } else if (name === "회원탈퇴") {
       const response = await fetchSignout();
       console.log(response);
-      if (response?.status === 200) {
+      if (response?.httpStatusCode === 200) {
         console.log("회원탈퇴 성공");
         Alert.alert("회원탈퇴가 완료되었습니다");
         clearAuthState();
@@ -55,21 +52,17 @@ const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
 
   return (
     <View style={styles.container}>
-      {Array(2)
-        .fill(0)
-        .map((_, idx) => (
-          <Pressable
-            key={idx}
-            style={
-              idx !== menuItem.length - 1
-                ? styles.itemArea
-                : styles.lastItemArea
-            }
-            onPress={() => onPress(idx)}
-          >
-            <Text style={styles.itemText}>{menuItem[idx].name}</Text>
-          </Pressable>
-        ))}
+      {menuItem.map((v, idx) => (
+        <Pressable
+          key={idx}
+          style={
+            idx !== menuItem.length - 1 ? styles.itemArea : styles.lastItemArea
+          }
+          onPress={() => onPress(v.name, v.link)}
+        >
+          <Text style={styles.itemText}>{menuItem[idx].name}</Text>
+        </Pressable>
+      ))}
     </View>
   );
 };
