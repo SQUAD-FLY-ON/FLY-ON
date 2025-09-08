@@ -18,7 +18,7 @@ export default function ExploreSpotMarkers() {
     centerLatitude: center.latitude,
     centerLongitude: center.longitude
   }
-  const query = useQuery({ queryKey: ['spotMarkers', selectedRegion.name], queryFn: async () => await fetchSpotMarkers(currentLocation!), enabled: currentLocation !== null })
+  const query = useQuery({ queryKey: ['spotMarkers', selectedRegion.name], queryFn: async () => await fetchSpotMarkers({sido: selectedRegion.name!}), enabled: currentLocation !== null })
   return (<>
     {query.data?.map((marker) => (
       <Marker
