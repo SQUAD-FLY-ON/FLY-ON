@@ -1,5 +1,6 @@
+import Logo from "@/conponents/icons/Logo";
 import Colors from "@/constants/colors";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function FooterSection() {
   return (
@@ -11,7 +12,7 @@ export default function FooterSection() {
           <Text style={styles.text}>운영정책</Text>
           <Text style={styles.text}>신고센터</Text>
         </View>
-        <Image source={require("@/assets/images/logo.png")} />
+        <Logo />
       </View>
     </View>
   );
