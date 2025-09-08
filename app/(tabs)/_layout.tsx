@@ -16,7 +16,7 @@ export default function TabLayout() {
           <TabTrigger name="explore" href="/explore" asChild>
             <CustomTabButton routeName="explore" />
           </TabTrigger>
-          <TabTrigger name="air" href="/air" asChild>
+          <TabTrigger name="air" href="/air" reset="always" asChild>
             <AirFloatingButton />
           </TabTrigger>
           <TabTrigger name="my-schedules" href="/my-schedules" asChild>
