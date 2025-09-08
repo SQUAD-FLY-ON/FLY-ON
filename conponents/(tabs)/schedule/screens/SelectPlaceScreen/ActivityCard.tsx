@@ -1,50 +1,53 @@
-// PlaceCard.tsx
 import CustomButton from "@/conponents/CustomButton";
 import { useScheduleStore } from "@/store/useScheduleStore";
-import { TourismItem } from "@/types";
+import { Spot } from "@/types";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useShallow } from "zustand/react/shallow";
 
-export default function PlaceCard({data}: {data: TourismItem}) {
-  const { selectedPlaces, setSelectedPlaces } = useScheduleStore(
+export default function ActivityCard({data}: {data:Spot}) {
+  const { selectedActivities, setSelectedActivities } = useScheduleStore(
     useShallow(state => ({
-      selectedPlaces: state.selectedPlaces,
-      setSelectedPlaces: state.setSelectedPlaces,
+      selectedActivities: state.selectedActivities,
+      setSelectedActivities: state.setSelectedActivities,
     }))
   );
+
   const onPress = () => {
-    setSelectedPlaces(data);
+    setSelectedActivities(data);
   };
 
-  const selected = Array.isArray(selectedPlaces) && 
-    selectedPlaces.some(place => place.fullAddress === data.fullAddress);
+  // selectedActivities가  단일 객체인 경우를 가정
+  const selected =
+    selectedActivities?.id === data.id;
+  console.log(selectedActivities);
 
   return (
-    <Pressable 
-      onPress={onPress} 
+    <Pressable
+      onPress={onPress}
       style={[styles.container, { backgroundColor: selected ? '#ECF4FE' : '#ffffff' }]}
     >
-      <Image 
-        style={styles.image} 
-        source={data?.imgUrl 
-          ? { uri: data?.imgUrl } 
-          : require('@/assets/images/dummy_image_place.png')
-        } 
+      <Image
+        style={styles.image}
+        source={data?.imgUrl
+          ? { uri: data?.imgUrl }
+          : require('@/assets/images/dummy_image_activity_area.png')
+        }
       />
       <View style={styles.contentContainer}>
         <Text style={styles.title}>{data.name}</Text>
         <Text style={styles.address}>{data.fullAddress}</Text>
       </View>
-      <CustomButton 
-        containerStyle={styles.buttonPosition} 
-        buttonType="small" 
-        text="자세히보기" 
-        textStyle={{ lineHeight: 14, fontSize: 14 }} 
-        onPress={() => {}} 
+      <CustomButton
+        containerStyle={styles.buttonPosition}
+        buttonType="small"
+        text="자세히보기"
+        textStyle={{ lineHeight: 14, fontSize: 14 }}
+        onPress={() => { }}
       />
     </Pressable>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     padding: 8,

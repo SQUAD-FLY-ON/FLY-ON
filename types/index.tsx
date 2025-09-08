@@ -44,6 +44,23 @@ export interface AuthResponse {
   refreshToken: string;
 }
 
+interface PlaceData {
+  address: string;
+  day: string;
+  fullAddress: string;
+  id: string | null;
+  image: string;
+  imgUrl: string;
+  key: string;
+  latitude: number;
+  longitude: number;
+  name: string;
+  phoneNumber: string;
+  place: string;
+  tourismType: TourismType;
+  type: TourismType;
+}
+
 export type Plan = {
   key: string;
   type: string;
@@ -51,6 +68,7 @@ export type Plan = {
   place: string;
   address: string;
 };
+
 
 export type GeoJSONCoordinates = number[][][] | number[][][][];
 
@@ -99,20 +117,8 @@ export type RegionName =
   | "경상남도"
   | "제주특별자치도";
 
-export type selectedRegion = {
-  key: "" | RegionCode;
-  name: "" | RegionName;
-  coordinates: LatLng[];
-};
-export type ScreenKey =
-  | "SelectDate"
-  | "SelectAreaRegion"
-  | "SelectSubRegion"
-  | "SelectActivity"
-  | "SelectPlace"
-  | "LoadingGenerateSchedule"
-  | "AIRecommendPlan"
-  | "EditPlan";
+export type selectedRegion = { key: "" | RegionCode; name: '' | RegionName; coordinates: LatLng[] }
+export type ScreenKey = "SelectDate" | "SelectAreaRegion" | "SelectSubRegion" | "SelectActivity" | "SelectPlace" | "LoadingGenerateSchedule" | "AIRecommendPlan" | "EditPlan" | "Complete"
 
 export type ScreenItem = {
   key: ScreenKey;
@@ -150,7 +156,44 @@ export interface SelectedPlace {
   address: string;
 }
 
-export interface paraglidingSpot {
+export enum TourismType {
+  ATTRACTION_SPOT = 'ATTRACTION_SPOT',
+  PARAGLIDING_SPOT = 'PARAGLIDING_SPOT',
+  RESTAURANT = 'RESTAURANT',
+  ACCOMMODATION = 'ACCOMMODATION',
+  SHOPPING = 'SHOPPING',
+  CULTURE = 'CULTURE',
+  FESTIVAL = 'FESTIVAL',
+  LEISURE = 'LEISURE',
+}
+
+// 관광 아이템 기본 인터페이스
+export interface TourismItem {
+  fullAddress: string;
+  id: string | null;
+  imgUrl: string;
+  latitude: string;
+  longitude: string;
+  name: string;
+  phoneNumber: string;
+  tourismType: TourismType;
+}
+
+export interface Spot {
+  id: string;
+  name: string;
+  fullAddress: string;
+  imgUrl: string;
+  latitude: number;
+  longitude: number;
+}
+
+// 개별 스케줄 아이템 타입
+export interface ScheduleItem {
+  id: number;
+  tourismType: TourismType;
+}
+  export interface paraglidingSpot {
   id: string;
   name: string;
   fullAddress: string;
@@ -177,6 +220,19 @@ interface TourismSpot {
   imgUrl: string;
 }
 
+// 하루 일정 타입 (ScheduleItem 배열)
+export type DaySchedule = ScheduleItem[];
+
+// 전체 일정 타입 (여러 날의 일정 배열)
+export type Schedules = DaySchedule[];
+
+export interface DayData {
+  [dayId: string]: {
+    title: string;
+    plans: Plan[];
+    color: string;
+  };
+}
 export interface TourismSchedule {
   id: string;
   memberId: number;

@@ -1,5 +1,4 @@
-
-import { RecommendSpotCreteria, RecommendSpots, RegionName, WeatherInfo } from ".";
+import { RegionName, Schedules, TourismItem, WeatherInfo, RecommendSpotCreteria, RecommendSpots, RegionName, } from ".";
 // types/api.ts
 export interface ApiResponse<T> {
   httpStatusCode: number;
@@ -29,7 +28,7 @@ export interface SignupRequest {
   oauthProviderType?: 'KAKAO' | 'GOOGLE' | 'NAVER'; // 소셜 로그인 타입은 선택 사항이고, 특정 값만 허용하도록 지정
 }
 
-export interface WeatherRequest{
+export interface WeatherRequest {
   sido: RegionName;
   tripStart: string;
   tripEnd: string;
@@ -37,4 +36,42 @@ export interface WeatherRequest{
 
 export interface WeatherResponse {
   weatherInfos: WeatherInfo[];
+}
+
+
+
+export interface TourismResponse {
+  schedules: any[];
+}
+export interface TourismRequest {
+  lat: number;
+  lon: number;
+}
+
+export interface SpotRequest {
+  centerLatitude: number;
+  centerLongitude: number;
+  cornerLatitude: number;
+  cornerLongitude: number;
+}
+
+export interface GptScheduleRequest {
+  tourismSpotList: TourismItem[];
+  paraglidingSpotId: number;
+  scheduleStart: string;
+  scheduleEnd: string;
+}
+
+export interface AddScheduleRequest {
+  schedules: Schedules;
+  scheduleStart: string;
+  scheduleEnd: string;
+}
+export interface RecommendSpotsResponse {
+  recommendSpotList: TourismItem[];
+
+}
+
+export interface ScheduleResponse {
+  schedules: Schedules;
 }

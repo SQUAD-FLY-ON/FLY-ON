@@ -2,6 +2,7 @@ import { Screens } from "@/constants/screens";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { ScreenKey } from "@/types";
 import CalanderScreen from "./CalanderScreen";
+import CompleteScreen from "./CompleteScreen";
 import GenerateScheduleScreen from "./GenerateScheduleScreen";
 import AIRecommendScreen from "./PlanScreen/AIRecommendPlanScreen";
 import EditPlanScreen from "./PlanScreen/EditPlanScreen";
@@ -18,6 +19,7 @@ const ScreenMap: Record<ScreenKey, React.ComponentType<any>> = {
   'LoadingGenerateSchedule': GenerateScheduleScreen ,
   'AIRecommendPlan': AIRecommendScreen ,
   'EditPlan': EditPlanScreen ,
+  "Complete": CompleteScreen,
 };
 export default function Screen() {
   const currentStep = useScheduleStore(state => state.currentStep);

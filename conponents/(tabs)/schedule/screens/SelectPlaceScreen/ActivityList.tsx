@@ -1,18 +1,19 @@
 // /components/schedule/PlaceList.tsx (새 파일)
 
-import { TourismItem } from "@/types";
+import { Spot } from "@/types";
 import { FlatList, StyleSheet, View } from "react-native";
 import TitleHeader from "../TitleHeader";
-import PlaceCard from "./PlaceCard";
+import ActivityCard from "./ActivityCard";
 
 
-interface PlaceListProps {
+interface ActivityListProps {
   title: string;
   description: string;
-  data: TourismItem[]; // 실제로는 Activity 또는 Place 타입으로 지정
+  filters: { key: string; text: string }[];
+  data: Spot[]; // 실제로는 Activity 또는 Place 타입으로 지정
 }
 
-export default function PlaceList({ title, description, data }: PlaceListProps) {
+export default function ActivityList({ title, description, data }: ActivityListProps) {
   return (
     <View style={{ flex: 1 }}>
       <TitleHeader title={title} description={description} />
@@ -20,9 +21,9 @@ export default function PlaceList({ title, description, data }: PlaceListProps) 
         style={{ marginVertical: 14 }}
         contentContainerStyle={styles.placeContainer}
         data={data}
-        renderItem={({ item,index }) =>
-          <PlaceCard
-            key={index}
+        renderItem={({ item, index }) =>
+          <ActivityCard
+            key={item.id}
             data = {item}
           />
         }

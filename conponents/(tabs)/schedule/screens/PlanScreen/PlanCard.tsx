@@ -1,42 +1,57 @@
+import { typeToLabel } from "@/constants/screens";
+import { ScheduleItem } from "@/types";
 import { useState } from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Image, LayoutChangeEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-export default function PlanCard({ index, item, isLast = false }: { index: number, item:plan, isLast?: boolean }) {
-  const typeToLabel: Record<string, string> = {
-    activity: '체험장 이동',
-    restaurant: '음식점으로 이동',
-    lodging: '숙소로 이동',
-  };
+export default function PlanCard({ 
+  index, 
+  item, 
+  isLast = false 
+}: { 
+  index: number; 
+  item: ScheduleItem; 
+  isLast?: boolean;
+}) {
+
   const [componentHeight, setComponentHeight] = useState<number>(0);
-  const handleLayout = (event) => {
+
+  const handleLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
     setComponentHeight(height);
   };
-  return (<TouchableOpacity onLongPress={() => {}} style={styles.container}>
-    <View style={styles.rowContainer}>
-      <View style={styles.leftContainer}>
-        <View style={styles.indexCircle}>
-          <Text style={styles.index}>
-            {index + 1}
-          </Text>
+
+  return (
+    <TouchableOpacity onLongPress={() => {}} style={styles.container}>
+      <View style={styles.rowContainer}>
+        <View style={styles.leftContainer}>
+          <View style={styles.indexCircle}>
+            <Text style={styles.index}>
+              {index + 1}
+            </Text>
+          </View>
+          {!isLast && (
+            <View style={[styles.line, { height: 19 + componentHeight }]} />
+          )}
         </View>
-        {!isLast &&
-          <View style={[styles.line, { height: 19 + componentHeight }]} />}
-      </View>
-      <View style={styles.rightContainer} onLayout={handleLayout}>
-        <Text style={styles.type}>
-          {typeToLabel[item.type]}
-        </Text>
-        <View style={styles.card}>
-          <Image source={item.image} style={styles.image} />
-          <View style={styles.cardTextContainer}>
-            <Text style={styles.place} numberOfLines={1}>{item.place}</Text>
-            <Text style={styles.address} numberOfLines={1} ellipsizeMode="tail">{item.address}</Text>
+        <View style={styles.rightContainer} onLayout={handleLayout}>
+          <Text style={styles.type}>
+            {typeToLabel[item.tourismType] || '장소로 이동'}
+          </Text>
+          <View style={styles.card}>
+            <Image source={item.imgUrl? {  uri: item.imgUrl }: require('@/assets/images/dummy_image_place.png')} style={styles.image} />
+            <View style={styles.cardTextContainer}>
+              <Text style={styles.place} numberOfLines={1}>
+                {item.name}
+              </Text>
+              <Text style={styles.address} numberOfLines={1} ellipsizeMode="tail">
+                {item.fullAddress}
+              </Text>
+            </View>
           </View>
         </View>
       </View>
-    </View>
-  </TouchableOpacity>)
+    </TouchableOpacity>
+  );
 }
 const styles = StyleSheet.create({
   container: {
