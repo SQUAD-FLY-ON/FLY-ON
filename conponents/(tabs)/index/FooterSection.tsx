@@ -1,17 +1,17 @@
 import Logo from "@/conponents/icons/Logo";
 import Colors from "@/constants/colors";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 export default function FooterSection() {
   return (
     <View style={styles.container}>
       <View style={styles.footerContainer}>
-        <View style={styles.footerRow}>
+        {/* <View style={styles.footerRow}>
           <Text style={styles.text}>이용약관</Text>
           <Text style={styles.text}>고객센터</Text>
           <Text style={styles.text}>운영정책</Text>
           <Text style={styles.text}>신고센터</Text>
-        </View>
+        </View> */}
         <Logo />
       </View>
     </View>
