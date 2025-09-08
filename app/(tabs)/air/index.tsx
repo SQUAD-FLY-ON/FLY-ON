@@ -7,7 +7,8 @@ import { useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import * as Location from "expo-location";
-import { TLocationData } from "@/types";
+import { Option, TLocationData } from "@/types";
+import extractTourNames from "@/libs/(tabs)/air/extractTourNames";
 
 export default function Index() {
   const router = useRouter();
@@ -16,6 +17,9 @@ export default function Index() {
   const locationDataRef = useRef<TLocationData[]>([]);
   const intervalRef = useRef<null | number>(null);
 
+  const [tourList, setTourList] = useState<Option[]>([]);
+
+  const [value, setValue] = useState<string | null>(null);
   const [hasValue, setHasValue] = useState(false);
   const [isFlyOn, setIsFlyOn] = useState(false);
   const [seconds, setSeconds] = useState<number>(0);
@@ -77,12 +81,10 @@ export default function Index() {
     } else {
       setIsFlyOn(false);
       stopRecordLocation();
-      // console.log("seconds:", seconds, seconds.toString());
-      // console.log("locationDataRef.current:", locationDataRef.current);
       router.push({
         pathname: "/(tabs)/air/report",
         params: {
-          airfieldName: "양평 패러리브 패러글라이딩",
+          airfieldName: value,
           time: seconds.toString(),
           locationData: JSON.stringify(locationDataRef.current),
         },
@@ -90,7 +92,20 @@ export default function Index() {
     }
   };
 
-  const mockItems = [{ label: "양평 여행(07.22-07.24)", value: "양평여행" }];
+  const getTourList = async () => {
+    try {
+      const response = await extractTourNames();
+
+      const options: Option[] = response.map((name) => ({
+        label: name,
+        value: name,
+      }));
+      setTourList(options);
+      console.log("투어리스트:", options);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     ask();
@@ -98,6 +113,8 @@ export default function Index() {
 
   useFocusEffect(
     useCallback(() => {
+      getTourList();
+      setValue(null);
       setHasValue(false);
       setIsFlyOn(false);
       setSeconds(0);
@@ -112,7 +129,12 @@ export default function Index() {
         <Text style={styles.description}>
           비행 일정을 선택하여 비행모드로 전환하여 비행을 기록해보세요.
         </Text>
-        <Dropdown itemProps={mockItems} setHasValue={setHasValue} />
+        <Dropdown
+          itemProps={tourList}
+          value={value}
+          setValue={setValue}
+          setHasValue={setHasValue}
+        />
         <FlightRecordButton isFlying={isFlyOn} onPress={onPressRecordButton} />
         <Stopwatch
           isActive={isFlyOn}

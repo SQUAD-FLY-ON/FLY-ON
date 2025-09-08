@@ -266,3 +266,8 @@ export type TLocationData = {
 export type TFlightLogStorage = {
   [regionName: string]: TLocationData[];
 };
+
+export type Option = {
+  label: string;
+  value: string;
+};

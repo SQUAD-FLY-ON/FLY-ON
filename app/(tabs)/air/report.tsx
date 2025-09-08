@@ -6,14 +6,12 @@ import { useLocalSearchParams } from "expo-router/build/hooks";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import haversine from "haversine-distance";
-import { flightLogRequest, postFlightLogRequest } from "@/types/api";
-import { postFlightLog } from "@/libs/(tabs)/air/flightLogs";
 import { useAuthStore } from "@/store/useAuthStore";
 import { getAllFlightLogs, saveFlightLog } from "@/store/flightLogStore";
 
 export default function Report() {
   const params = useLocalSearchParams();
-  console.log("params: ", params);
+  // console.log("params: ", params);
 
   const memberId = useAuthStore((state) => state.memberInfo?.memberId);
   console.log("memberId:", memberId);
@@ -55,8 +53,6 @@ export default function Report() {
 
   // POST 비행기록
   async function onPressSave() {
-    console.log("Save Modal Open!");
-
     // 위치 정보 제외한 비행 경로 관련 데이터 서버에 POST
     // API 수정 전 -> 서버에 데이터 전송 X
 
