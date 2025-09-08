@@ -3,42 +3,57 @@ import Colors from "@/constants/colors";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import UserGroup from "./icons/UserGroup";
+import { useEffect, useState } from "react";
+import { ApiResponse } from "@/types/api";
+import { fetchTourSchedule } from "@/libs/fetchTourSchedule";
+import { TourismSchedule, TourismScheduleData } from "@/types";
+import CardContents from "./CardContents";
+import mockSchedule from "@/dummy/mock_schdule";
 
 const TravelCard = () => {
-  // mock data
-  const schedule = [
-    "양평 패러러브 패러글라이딩",
-    "000 드라마 세트장",
-    "양평 해수욕장",
-  ];
   const router = useRouter();
+
+  const [schedule, setSchedule] = useState<TourismSchedule[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const getSchedule = async () => {
+    try {
+      const response: ApiResponse<TourismScheduleData> =
+        await fetchTourSchedule();
+      setSchedule(response.data.tourismSchedules);
+    } catch (err: any) {
+      setError(err.message || "에러 발생");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onPress = () => {
+    const route = schedule?.length ? "/my-schedules" : "/schedule";
+    router.push(route);
+  };
+
+  useEffect(() => {
+    getSchedule();
+    // setSchedule(mockSchedule);
+  }, []);
+
   return (
     <View style={styles.travelCard}>
-      <View style={styles.cardTop}>
-        <Text style={styles.title}>양평 여행 (3일)</Text>
-        <Text style={styles.period}> 07.24 - 07. 26</Text>
-      </View>
-      <View style={styles.cardContents}>
-        {schedule.map((v, i) => (
-          <View key={i} style={styles.schedule}>
-            <View style={styles.circle} />
-            <Text style={styles.scheduleDay}>{i + 1}일차</Text>
-            <Text style={styles.scheduleLocation}>{v}</Text>
-          </View>
-        ))}
-      </View>
+      <CardContents loading={loading} schedule={schedule} />
       <View style={styles.cardBottom}>
-        <View style={styles.userGroupView}>
-          <UserGroup />
-          <Text style={styles.userGroupText}>2인</Text>
-        </View>
+        {schedule?.length ? (
+          <View style={styles.userGroupView}>
+            <UserGroup />
+            <Text style={styles.userGroupText}>2인</Text>
+          </View>
+        ) : null}
         <CustomButton
-          onPress={() => {
-            router.push("/schedule");
-          }}
+          onPress={onPress}
           containerStyle={styles.scheduleDetailBtn}
           buttonType={"small"}
-          text="일정 보기"
+          text={schedule?.length ? "일정보기" : "일정생성"}
           rightArrow
         />
       </View>

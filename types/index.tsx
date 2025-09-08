@@ -1,3 +1,4 @@
+import { FlightLevel } from "@/app/(tabs)/user";
 import { ImageSourcePropType } from "react-native";
 import { LatLng } from "react-native-maps";
 
@@ -23,7 +24,7 @@ export type TNearLocations = {
   title: string;
 };
 
-export type RecommendSpotCreteria = 'DISTANCE' | 'WEATHER'
+export type RecommendSpotCreteria = "DISTANCE" | "WEATHER";
 
 export interface RecommendSpots {
   id: number;
@@ -44,12 +45,12 @@ export interface AuthResponse {
 }
 
 export type Plan = {
-  key: string,
+  key: string;
   type: string;
   image: any;
   place: string;
   address: string;
-}
+};
 
 export type GeoJSONCoordinates = number[][][] | number[][][][];
 
@@ -98,8 +99,20 @@ export type RegionName =
   | "경상남도"
   | "제주특별자치도";
 
-export type selectedRegion = { key: "" | RegionCode; name: '' | RegionName; coordinates: LatLng[] }
-export type ScreenKey = "SelectDate" | "SelectAreaRegion" | "SelectSubRegion" | "SelectActivity" | "SelectPlace" | "LoadingGenerateSchedule" | "AIRecommendPlan" | "EditPlan"
+export type selectedRegion = {
+  key: "" | RegionCode;
+  name: "" | RegionName;
+  coordinates: LatLng[];
+};
+export type ScreenKey =
+  | "SelectDate"
+  | "SelectAreaRegion"
+  | "SelectSubRegion"
+  | "SelectActivity"
+  | "SelectPlace"
+  | "LoadingGenerateSchedule"
+  | "AIRecommendPlan"
+  | "EditPlan";
 
 export type ScreenItem = {
   key: ScreenKey;
@@ -108,7 +121,15 @@ export type ScreenItem = {
   description?: string; // description은 선택 사항이므로 ?를 붙입니다.
 };
 
-export type WeatherStatus = '맑음' | '구름조금' | '구름많음' | '흐림' | '비' | '흐리고 비' | '눈'| '비/눈';
+export type WeatherStatus =
+  | "맑음"
+  | "구름조금"
+  | "구름많음"
+  | "흐림"
+  | "비"
+  | "흐리고 비"
+  | "눈"
+  | "비/눈";
 
 export interface DailyWeather {
   monthDate: string;
@@ -127,4 +148,34 @@ export interface SelectedPlace {
   image?: string;
   title: string;
   address: string;
+}
+
+export interface MemberProfileInfo {
+  nickname: string;
+  gliderBadge: FlightLevel;
+  badgeAltitude: number;
+  totalJumpAltitude: number;
+}
+
+interface TourismSpot {
+  id: number;
+  tourismType: string;
+  name: string;
+  fullAddress: string;
+  longitude: number;
+  latitude: number;
+  phoneNumber: string;
+  imgUrl: string;
+}
+
+export interface TourismSchedule {
+  id: string;
+  memberId: number;
+  scheduleStart: string;
+  scheduleEnd: string;
+  dailyTourismSpots: TourismSpot[][];
+}
+
+export interface TourismScheduleData {
+  tourismSchedules: TourismSchedule[];
 }

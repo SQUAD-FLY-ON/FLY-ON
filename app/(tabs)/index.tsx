@@ -6,10 +6,7 @@ import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
 
 export default function Index() {
   return (
-    <ScrollView
-      contentContainerStyle={styles.scrollContainer}
-    >
-      {/* 상단 LinearBackground 적용을 위한 View */}
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View>
         <HomeLinearBackground />
         <MyStatusSection />
