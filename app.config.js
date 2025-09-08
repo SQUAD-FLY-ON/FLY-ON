@@ -12,13 +12,16 @@ export default {
     newArchEnabled: true, // New Architecture 활성화
     ios: {
       supportsTablet: true,
+      bundleIdentifier: "com.flyon",
       // iOS Google Maps API 키를 .env 파일에서 가져옵니다.
       // app.json의 "iosGoogleMapsApiKey": "AIzaSyAHJwvnyDvni2n2wNO908ccmCoQ0lIGPOg" 대신 사용
     },
     android: {
       package: "com.flyon",
+      versionCode: 1,
       adaptiveIcon: {
-        foregroundImage: "./assets/images/icon.png",
+        foregroundImage: "./assets/images/adaptive-icon.png",
+        backgroundColor: '#3A88F4',
       },
       edgeToEdgeEnabled: true,
       // Android Google Maps API 키를 .env 파일에서 가져옵니다.
@@ -64,8 +67,12 @@ export default {
       url: "https://u.expo.dev/c82afcfb-f95e-456e-b9e8-0df6bea8d5eb"
     },
     runtimeVersion: {
-    "policy": "appVersion"
-  },
+      policy: "fingerprint"  // 따옴표 제거, 값도 "fingerprint"로 변경
+    },
+    // 새로 추가: CLI 앱 버전 소스 설정
+    cli: {
+      appVersionSource: "local"  // 또는 "remote"
+    },
     extra: {
       router: {},
       eas: {
