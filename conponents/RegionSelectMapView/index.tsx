@@ -1,7 +1,7 @@
 import RegionPolygon from '@/conponents/RegionSelectMapView/RegionPolygon';
 import { polygons } from '@/constants/polygons';
 import { customMapStyle, koreaRegion } from '@/constants/regionSelectMap';
-import { convertCoordinatesToPoints } from '@/libs/regionSelectMap';
+import { convertCoordinatesToPoints } from '@/libs/map';
 import { RegionCode, selectedRegion } from '@/types';
 import React, { SetStateAction, useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -42,7 +42,6 @@ export default function RegionSelectMapView({ selectedRegion, setSelectedRegion 
   //     };
   //   }, []) 
   // );
-
   return (
     <View style={styles.container}>
 

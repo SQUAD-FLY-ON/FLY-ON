@@ -1,4 +1,5 @@
-import { RegionName, Schedules, TourismItem, WeatherInfo, RecommendSpotCreteria, RecommendSpots, RegionName, } from ".";
+
+import { RecommendSpotCreteria, RecommendSpots, RegionName, Schedules, TourismItem, WeatherInfo, } from ".";
 // types/api.ts
 export interface ApiResponse<T> {
   httpStatusCode: number;
@@ -53,6 +54,7 @@ export interface SpotRequest {
   centerLongitude: number;
   cornerLatitude: number;
   cornerLongitude: number;
+
 }
 
 export interface GptScheduleRequest {

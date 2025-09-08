@@ -40,8 +40,8 @@ export const getCorners = (coords) => {
 
 
 // 폴리곤 중심 계산
-export const calculatePolygonCentroid = (coords: LatLng[]): LatLng | null => {
-  if (coords.length < 3) return null;
+export const calculatePolygonCentroid = (coords: LatLng[]): LatLng => {
+  if (coords.length < 3) return {latitude: 0, longitude:0};
 
   let area = 0;
   let centroidX = 0;

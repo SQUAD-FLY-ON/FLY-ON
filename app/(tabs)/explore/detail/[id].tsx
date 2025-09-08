@@ -1,10 +1,9 @@
-import { useEffect, useRef } from "react";
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import WebView from "react-native-webview";
-import { WebView as WebViewType } from "react-native-webview";
+import SpotCard from "@/conponents/(tabs)/explore/SpotCard";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
-import SpotCard from "@/conponents/(tabs)/explore/SpotCard";
+import { useEffect, useRef } from "react";
+import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import WebView, { WebView as WebViewType } from "react-native-webview";
 
 const mockdata = {
   id: "1234",
