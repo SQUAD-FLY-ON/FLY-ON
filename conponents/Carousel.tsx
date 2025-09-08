@@ -1,11 +1,11 @@
 // Carousel.tsx
-import { activityArea } from '@/types';
+import { RecommendSpots } from '@/types';
 import React, { ReactElement } from 'react';
 import { FlatList, ViewStyle } from 'react-native';
 
 type CarouselProps = {
-    data: activityArea[];
-    renderItem: (item: activityArea, index: number) => ReactElement | null;
+    data: RecommendSpots[];
+    renderItem: (item: RecommendSpots, index: number) => ReactElement | null;
     gap?: number;
     style?: ViewStyle;
 };

@@ -1,6 +1,5 @@
 import CustomButton from "@/conponents/CustomButton";
 import { RadioButton } from "@/conponents/RadioButton";
-import Colors from "@/constants/colors";
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
@@ -28,7 +27,7 @@ const FilterModal = ({
       ref={ref}
       onChange={(index) => console.log(index)}
       animateOnMount
-      snapPoints={[270]}
+      snapPoints={[300]}
       backdropComponent={(props) => (
         <BottomSheetBackdrop
           {...props}
@@ -39,27 +38,29 @@ const FilterModal = ({
       )}
     >
       <BottomSheetView
-        style={{ padding: 18, backgroundColor: "white", gap: 12 }}
+        style={{ padding: 18, backgroundColor: "white"}}
       >
-        <Text style={styles.modalTitle}>체험장 추천 기준을 선택해주세요</Text>
-        <View style={styles.modalRadios}>
-          {options.map((opt) => (
-            <RadioButton
-              key={opt.key}
-              label={opt.label}
-              selected={selectedKey === opt.key}
-              onPress={() => setSelectedKey(opt.key)}
+        <View style={{ gap: 12 }} >
+          <Text style={styles.modalTitle}>체험장 추천 기준을 선택해주세요</Text>
+          <View style={styles.modalRadios}>
+            {options.map((opt) => (
+              <RadioButton
+                key={opt.key}
+                label={opt.label}
+                selected={selectedKey === opt.key}
+                onPress={() => setSelectedKey(opt.key)}
+              />
+            ))}
+          </View>
+          <View style={styles.modalButton}>
+            <CustomButton
+              text="선택 완료"
+              onPress={() => {
+                setCurrentKey(selectedKey);
+                ref?.current?.close();
+              }}
             />
-          ))}
-        </View>
-        <View style={styles.modalButton}>
-          <CustomButton
-            text="선택 완료"
-            onPress={() => {
-              setCurrentKey(selectedKey);
-              ref?.current?.close();
-            }}
-          />
+          </View>
         </View>
       </BottomSheetView>
     </BottomSheetModal>

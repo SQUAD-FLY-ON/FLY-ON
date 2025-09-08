@@ -1,4 +1,3 @@
-// app.config.js
 import 'dotenv/config'; // .env 파일의 환경 변수를 로드합니다.
 
 export default {
@@ -19,8 +18,7 @@ export default {
     android: {
       package: "com.flyon",
       adaptiveIcon: {
-        foregroundImage: "./assets/images/adaptive-icon.png",
-        backgroundColor: "#ffffff"
+        foregroundImage: "./assets/images/icon.png",
       },
       edgeToEdgeEnabled: true,
       // Android Google Maps API 키를 .env 파일에서 가져옵니다.
@@ -36,10 +34,16 @@ export default {
       [
         "expo-splash-screen",
         {
-          image: "./assets/images/splash-icon.png",
+          image: "./assets/images/icon.png",
           imageWidth: 200,
           resizeMode: "contain",
-          backgroundColor: "#ffffff"
+          backgroundColor: "#3A88F4"
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ],
       // react-native-maps 플러그인에서 API 키를 제거합니다.
@@ -56,13 +60,21 @@ export default {
     experiments: {
       typedRoutes: true
     },
+    updates: {
+      url: "https://u.expo.dev/c82afcfb-f95e-456e-b9e8-0df6bea8d5eb"
+    },
+    runtimeVersion: {
+    "policy": "appVersion"
+  },
     extra: {
       router: {},
       eas: {
         projectId: "c82afcfb-f95e-456e-b9e8-0df6bea8d5eb"
       },
       googleMapsIosApiKey: process.env.GOOGLE_MAPS_IOS_API_KEY,
-      googleMapsAndroidApiKey: process.env.GOOGLE_MAPS_ANDROID_API_KEY
+      googleMapsAndroidApiKey: process.env.GOOGLE_MAPS_ANDROID_API_KEY,
+      CESIUM_TOKEN: process.env.CESIUM_TOKEN,
+      CESIUM_WEB_URL: process.env.CESIUM_WEB_URL,
     }
   }
 };

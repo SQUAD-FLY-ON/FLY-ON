@@ -1,10 +1,10 @@
 // components/CustomTabList.tsx
-import { usePathname, useRouter } from 'expo-router';
-import { Children, cloneElement, isValidElement } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
-import Svg, { G, Path } from 'react-native-svg';
+import { usePathname, useRouter } from "expo-router";
+import { Children, cloneElement, isValidElement } from "react";
+import { Dimensions, StyleSheet, View } from "react-native";
+import Svg, { G, Path } from "react-native-svg";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 const height = 80;
 
 export function CustomTabList({ children }: { children: React.ReactNode }) {
@@ -12,14 +12,25 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   const triggers = Children.toArray(children).filter(isValidElement);
-  const centerFloatTrigger = triggers.find((c: any) => c.props.name === 'air');
-  const rightFloatTrigger = triggers.find((c: any) => c.props.name === 'schedule');
-  const leftTriggers = triggers.filter((c: any) => c.props.name === 'home' || c.props.name === 'explore');
-  const rightTriggers = triggers.filter((c: any) => c.props.name === 'community' || c.props.name === 'user');
-
-
+  const centerFloatTrigger = triggers.find((c: any) => c.props.name === "air");
+  const rightFloatTrigger = triggers.find(
+    (c: any) => c.props.name === "schedule"
+  );
+  const leftTriggers = triggers.filter(
+    (c: any) => c.props.name === "home" || c.props.name === "explore"
+  );
+  const rightTriggers = triggers.filter(
+    (c: any) => c.props.name === "my-schedules" || c.props.name === "user"
+  );
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        (pathname === "/air" ||
+          pathname === "/air/report" ||
+          pathname === "/schedule") && { display: "none" },
+      ]}
+    >
       <Svg
         width={width}
         height={height}
@@ -39,7 +50,11 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
         <View style={styles.leftContainer}>
           {leftTriggers.map((child: any) => {
             const isActive = pathname === child.props.href;
-            return cloneElement(child, { key: child.props.name, isActive, router });
+            return cloneElement(child, {
+              key: child.props.name,
+              isActive,
+              router,
+            });
           })}
         </View>
         {centerFloatTrigger &&
@@ -47,7 +62,8 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
             router,
             isCenter: true,
           })}
-        {pathname==='/' && rightFloatTrigger &&
+        {pathname === "/" &&
+          rightFloatTrigger &&
           cloneElement(rightFloatTrigger as any, {
             router,
             isCenter: true,
@@ -55,47 +71,49 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
         <View style={styles.rightContainer}>
           {rightTriggers.map((child: any, idx: number) => {
             const isActive = pathname === child.props.href;
-            return cloneElement(child, { key: child.props.name, isActive, router });
+            return cloneElement(child, {
+              key: child.props.name,
+              isActive,
+              router,
+            });
           })}
         </View>
       </View>
     </View>
-
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     height: height,
-    width: '100%',
-    backgroundColor: 'transparent',
-    position: 'absolute',
+    width: "100%",
+    backgroundColor: "transparent",
+    position: "absolute",
     bottom: 0,
-
   },
   svgBackground: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
   },
   tabContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    height: '100%',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    position: 'relative',
+    flexDirection: "row",
+    width: "100%",
+    height: "100%",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    position: "relative",
   },
   leftContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginLeft: width / 10 - 1,
     marginTop: 16,
     gap: 48,
   },
   rightContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginRight: width / 10 - 1,
     marginTop: 16,
     gap: 48,
-  }
+  },
 });
