@@ -10,6 +10,7 @@ import { ActivityIndicator, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
+const queryClient = new QueryClient()
 export default function RootLayout() {
   setupInterceptors();
   const queryClient = new QueryClient();

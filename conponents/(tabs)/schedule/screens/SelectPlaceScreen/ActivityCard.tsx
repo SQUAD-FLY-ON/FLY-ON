@@ -1,4 +1,3 @@
-import CustomButton from "@/conponents/CustomButton";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { Spot } from "@/types";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
@@ -37,13 +36,13 @@ export default function ActivityCard({data}: {data:Spot}) {
         <Text style={styles.title}>{data.name}</Text>
         <Text style={styles.address}>{data.fullAddress}</Text>
       </View>
-      <CustomButton
+      {/* <CustomButton
         containerStyle={styles.buttonPosition}
         buttonType="small"
         text="자세히보기"
         textStyle={{ lineHeight: 14, fontSize: 14 }}
         onPress={() => { }}
-      />
+      /> */}
     </Pressable>
   );
 }
