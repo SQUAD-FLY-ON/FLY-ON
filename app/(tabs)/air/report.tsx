@@ -8,6 +8,8 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import haversine from "haversine-distance";
 import { useAuthStore } from "@/store/useAuthStore";
 import { getAllFlightLogs, saveFlightLog } from "@/store/flightLogStore";
+import { ApiResponse, postFlightLogRequest } from "@/types/api";
+import { postFlightLog } from "@/libs/(tabs)/air/flightLogs";
 
 export default function Report() {
   const params = useLocalSearchParams();
@@ -54,20 +56,20 @@ export default function Report() {
   // POST 비행기록
   async function onPressSave() {
     // 위치 정보 제외한 비행 경로 관련 데이터 서버에 POST
-    // API 수정 전 -> 서버에 데이터 전송 X
 
-    // const data: postFlightLogRequest = {
-    //   airfieldName,
-    //   flightTime,
-    //   flightDistance,
-    //   averageSpeed,
-    //   flightAltitude: maxAltitude,
-    //   videoUrl: "url", // 삭제
-    //   points: locationData, // 삭제
-    // };
+    const data: postFlightLogRequest = {
+      airfieldName,
+      flightTime,
+      flightDistance,
+      averageSpeed,
+      flightAltitude: maxAltitude,
+    };
 
-    // const response = await postFlightLog(memberId as string, data);
-    // console.log(response);
+    const response: ApiResponse<any> = await postFlightLog(
+      memberId as string,
+      data
+    );
+    console.log(response);
 
     // API response로 받은 id값과 비행 경로 저장
     const mockId = Math.abs(Math.random() * 10000);
@@ -77,8 +79,7 @@ export default function Report() {
     const allFlightLogs = await getAllFlightLogs();
     console.log("전체 비행 기록:", allFlightLogs);
 
-    let responseStatus = 200; // mock response status
-    if (responseStatus === 200 && flightLog.success) {
+    if (response.httpStatusCode === 200 && flightLog.success) {
       setIsModalVisible(true);
     }
   }

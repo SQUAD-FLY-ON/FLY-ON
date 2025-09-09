@@ -92,6 +92,4 @@ export interface postFlightLogRequest {
   flightDistance: number;
   averageSpeed: number;
   flightAltitude: number;
-  videoUrl: string;
-  points: TLocationData[];
 }
