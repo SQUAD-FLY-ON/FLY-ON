@@ -2,7 +2,7 @@ import 'dotenv/config'; // .env 파일의 환경 변수를 로드합니다.
 
 export default {
   expo: {
-    name: "FlyOn-frontend",
+    name: "FlyOn",
     slug: "FlyOn-frontend",
     version: "1.0.0",
     orientation: "portrait",
@@ -19,8 +19,9 @@ export default {
     android: {
       package: "com.flyon",
       versionCode: 1,
+      runtimeVersion: "1.0.0",
       adaptiveIcon: {
-        foregroundImage: "./assets/images/adaptive-icon.png",
+        foregroundImage: "./assets/images/icon.png",
         backgroundColor: '#3A88F4',
       },
       edgeToEdgeEnabled: true,
@@ -66,13 +67,7 @@ export default {
     updates: {
       url: "https://u.expo.dev/c82afcfb-f95e-456e-b9e8-0df6bea8d5eb"
     },
-    runtimeVersion: {
-      policy: "fingerprint"  // 따옴표 제거, 값도 "fingerprint"로 변경
-    },
-    // 새로 추가: CLI 앱 버전 소스 설정
-    cli: {
-      appVersionSource: "local"  // 또는 "remote"
-    },
+    runtimeVersion: "1.0.0", 
     extra: {
       router: {},
       eas: {
