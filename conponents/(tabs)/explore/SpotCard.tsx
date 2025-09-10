@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   contents: {
     flexDirection: "row",
     gap: 12,
-    alignItems: "center",
+    alignItems: "flex-start",
   },
   contentsText: {
     fontFamily: "Pretendrad-Regular",
