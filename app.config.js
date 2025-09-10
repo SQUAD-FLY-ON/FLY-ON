@@ -4,7 +4,7 @@ export default {
   expo: {
     name: "FlyOn",
     slug: "FlyOn-frontend",
-    version: "1.0.0",
+    version: "1.0.1",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "flyonfrontend",
@@ -19,7 +19,7 @@ export default {
     android: {
       package: "com.flyon",
       versionCode: 1,
-      runtimeVersion: "1.0.0",
+      runtimeVersion: "1.0.1",
       adaptiveIcon: {
         foregroundImage: "./assets/images/icon.png",
         backgroundColor: '#3A88F4',
@@ -67,7 +67,7 @@ export default {
     updates: {
       url: "https://u.expo.dev/c82afcfb-f95e-456e-b9e8-0df6bea8d5eb"
     },
-    runtimeVersion: "1.0.0", 
+    runtimeVersion: "1.0.1", 
     extra: {
       router: {},
       eas: {
