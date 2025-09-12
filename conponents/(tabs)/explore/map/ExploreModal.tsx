@@ -1,11 +1,21 @@
+import { MainGradient } from "@/conponents/LinearGradients/MainGradient";
 import useExploreStore from "@/store/exploreStore";
 import { useRouter } from "expo-router";
 import { useEffect, useRef } from "react";
-import { Animated, Image, StyleSheet, Text, View } from "react-native";
+import {
+  Animated,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function ExploreModal() {
   const slideAnim = useRef(new Animated.Value(100)).current; // 초기값 100 (아래쪽)
-  const selectedMarkerSpot = useExploreStore(state => state.selectedMarkerSpot);
+  const selectedMarkerSpot = useExploreStore(
+    (state) => state.selectedMarkerSpot
+  );
   const router = useRouter();
   useEffect(() => {
     // 컴포넌트가 마운트되면 슬라이드 업 애니메이션 실행
@@ -16,16 +26,26 @@ export default function ExploreModal() {
     }).start();
   }, []);
   return (
-    <Animated.View style={[styles.overlay, {
-      transform: [{ translateY: slideAnim }],
-    },]}>
-      <View style={styles.container}>
+    <Animated.View
+      style={[
+        styles.overlay,
         {
-          selectedMarkerSpot.imgUrl === "" ?
-            <Image style={styles.image} source={require('@/assets/images/dummy_image_activity_area.png')} /> :
-            <Image source={{ uri: selectedMarkerSpot.imgUrl }}
-              style={styles.image} />
-        }
+          transform: [{ translateY: slideAnim }],
+        },
+      ]}
+    >
+      <View style={styles.container}>
+        {selectedMarkerSpot.imgUrl === "" ? (
+          <Image
+            style={styles.image}
+            source={require("@/assets/images/dummy_image_activity_area.png")}
+          />
+        ) : (
+          <Image
+            source={{ uri: selectedMarkerSpot.imgUrl }}
+            style={styles.image}
+          />
+        )}
         <View style={styles.textContainer}>
           <Text style={styles.title}>{selectedMarkerSpot.name}</Text>
           <Text style={styles.address}>{selectedMarkerSpot.fullAddress}</Text>
@@ -35,33 +55,38 @@ export default function ExploreModal() {
             <Text style={styles.review}>(19)</Text>
           </View> */}
         </View>
-        {/* <TouchableOpacity onPress = {() => {router.push('/(tabs)/explore/detail')}} style={styles.buttonPosition}>
-          <MainGradient  style={styles.button}>
+        <TouchableOpacity
+          onPress={() => {
+            router.push(`/(tabs)/explore/detail/${selectedMarkerSpot.id}`);
+          }}
+          style={styles.buttonPosition}
+        >
+          <MainGradient style={styles.button}>
             <Text style={styles.buttonText}>자세히 보기</Text>
           </MainGradient>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </Animated.View>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   overlay: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 132,
-    width: '100%',
-    zIndex:999,
-    paddingHorizontal:16, 
+    width: "100%",
+    zIndex: 999,
+    paddingHorizontal: 16,
   },
   container: {
     paddingHorizontal: 8,
     paddingVertical: 16,
-    width: '100%',
-    alignSelf: 'center',
-    backgroundColor: '#ffffff',
+    width: "100%",
+    alignSelf: "center",
+    backgroundColor: "#ffffff",
     borderRadius: 12,
     gap: 12,
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   textContainer: {
     gap: 4,
@@ -72,18 +97,18 @@ const styles = StyleSheet.create({
     height: 88,
   },
   title: {
-    fontFamily: 'Pretendard-SemiBold',
+    fontFamily: "Pretendard-SemiBold",
     fontWeight: 600,
-    fontSize: 16
+    fontSize: 16,
   },
   address: {
     fontSize: 12,
-    fontFamily: 'Pretendard',
+    fontFamily: "Pretendard",
     fontWeight: 300,
-    color: '#747474',
+    color: "#747474",
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: 4,
   },
   star: {
@@ -91,11 +116,11 @@ const styles = StyleSheet.create({
     height: 18,
   },
   review: {
-    color: '#8E9297',
-    fontFamily: 'Pretendard-Regular',
+    color: "#8E9297",
+    fontFamily: "Pretendard-Regular",
   },
   buttonPosition: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 8,
     right: 8,
   },
@@ -104,13 +129,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
 
     borderRadius: 100,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonText: {
-    color: '#ffffff',
-    fontFamily: 'Pretendard-Regular',
+    color: "#ffffff",
+    fontFamily: "Pretendard-Regular",
     fontSize: 12,
     fontWeight: 400,
-  }
-})
+  },
+});

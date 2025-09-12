@@ -1,18 +1,14 @@
 import SpotCard from "@/conponents/(tabs)/explore/SpotCard";
+import {
+  fetchSpotDetail,
+  SpotDetailResponse,
+} from "@/libs/(tabs)/explore/detail/fetchSpotDetail";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
-import { useEffect, useRef } from "react";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import WebView, { WebView as WebViewType } from "react-native-webview";
-
-const mockdata = {
-  id: "1234",
-  name: "양평 패러러브 패러글라이딩",
-  fullAddress: "경기 양평군 옥천면 동막길 49 1층",
-  imgUrl: "",
-  phoneNumber: "010-1234-5678",
-  webkitURL: "https://para114.com/",
-};
 
 interface IFlightPath {
   lat: number;
@@ -21,6 +17,16 @@ interface IFlightPath {
 }
 
 export default function Detail() {
+  const { id } = useLocalSearchParams();
+
+  const [spotInfo, setSpotInfo] = useState<SpotDetailResponse | null>(null);
+  const spotDetail = async () => {
+    const response = await fetchSpotDetail(id as string);
+    if (response !== null) {
+      setSpotInfo(response);
+    }
+  };
+
   const webviewRef = useRef<WebViewType>(null);
 
   const { CESIUM_TOKEN, CESIUM_WEB_URL } = Constants?.expoConfig?.extra as {
@@ -47,6 +53,8 @@ export default function Detail() {
   };
 
   useEffect(() => {
+    spotDetail();
+
     const flightPath = [
       { lat: 37.5, lon: 128.2, alt: 1000 },
       { lat: 37.51, lon: 128.21, alt: 900 },
@@ -83,7 +91,7 @@ export default function Detail() {
       </View>
       <View style={styles.cardContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{mockdata.name}</Text>
+          <Text style={styles.title}>{spotInfo ? spotInfo.name : "ERROR"}</Text>
           <View style={styles.scoreContainer}>
             <Image
               source={require("@/assets/images/star.png")}
@@ -94,9 +102,21 @@ export default function Detail() {
           </View>
         </View>
         <SpotCard
-          address={mockdata.fullAddress}
-          phoneNumber={mockdata.phoneNumber}
-          webURL={mockdata.webkitURL}
+          address={
+            spotInfo?.fullAddress
+              ? spotInfo.fullAddress
+              : "등록된 주소 정보가 없습니다"
+          }
+          phoneNumber={
+            spotInfo?.phoneNumber
+              ? spotInfo.phoneNumber
+              : "등록된 전화번호가 존재하지 않습니다"
+          }
+          webURL={
+            spotInfo?.websiteUrl
+              ? spotInfo.websiteUrl
+              : "체험장 사이트가 존재하지 않습니다"
+          }
         />
       </View>
     </SafeAreaView>
@@ -120,7 +140,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    height: 200,
+    height: 100,
   },
   cardContainer: {
     flex: 1,
