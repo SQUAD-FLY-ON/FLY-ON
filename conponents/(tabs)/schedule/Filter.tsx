@@ -43,10 +43,11 @@ export default function Filter({
 
 const styles = StyleSheet.create({
   scrollView: {
-    flexGrow: 0, // ScrollView가 필요한 공간만 차지하도록
+    flexGrow: 0,
+    height: 44,
   },
   scrollContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 0, // 필요에 따라 좌우 패딩 조정
+    paddingHorizontal: 0,
   },
 });
