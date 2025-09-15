@@ -18,11 +18,11 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <BackButton />
+        <BackButton onPress={() => router.back()} />
         <Text style={styles.headerText}>{selectedRegion.name}</Text>
       </View>
       <ExploreMap />
-      {/* <MapFloatingButton onPress={() => {router.push('/(tabs)/explore/explore-list')}} style={styles.floatButtonPosition} /> */}
+      <MapFloatingButton onPress={() => {router.push('/(tabs)/explore/explore-list')}} style={styles.floatButtonPosition} />
       {selectedMarkerSpot.id && <ExploreModal />}
     </View>
   );

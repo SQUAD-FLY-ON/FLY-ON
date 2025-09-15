@@ -13,7 +13,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.backButtonContainer}>
-        <BackButton />
+        <BackButton onPress={() => router.back()}/>
       </View>
 
       <RegionSelect />
