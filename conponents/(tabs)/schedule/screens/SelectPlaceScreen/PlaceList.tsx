@@ -1,18 +1,38 @@
-// /components/schedule/PlaceList.tsx (새 파일)
-
+// /components/schedule/PlaceList.tsx
 import { TourismItem } from "@/types";
-import { FlatList, StyleSheet, View } from "react-native";
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import TitleHeader from "../TitleHeader";
 import PlaceCard from "./PlaceCard";
-
 
 interface PlaceListProps {
   title: string;
   description: string;
-  data: TourismItem[]; // 실제로는 Activity 또는 Place 타입으로 지정
+  data: TourismItem[];
+  onEndReached: () => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
 }
 
-export default function PlaceList({ title, description, data }: PlaceListProps) {
+export default function PlaceList({ 
+  title, 
+  description, 
+  data, 
+  onEndReached, 
+  hasNextPage, 
+  isFetchingNextPage 
+}: PlaceListProps) {
+  
+  const renderFooter = () => {
+    if (!isFetchingNextPage) return null;
+    
+    return (
+      <View style={styles.footerLoader}>
+        <ActivityIndicator size="small" color="#666" />
+        <Text style={styles.footerText}>더 많은 장소를 불러오는 중...</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <TitleHeader title={title} description={description} />
@@ -20,12 +40,17 @@ export default function PlaceList({ title, description, data }: PlaceListProps) 
         style={{ marginVertical: 14 }}
         contentContainerStyle={styles.placeContainer}
         data={data}
-        renderItem={({ item,index }) =>
+        renderItem={({ item, index }) => (
           <PlaceCard
-            key={index}
-            data = {item}
+            key={`${item.id || index}`} // id가 있다면 사용, 없으면 index
+            data={item}
           />
-        }
+        )}
+        keyExtractor={(item, index) => `${item.id || index}`}
+        onEndReached={hasNextPage ? onEndReached : undefined}
+        onEndReachedThreshold={0.5} // 50% 지점에서 트리거
+        ListFooterComponent={renderFooter}
+        showsVerticalScrollIndicator={true}
       />
     </View>
   );
@@ -34,5 +59,15 @@ export default function PlaceList({ title, description, data }: PlaceListProps) 
 const styles = StyleSheet.create({
   placeContainer: {
     gap: 8,
+  },
+  footerLoader: {
+    paddingVertical: 20,
+    alignItems: 'center',
+    gap: 8,
+  },
+  footerText: {
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'Pretendard-Regular'
   }
-})
+});
