@@ -2,29 +2,30 @@ import { fetchWeather } from "@/libs/schedule/fetchWeather";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { RegionName } from "@/types";
 import { useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
 import { useEffect } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
+import { useShallow } from "zustand/shallow";
 import SubRegionSvg from "./SubRegionSvg";
 import WeatherCard from "./WeatherCard";
 
 export default function SelectSubRegion() {
-  const selectedRegion = useScheduleStore(state => state.selectedRegion);
-  const tripStart = dayjs().format('YYYYMMDD');
-  const tripEnd = dayjs().add(4, 'day').format('YYYYMMDD');
+  const {selectedRegion, currentMarkedDates} = useScheduleStore(useShallow(state => ({ selectedRegion: state.selectedRegion, currentMarkedDates: state.currentMarkedDates })));
+  const dates = Object.keys(currentMarkedDates);
+  const tripStart = dates[0].replaceAll('-', '');
+  const tripEnd = dates[dates.length - 1].replaceAll('-', '');
   const goToPrevStep = useScheduleStore(state => state.goToPrevStep);
   useEffect(() => {
     if (selectedRegion.key === '' && selectedRegion.name === '') {
       goToPrevStep();
     }
-  }, [selectedRegion])
+  }, [selectedRegion]);
   const { data, isError, isLoading } = useQuery({
-    queryKey: ['weather', selectedRegion.name],
+    queryKey: ['weather', selectedRegion.name,tripStart,tripEnd],
     queryFn: () => fetchWeather({
       // selectedRegion.name을 RegionName 타입으로 간주하라고 알려줌
       sido: selectedRegion.name as RegionName,
       tripStart,
-      tripEnd
+      tripEnd,
     }),
     enabled: selectedRegion.name !== ''
   });
