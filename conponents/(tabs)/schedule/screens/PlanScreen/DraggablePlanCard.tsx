@@ -2,7 +2,7 @@ import { typeToLabel } from "@/constants/screens";
 import { Plan } from "@/types";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRef, useState } from "react";
-import { Animated, PanResponder, PanResponderGestureState, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Image, PanResponder, PanResponderGestureState, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 const DraggablePlanCard = ({
   item,
@@ -141,9 +141,14 @@ const panResponder = PanResponder.create({
         <View style={styles.rightContainer} onLayout={handleLayout}>
           <Text style={styles.type}>{typeToLabel[item?.type]}</Text>
           <View style={styles.card}>
-            <View style={styles.imagePlaceholder}>
+            {item?.image? (
+              <Image style = {styles.imagePlaceholder} source={{ uri: item?.image }} />
+            ): (
+              <View style={styles.imagePlaceholder}>
               <Text style={styles.imageText}>IMG</Text>
             </View>
+            )}
+            
             <View style={styles.cardTextContainer}>
               <Text style={styles.place} numberOfLines={1}>
                 {item?.place}
