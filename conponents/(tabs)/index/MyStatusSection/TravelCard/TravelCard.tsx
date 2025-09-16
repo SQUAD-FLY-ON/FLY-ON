@@ -43,12 +43,6 @@ const TravelCard = () => {
     <View style={styles.travelCard}>
       <CardContents loading={loading} schedule={schedule} />
       <View style={styles.cardBottom}>
-        {schedule?.length ? (
-          <View style={styles.userGroupView}>
-            <UserGroup />
-            <Text style={styles.userGroupText}>2인</Text>
-          </View>
-        ) : null}
         <CustomButton
           onPress={onPress}
           containerStyle={styles.scheduleDetailBtn}
@@ -120,21 +114,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 2,
+    marginTop: 25,
     marginHorizontal: 12,
     marginBottom: 12,
   },
-  userGroupView: {
-    flexDirection: "row",
-    gap: 4,
-    alignItems: "center",
-    padding: 4,
-  },
-  userGroupText: {
-    color: "#787878",
-    fontFamily: "Pretendard-Regular",
-    fontSize: 12,
-  },
+
   scheduleDetailBtn: {
     position: "absolute",
     bottom: 0,
