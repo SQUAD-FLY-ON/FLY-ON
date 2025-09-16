@@ -7,9 +7,9 @@ const CardContents = ({
   schedule,
 }: {
   loading: boolean;
-  schedule: TourismSchedule[] | null;
+  schedule: TourismSchedule[] | undefined;
 }) => {
-  if (schedule === null || schedule?.length === 0) {
+  if (loading || !schedule || schedule?.length === 0) {
     return (
       <View style={styles.emptyContents}>
         <Text style={styles.emptyText}>여행 일정이 비어있어요</Text>
@@ -26,7 +26,7 @@ const CardContents = ({
   outer: for (let i = 0; i < schedule[0].dailyTourismSpots.length; i++) {
     const day = schedule[0].dailyTourismSpots[i];
     for (const spot of day) {
-      if (spot.name.includes("패러글라이딩 체험장")) {
+      if (spot.name.includes("패러글라이딩")) {
         paragliding.spot = spot.name;
         paragliding.day = i + 1;
       }
