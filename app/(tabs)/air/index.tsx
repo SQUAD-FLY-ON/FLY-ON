@@ -2,13 +2,13 @@ import Background from "@/conponents/(tabs)/air/Background";
 import Dropdown from "@/conponents/(tabs)/air/Dropdown";
 import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
 import Stopwatch from "@/conponents/(tabs)/air/Stopwatch";
+import extractTourNames from "@/libs/(tabs)/air/extractTourNames";
+import { Option, TLocationData } from "@/types";
 import { useFocusEffect } from "@react-navigation/native";
+import * as Location from "expo-location";
 import { useRouter } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import * as Location from "expo-location";
-import { Option, TLocationData } from "@/types";
-import extractTourNames from "@/libs/(tabs)/air/extractTourNames";
 
 export default function Index() {
   const router = useRouter();
@@ -96,10 +96,13 @@ export default function Index() {
     try {
       const response = await extractTourNames();
 
-      const options: Option[] = response.map((name) => ({
+      // 중복 제거 후 옵션 생성
+      const uniqueNames = [...new Set(response)];
+      const options: Option[] = uniqueNames.map((name) => ({
         label: name,
         value: name,
       }));
+
       setTourList(options);
       console.log("투어리스트:", options);
     } catch (error) {
