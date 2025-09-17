@@ -3,52 +3,30 @@ import Colors from "@/constants/colors";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, View } from "react-native";
 import UserGroup from "./icons/UserGroup";
-import { useEffect, useState } from "react";
-import { ApiResponse } from "@/types/api";
-import { fetchTourSchedule } from "@/libs/fetchTourSchedule";
-import { TourismSchedule, TourismScheduleData } from "@/types";
 import CardContents from "./CardContents";
 import mockSchedule from "@/dummy/mock_schdule";
+import { useTourSchedule } from "@/hooks/useTourSchedule";
 
 const TravelCard = () => {
   const router = useRouter();
 
-  const [schedule, setSchedule] = useState<TourismSchedule[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const getSchedule = async () => {
-    try {
-      const response: ApiResponse<TourismScheduleData> =
-        await fetchTourSchedule();
-      setSchedule(response.data.tourismSchedules);
-    } catch (err: any) {
-      setError(err.message || "에러 발생");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { isScheduleLoading, isScheduleError, schedule } = useTourSchedule();
+  console.log("test-schedule:", schedule, schedule?.length);
 
   const onPress = () => {
     const route = schedule?.length ? "/my-schedules" : "/schedule";
     router.push(route);
   };
 
-  useEffect(() => {
-    getSchedule();
-    // setSchedule(mockSchedule);
-  }, []);
+  // useEffect(() => {
+  //   getSchedule();
+  //   // setSchedule(mockSchedule);
+  // }, []);
 
   return (
     <View style={styles.travelCard}>
-      <CardContents loading={loading} schedule={schedule} />
+      <CardContents loading={isScheduleLoading} schedule={schedule} />
       <View style={styles.cardBottom}>
-        {schedule?.length ? (
-          <View style={styles.userGroupView}>
-            <UserGroup />
-            <Text style={styles.userGroupText}>2인</Text>
-          </View>
-        ) : null}
         <CustomButton
           onPress={onPress}
           containerStyle={styles.scheduleDetailBtn}
@@ -120,21 +98,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: 2,
+    marginTop: 25,
     marginHorizontal: 12,
     marginBottom: 12,
   },
-  userGroupView: {
-    flexDirection: "row",
-    gap: 4,
-    alignItems: "center",
-    padding: 4,
-  },
-  userGroupText: {
-    color: "#787878",
-    fontFamily: "Pretendard-Regular",
-    fontSize: 12,
-  },
+
   scheduleDetailBtn: {
     position: "absolute",
     bottom: 0,
