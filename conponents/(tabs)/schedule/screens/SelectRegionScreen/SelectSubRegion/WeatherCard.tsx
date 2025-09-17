@@ -1,9 +1,9 @@
 import { WeatherInfo, WeatherStatus } from "@/types";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { FlatList, Image, StyleSheet, Text, View } from "react-native";
 
 export default function WeatherCard({ weatherData }: { weatherData: WeatherInfo }) {
   const imageMap: Record<WeatherStatus, any> = {
-    '맑음' : require('@/assets/images/sunny.png'),
+    '맑음': require('@/assets/images/sunny.png'),
     '구름조금': require('@/assets/images/partlyCloudy.png'),
     '구름많음': require('@/assets/images/cloudy.png'),
     '흐림': require('@/assets/images/overcast.png'),
@@ -12,27 +12,38 @@ export default function WeatherCard({ weatherData }: { weatherData: WeatherInfo 
     '비/눈': require('@/assets/images/sleet.png'),
     '눈': require('@/assets/images/snowy.png'),
   };
-return (<View style={styles.container}>
+  return (<View style={styles.container}>
     <View style={styles.regionContainer}>
       <Text style={styles.regionTitle}>{weatherData.sigungu}</Text>
-      <Text style={[styles.regionDescription, { marginTop: 4 }]}>20km</Text>
-      <Text style={styles.regionDescription}>체험장 수: 12</Text>
+      {/* <Text style={[styles.regionDescription, { marginTop: 4 }]}>20km</Text>
+      <Text style={styles.regionDescription}>체험장 수: 12</Text> */}
     </View>
-    <View style={styles.weatherContainer}>
-      {
-        weatherData.dailyWeathers.map((weather) => {
-          const month = parseInt(weather.monthDate.slice(0,2),10);
-          const date = parseInt(weather.monthDate.slice(2,4),10);
-          const minTemp = Math.round(Number(weather.minTemp));
-          const maxTemp = Math.round(Number(weather.maxTemp));
-          return (<View key={weather.monthDate} style={styles.weather}>
+    <FlatList
+      horizontal={true}
+      data={weatherData.dailyWeathers}
+      keyExtractor={(item) => item.monthDate}
+      showsHorizontalScrollIndicator={false}
+      style={styles.weatherList} // 새로운 스타일
+      contentContainerStyle={styles.weatherContainer} // 컨텐츠 스타일
+      renderItem={({ item: weather }) => {
+        const month = parseInt(weather.monthDate.slice(0, 2), 10);
+        const date = parseInt(weather.monthDate.slice(2, 4), 10);
+        const minTemp = Math.round(Number(weather.minTemp));
+        const maxTemp = Math.round(Number(weather.maxTemp));
+
+        return (
+          <View style={styles.weather}>
             <Text style={styles.date}>{month}/{date}</Text>
-            <Image style={{ width: 36, height: 33 }} source={imageMap[weather.sky]} resizeMode="contain" />
+            <Image
+              style={{ width: 36, height: 33 }}
+              source={imageMap[weather.sky]}
+              resizeMode="contain"
+            />
             <Text style={styles.temp}>{minTemp}° / {maxTemp}°</Text>
-          </View>)
-        })
-      }
-    </View>
+          </View>
+        );
+      }}
+    />
   </View>)
 }
 const styles = StyleSheet.create({
@@ -48,6 +59,8 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: '#ffffff',
     width: 84,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   regionTitle: {
     color: '#333333',
@@ -61,16 +74,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-Regular',
     fontSize: 10,
   },
-  weatherContainer: {
+  // FlatList 자체의 스타일 (컨테이너)
+  weatherList: {
     flex: 1,
-    gap: 8,
-    flexDirection: 'row',
-    paddingVertical: 11,
-    paddingRight: 8,
-    paddingLeft: 9,
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    alignItems: 'center',
+    paddingVertical: 11,
+  },
+  // FlatList 내부 컨텐츠의 스타일
+  weatherContainer: {
+    gap: 10,
+    paddingHorizontal: 9,
+    alignItems: 'center', // 이제 contentContainerStyle에 위치
   },
   weather: {
   },
@@ -85,6 +100,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Pretendard-SemiBold',
     fontSize: 8,
     fontWeight: 600,
-    alignSelf: 'center',
+    textAlign: 'center',
   }
-})
+});

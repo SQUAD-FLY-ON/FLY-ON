@@ -1,5 +1,7 @@
+import CustomButton from "@/conponents/CustomButton";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { Spot } from "@/types";
+import { useRouter } from "expo-router";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useShallow } from "zustand/react/shallow";
 
@@ -10,7 +12,7 @@ export default function ActivityCard({data}: {data:Spot}) {
       setSelectedActivities: state.setSelectedActivities,
     }))
   );
-
+  const router = useRouter();
   const onPress = () => {
     setSelectedActivities(data);
   };
@@ -33,16 +35,16 @@ export default function ActivityCard({data}: {data:Spot}) {
         }
       />
       <View style={styles.contentContainer}>
-        <Text style={styles.title}>{data.name}</Text>
-        <Text style={styles.address}>{data.fullAddress}</Text>
+        <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{data.name}</Text>
+        <Text style={styles.address} numberOfLines={2} ellipsizeMode="tail" >{data.fullAddress}</Text>
       </View>
-      {/* <CustomButton
+      <CustomButton
         containerStyle={styles.buttonPosition}
         buttonType="small"
         text="자세히보기"
         textStyle={{ lineHeight: 14, fontSize: 14 }}
         onPress={() => { }}
-      /> */}
+      />
     </Pressable>
   );
 }
@@ -63,6 +65,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     gap: 4,
+    flex:1,
+    flexShrink:1,
   },
   title: {
     // heading4

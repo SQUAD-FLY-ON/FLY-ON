@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
-import { BackButton } from "./BackButton";
+import { ScheduleBackButton } from "./ScheduleBackButton";
 
 export default function ScheduleTopBar() {
     return (<View style={styles.container}>
-        <BackButton />
+        <ScheduleBackButton />
         <Text style={styles.text}>일정 추가하기</Text>
     </View>)
 }

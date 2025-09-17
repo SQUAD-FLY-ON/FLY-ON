@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 18,
     gap: 8,
     backgroundColor: "#fff",
   },
@@ -24,6 +24,10 @@ const styles = StyleSheet.create({
     //Heading1
     fontWeight: 700,
     fontSize: 24,
+    height:28,
+    lineHeight:24,
     fontFamily: "Pretendard-Bold",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

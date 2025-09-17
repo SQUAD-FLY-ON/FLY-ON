@@ -1,7 +1,7 @@
 import Level from "@/conponents/(tabs)/user/Level";
 import MenuList from "@/conponents/(tabs)/user/MenuList";
 import Profile from "@/conponents/(tabs)/user/Profile";
-import PageHeader from "@/conponents/PageHeader";
+import Header from "@/conponents/Header";
 import { fetchMembers } from "@/libs/fetchMember";
 import { MemberProfileInfo } from "@/types";
 import { ApiResponse } from "@/types/api";
@@ -66,7 +66,7 @@ export default function Index() {
 
   return (
     <View>
-      <PageHeader title="마이페이지" isFirst={true} />
+      <Header title="마이페이지" backButton={false} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Profile
           level={memberInfo.gliderBadge}

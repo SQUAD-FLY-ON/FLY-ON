@@ -52,6 +52,8 @@ export interface TourismResponse {
 export interface TourismRequest {
   lat: number;
   lon: number;
+  page: number;
+  size: number;
 }
 
 export interface SpotRequest {

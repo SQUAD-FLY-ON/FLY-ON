@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ViewStyle } from "react-native";
 
-export default function TitleHeader({ title, description }: { title: string; description: string }) {
-  return (<View style={styles.container}>
+export default function TitleHeader({ title, description, style }: { title: string; description: string, style?: ViewStyle }) {
+  return (<View style={[styles.container,style]}>
     <Text style={styles.title}>{title}</Text>
     <Text style={styles.description}>{description}</Text>
   </View>)

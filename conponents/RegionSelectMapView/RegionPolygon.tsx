@@ -27,7 +27,7 @@ const RegionPolygon = ({
         coordinates={coordinates}
         fillColor={isSelected ? selectedFillColor : flyOnFillColor}
         strokeColor={defaultStrokeColor}
-        strokeWidth={isSelected ? 2 : 1}
+        strokeWidth={isSelected ? 4 : 2}
         tappable
         onPress={onPress}
       />

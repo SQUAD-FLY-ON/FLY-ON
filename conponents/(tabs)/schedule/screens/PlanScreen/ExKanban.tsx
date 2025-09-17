@@ -7,6 +7,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import React, { Fragment, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
   Animated,
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -300,9 +301,13 @@ const TravelPlanKanban = () => {
           <View style={styles.rightContainer}>
             <Text style={styles.type}>{typeToLabel[item?.type]}</Text>
             <View style={styles.card}>
-              <View style={styles.imagePlaceholder}>
-                <Text style={styles.imageText}>IMG</Text>
-              </View>
+              {item?.image ? (
+                <Image style={styles.imagePlaceholder} source={{ uri: item?.image }} />
+              ) : (
+                <View style={styles.imagePlaceholder}>
+                  <Text style={styles.imageText}>IMG</Text>
+                </View>
+              )}
               <View style={styles.cardTextContainer}>
                 <Text style={styles.place} numberOfLines={1}>
                   {item?.place}
