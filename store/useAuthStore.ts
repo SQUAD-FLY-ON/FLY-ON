@@ -2,7 +2,6 @@ import { apiClient } from "@/api/apiClient";
 import { AuthResponse, MemberInfo } from "@/types";
 import { ApiResponse, LoginRequest } from "@/types/api";
 import * as SecureStore from "expo-secure-store";
-import { Alert } from "react-native";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
@@ -56,12 +55,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
         set({ isLoading: true });
 
-        try {
           // 액세스 토큰 유효성 검사 (예: 사용자 정보 요청)
           const userResponse = await apiClient.get("/members");
           if (userResponse.httpStatusCode === 200) {
-            console.log(userResponse);
-
             set({
               isAuthenticated: true,
               memberInfo: userResponse.data || get().memberInfo,
@@ -70,27 +66,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             });
             return;
           }
-        } catch (error: any) {
-          console.log("액세스 토큰 만료, 토큰 갱신 시도...");
-
-          // 액세스 토큰이 만료된 경우, 리프레시 토큰으로 갱신 시도
-          const refreshSuccess = await get().refreshAccessToken();
-          console.log(refreshSuccess);
-          if (refreshSuccess) {
-            set({
-              isAuthenticated: true,
-              isInitialized: true,
-              isLoading: false,
-            });
-          } else {
-            // 리프레시 토큰도 만료된 경우
-            get().clearAuthState();
-            set({
-              isInitialized: true,
-              isLoading: false,
-            });
-          }
-        }
       },
       login: async (credentials) => {
         set({ isLoading: true });
@@ -117,8 +92,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             };
           }
         } catch (error: any) {
-          console.error("로그인 실패:", error);
-          Alert.alert("아이디 혹은 비밀번호가 올바르지 않습니다.");
           return {
             success: false,
             error:
