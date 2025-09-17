@@ -1,3 +1,4 @@
+import { Option } from "@/types";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   Dispatch,
@@ -6,24 +7,28 @@ import {
   useEffect,
   useState,
 } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import DropDownPicker from "react-native-dropdown-picker";
-
-type TDropdownItem = {
-  label: string;
-  value: string;
-};
 
 const Dropdown = ({
   itemProps,
+  value,
+  setValue,
   setHasValue,
 }: {
-  itemProps: TDropdownItem[];
+  itemProps: Option[];
+  value: null | string;
+  setValue: Dispatch<SetStateAction<null | string>>;
   setHasValue: Dispatch<SetStateAction<boolean>>;
 }) => {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
   const [items, setItems] = useState(itemProps);
+
+  console.log("드롭다운 아이템 props: ", items);
+
+  useEffect(() => {
+    setItems(itemProps);
+  }, [itemProps]);
 
   useEffect(() => {
     if (value !== null) setHasValue(true);
@@ -48,6 +53,11 @@ const Dropdown = ({
         placeholder="비행 일정을 선택하세요"
         listMode="SCROLLVIEW"
         style={styles.dropdown}
+        ListEmptyComponent={() => (
+          <View style={styles.emptyDropdown}>
+            <Text>비행 일정이 없습니다!</Text>
+          </View>
+        )}
       />
     </View>
   );
@@ -63,5 +73,10 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     borderColor: "#ccc",
+  },
+  emptyDropdown: {
+    borderColor: "#ccc",
+    paddingHorizontal: 8,
+    paddingVertical: 16,
   },
 });

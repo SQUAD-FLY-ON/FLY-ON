@@ -2,24 +2,87 @@ import Background from "@/conponents/(tabs)/air/Background";
 import ReportText from "@/conponents/(tabs)/air/ReportText";
 import SaveModal from "@/conponents/(tabs)/air/SaveModal";
 import { MainGradient } from "@/conponents/LinearGradients/MainGradient";
-import { useSearchParams } from "expo-router/build/hooks";
+import { useLocalSearchParams } from "expo-router/build/hooks";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import haversine from "haversine-distance";
+import { useAuthStore } from "@/store/useAuthStore";
+import { getAllFlightLogs, saveFlightLog } from "@/store/flightLogStore";
+import { ApiResponse, postFlightLogRequest } from "@/types/api";
+import { postFlightLog } from "@/libs/(tabs)/air/flightLogs";
 
 export default function Report() {
-  const params = useSearchParams() as { time?: string };
-  const time = params?.time ? Number(params.time) : 0;
+  const params = useLocalSearchParams();
+  // console.log("params: ", params);
+
+  const memberId = useAuthStore((state) => state.memberInfo?.memberId);
+  console.log("memberId:", memberId);
+
+  const airfieldName = params?.airfieldName as string;
+  const flightTime = params?.time ? Number(params.time) : 0;
+  const locationData = params?.locationData
+    ? JSON.parse(params.locationData as string)
+    : [];
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
-  const minutes = Math.floor(time / 60);
-  const seconds = time - minutes * 60;
+  const minutes = Math.floor(flightTime / 60);
+  const seconds = flightTime - minutes * 60;
   const minutesStr = minutes < 10 ? "0" + minutes : String(minutes);
   const secondsStr = seconds < 10 ? "0" + seconds : String(seconds);
 
-  const onPressSave = () => {
-    console.log("Save Modal Open!");
-    setIsModalVisible(true);
-  };
+  // 비행 고도, 비행 거리
+  let maxAltitude = 0;
+  let flightDistance = 0;
+
+  let coordinate = { latitude: 0, longitude: 0 };
+  for (let { lat, lon, alt } of locationData) {
+    if (coordinate.latitude === 0) {
+      coordinate.latitude = lat;
+      coordinate.longitude = lon;
+    } else {
+      flightDistance += haversine(coordinate, {
+        latitude: lat,
+        longitude: lon,
+      });
+      coordinate.latitude = lat;
+      coordinate.longitude = lon;
+    }
+    maxAltitude = Math.max(maxAltitude, alt);
+  }
+
+  // 평균 비행 속도
+  const averageSpeed = flightDistance / seconds;
+
+  // POST 비행기록
+  async function onPressSave() {
+    // 위치 정보 제외한 비행 경로 관련 데이터 서버에 POST
+
+    const data: postFlightLogRequest = {
+      airfieldName,
+      flightTime,
+      flightDistance,
+      averageSpeed,
+      flightAltitude: maxAltitude,
+    };
+
+    const response: ApiResponse<any> = await postFlightLog(
+      memberId as string,
+      data
+    );
+    console.log(response);
+
+    // API response로 받은 id값과 비행 경로 저장
+    const mockId = Math.abs(Math.random() * 10000);
+    const flightLog = await saveFlightLog(`${mockId}`, locationData);
+    console.log(`ID ${mockId}: `, flightLog.success);
+
+    const allFlightLogs = await getAllFlightLogs();
+    console.log("전체 비행 기록:", allFlightLogs);
+
+    if (response.httpStatusCode === 200 && flightLog.success) {
+      setIsModalVisible(true);
+    }
+  }
 
   return (
     <Background>
@@ -34,18 +97,28 @@ export default function Report() {
         </View>
 
         <View style={styles.reportTextContainer}>
-          <ReportText
-            data={{ label: "비행장", value: "양평 패러리브 패러글라이딩" }}
-          />
+          <ReportText data={{ label: "비행장", value: airfieldName }} />
           <ReportText
             data={{
               label: "비행 시간",
               value: `${minutesStr}분 ${secondsStr}초`,
             }}
           />
-          <ReportText data={{ label: "비행 고도", value: "000m" }} />
-          <ReportText data={{ label: "비행 거리", value: "000m" }} />
-          <ReportText data={{ label: "평균 비행 속도", value: "00m/s" }} />
+          <ReportText
+            data={{ label: "비행 고도", value: `${maxAltitude.toFixed(2)}m` }}
+          />
+          <ReportText
+            data={{
+              label: "비행 거리",
+              value: `${flightDistance.toFixed(2)}m`,
+            }}
+          />
+          <ReportText
+            data={{
+              label: "평균 비행 속도",
+              value: `${averageSpeed.toFixed(2)}m/s`,
+            }}
+          />
         </View>
 
         <Pressable onPress={onPressSave}>

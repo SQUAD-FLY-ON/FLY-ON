@@ -69,7 +69,6 @@ export type Plan = {
   address: string;
 };
 
-
 export type GeoJSONCoordinates = number[][][] | number[][][][];
 
 export type Region = {
@@ -117,8 +116,21 @@ export type RegionName =
   | "경상남도"
   | "제주특별자치도";
 
-export type selectedRegion = { key: "" | RegionCode; name: '' | RegionName; coordinates: LatLng[] }
-export type ScreenKey = "SelectDate" | "SelectAreaRegion" | "SelectSubRegion" | "SelectActivity" | "SelectPlace" | "LoadingGenerateSchedule" | "AIRecommendPlan" | "EditPlan" | "Complete"
+export type selectedRegion = {
+  key: "" | RegionCode;
+  name: "" | RegionName;
+  coordinates: LatLng[];
+};
+export type ScreenKey =
+  | "SelectDate"
+  | "SelectAreaRegion"
+  | "SelectSubRegion"
+  | "SelectActivity"
+  | "SelectPlace"
+  | "LoadingGenerateSchedule"
+  | "AIRecommendPlan"
+  | "EditPlan"
+  | "Complete";
 
 export type ScreenItem = {
   key: ScreenKey;
@@ -157,14 +169,14 @@ export interface SelectedPlace {
 }
 
 export enum TourismType {
-  ATTRACTION_SPOT = 'ATTRACTION_SPOT',
-  PARAGLIDING_SPOT = 'PARAGLIDING_SPOT',
-  RESTAURANT = 'RESTAURANT',
-  ACCOMMODATION = 'ACCOMMODATION',
-  SHOPPING = 'SHOPPING',
-  CULTURE = 'CULTURE',
-  FESTIVAL = 'FESTIVAL',
-  LEISURE = 'LEISURE',
+  ATTRACTION_SPOT = "ATTRACTION_SPOT",
+  PARAGLIDING_SPOT = "PARAGLIDING_SPOT",
+  RESTAURANT = "RESTAURANT",
+  ACCOMMODATION = "ACCOMMODATION",
+  SHOPPING = "SHOPPING",
+  CULTURE = "CULTURE",
+  FESTIVAL = "FESTIVAL",
+  LEISURE = "LEISURE",
 }
 
 // 관광 아이템 기본 인터페이스
@@ -193,7 +205,7 @@ export interface ScheduleItem {
   id: number;
   tourismType: TourismType;
 }
-  export interface paraglidingSpot {
+export interface paraglidingSpot {
   id: string;
   name: string;
   fullAddress: string;
@@ -244,3 +256,18 @@ export interface TourismSchedule {
 export interface TourismScheduleData {
   tourismSchedules: TourismSchedule[];
 }
+
+export type TLocationData = {
+  lat: number;
+  lon: number;
+  alt: number;
+};
+
+export type TFlightLogStorage = {
+  [regionName: string]: TLocationData[];
+};
+
+export type Option = {
+  label: string;
+  value: string;
+};
