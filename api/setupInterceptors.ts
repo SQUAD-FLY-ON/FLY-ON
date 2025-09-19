@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { useAuthStore } from '../store/useAuthStore'; // This is where the import happens
 import { apiClient } from './apiClient';
 
@@ -18,6 +19,11 @@ export const setupInterceptors = () => {
       return response.data;
     },
     async (error) => {
+      if(error.response.data?.serverErrorMessage){
+        Alert.alert(error.response.data?.serverErrorMessage);
+      } else {
+        Alert.alert('데이터 요청에 실패했습니다.');
+      }
       const originalRequest = error.config;
       if (error.response?.status === 401 && !originalRequest._retry) {
         originalRequest._retry = true;
