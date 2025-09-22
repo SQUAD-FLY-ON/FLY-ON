@@ -1,4 +1,3 @@
-import { setupInterceptors } from "@/api/setupInterceptors";
 import Header from "@/conponents/Header";
 import { useAuthStore } from "@/store/useAuthStore";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -12,7 +11,6 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 const queryClient = new QueryClient()
 export default function RootLayout() {
-  setupInterceptors();
   const queryClient = new QueryClient();
 
   const [fontsLoaded] = useFonts({
@@ -32,6 +30,7 @@ export default function RootLayout() {
       initializeAuth();
     }
   }, [fontsLoaded, isInitialized, initializeAuth]);
+  console.log(isAuthenticated);
   // 폰트 로딩 또는 인증 초기화가 완료되지 않은 경우 로딩 화면 표시
   if (!fontsLoaded || !isInitialized || isLoading) {
     return (
