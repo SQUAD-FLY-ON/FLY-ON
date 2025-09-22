@@ -23,17 +23,6 @@ const CardContents = ({
     day: 0,
   };
 
-  outer: for (let i = 0; i < schedule.dailyTourismSpots.length; i++) {
-    const day = schedule.dailyTourismSpots[i];
-    for (const spot of day) {
-      if (spot.name.includes("패러글라이딩 체험장")) {
-        paragliding.spot = spot.name;
-        paragliding.day = i + 1;
-      }
-      break outer;
-    }
-  }
-
   const formatDate = (dateStr: string) => {
     const [_, month, day] = dateStr.split("-");
     return `${month}.${day}`;
@@ -46,7 +35,7 @@ const CardContents = ({
     <>
       <View style={styles.cardTop}>
         <Text style={styles.title}>
-          {paragliding.spot.split(" ")[0]} 여행 (
+          {schedule.tourName?`${schedule.tourName} 여행`: '여행'} (
           {schedule.dailyTourismSpots.length}일)
         </Text>
         <Text style={styles.period}>
@@ -55,7 +44,7 @@ const CardContents = ({
         </Text>
       </View>
       <View style={styles.cardContents}>
-        {schedule.dailyTourismSpots.map((v, i) => (
+        {schedule.dailyTourismSpots?.map((v, i) => (
           <View key={i} style={styles.schedule}>
             <View style={styles.circle} />
             <Text style={styles.scheduleDay}>{i + 1}일차</Text>

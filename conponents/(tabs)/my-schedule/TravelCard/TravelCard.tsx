@@ -2,7 +2,7 @@ import CustomButton from "@/conponents/CustomButton";
 import Colors from "@/constants/colors";
 import { TourismSchedule } from "@/types";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import CardContents from "./CardContents";
 import UserGroup from "./icons/UserGroup";
 
@@ -27,7 +27,7 @@ const TravelCard = ({
         {schedule ? (
           <View style={styles.userGroupView}>
             <UserGroup />
-            <Text style={styles.userGroupText}>2인</Text>
+            {/* <Text style={styles.userGroupText}>2인</Text> */}
           </View>
         ) : null}
         {<CustomButton

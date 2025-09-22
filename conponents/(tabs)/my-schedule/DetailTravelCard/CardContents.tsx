@@ -45,8 +45,9 @@ const CardContents = ({
   return (
     <>
       <View style={styles.cardTop}>
+
         <Text style={styles.title}>
-          {paragliding.spot.split(" ")[0]} 여행 (
+          {schedule.tourName?`${schedule.tourName} 여행`: '여행'} (
           {schedule.dailyTourismSpots.length}일)
         </Text>
         <Text style={styles.period}>
@@ -102,9 +103,9 @@ const styles = StyleSheet.create({
   cardContents: {
     paddingVertical: 27,
     paddingHorizontal: 14,
-    backgroundColor:'#ffffff',
-    gap:12,
-    borderRadius:12,
+    backgroundColor: '#ffffff',
+    gap: 12,
+    borderRadius: 12,
   },
   schedule: {
     flexDirection: "row",
