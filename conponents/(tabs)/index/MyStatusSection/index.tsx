@@ -1,13 +1,13 @@
+import Logo from "@/conponents/icons/Logo";
+import LevelBadge from "@/conponents/LevelBadge";
+import Colors from "@/constants/colors";
+import { fetchMembers } from "@/libs/fetchMember";
+import { MemberProfileInfo } from "@/types";
+import { ApiResponse } from "@/types/api";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import HomeImage from "./AnimatedImages/HomeImage";
 import TravelCard from "./TravelCard/TravelCard";
-import Colors from "@/constants/colors";
-import LevelBadge from "@/conponents/LevelBadge";
-import { useEffect, useState } from "react";
-import { fetchMembers } from "@/libs/fetchMember";
-import { ApiResponse } from "@/types/api";
-import Logo from "@/conponents/icons/Logo";
-import { MemberProfileInfo } from "@/types";
 
 export default function MyStatusSection() {
   const [memberInfo, setMemberInfo] = useState<MemberProfileInfo | null>(null);
