@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
     flexShrink: 0,
     borderRadius: 12,
     zIndex: 4,
+    backgroundColor: '#ffffff',
   },
 
 });

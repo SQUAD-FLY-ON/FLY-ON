@@ -13,7 +13,7 @@ export default function Index() {
       <Header title="나의 여행" backButton={false} />
       <FlatList
         data={schedule}
-        style={{ flex: 1, width: '100%' }}
+        style={{ flex: 1, width: '100%', marginTop: 24 }}
         contentContainerStyle={{ paddingHorizontal: 16, gap: 24, paddingBottom: 120 }}
         renderItem={({ item }) => <TravelCard onPress= {() => {router.push(`/(tabs)/my-schedules/detail/${item.id}`)}} key={item.id} schedule={item} />} />
     </View>

@@ -1,7 +1,6 @@
 import CustomButton from "@/conponents/CustomButton";
 import Colors from "@/constants/colors";
 import { TourismSchedule } from "@/types";
-import { useRouter } from "expo-router";
 import { StyleSheet, View, ViewStyle } from "react-native";
 import CardContents from "./CardContents";
 import UserGroup from "./icons/UserGroup";
@@ -17,9 +16,6 @@ const TravelCard = ({
   schedule: TourismSchedule | null,
   loading?: boolean
 }) => {
-  const router = useRouter();
-  console.log(schedule);
-
   return (
     <View style={[styles.travelCard, containerStyle]}>
       <CardContents loading={loading} schedule={schedule} />
@@ -50,7 +46,7 @@ const styles = StyleSheet.create({
     height: "auto",
     flexShrink: 0,
     borderRadius: 12,
-    backgroundColor: "rgba(255, 255, 255, 0.6)",
+    backgroundColor: '#ffffff',
     zIndex: 4,
   },
   cardTop: {
