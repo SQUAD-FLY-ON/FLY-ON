@@ -3,11 +3,11 @@ import { apiClient } from "@/api/apiClient";
 import { ApiResponse } from "@/types/api";
 import { Alert } from "react-native";
 import { useAuthStore } from "@/store/useAuthStore";
-import { TourismScheduleData } from "@/types";
+import { TourismSchedule, TourismScheduleData } from "@/types";
 
 const memberId = useAuthStore.getState().memberInfo?.memberId;
 
-export async function fetchTourSchedule(): Promise<any> {
+export async function fetchTourSchedule(): Promise<TourismSchedule[]> {
   try {
     const response: ApiResponse<TourismScheduleData> = await apiClient.get(
       `/tourism-schedule`,

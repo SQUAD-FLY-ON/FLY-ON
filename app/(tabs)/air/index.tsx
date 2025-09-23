@@ -2,7 +2,7 @@ import Background from "@/conponents/(tabs)/air/Background";
 import Dropdown from "@/conponents/(tabs)/air/Dropdown";
 import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
 import Stopwatch from "@/conponents/(tabs)/air/Stopwatch";
-import extractTourNames from "@/libs/(tabs)/air/extractTourNames";
+import { useTourSchedule } from "@/hooks/useTourSchedule";
 import { Option, TLocationData } from "@/types";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Location from "expo-location";
@@ -12,6 +12,8 @@ import { StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
   const router = useRouter();
+
+  const { isScheduleLoading, isScheduleError, schedule } = useTourSchedule();
 
   const [ok, setOk] = useState<boolean>();
   const locationDataRef = useRef<TLocationData[]>([]);
@@ -92,23 +94,56 @@ export default function Index() {
     }
   };
 
-  const getTourList = async () => {
-    try {
-      const response = await extractTourNames();
+  // const getTourList = async () => {
+  //   try {
+  //     if (schedule === undefined) return [];
 
-      // 중복 제거 후 옵션 생성
-      const uniqueNames = [...new Set(response)];
-      const options: Option[] = uniqueNames.map((name) => ({
-        label: name,
-        value: name,
-      }));
+  //     const result = [];
 
-      setTourList(options);
-      console.log("투어리스트:", options);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     for (const tour of schedule) {
+  //       if (tour.dailyTourismSpots) {
+  //         const flatSpots = tour.dailyTourismSpots.flat();
+
+  //         for (const spot of flatSpots) {
+  //           if (spot.name.includes("패러글라이딩")) {
+  //             result.push(spot.name);
+  //             break;
+  //           }
+  //         }
+  //       }
+  //     }
+
+  //     // 중복 제거 후 옵션 생성
+  //     const uniqueNames = [...new Set(result)];
+  //     const options: Option[] = uniqueNames.map((name) => ({
+  //       label: name,
+  //       value: name,
+  //     }));
+
+  //     setTourList(options);
+  //     console.log("투어리스트:", options);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (schedule === undefined) return;
+
+    // tourName: null 에러
+    const options: Option[] = schedule?.map((tour) => ({
+      label: tour.tourName,
+      value: tour.tourName,
+    }));
+
+    setTourList(options);
+  }, [schedule]);
+
+  // useEffect(() => {
+  //   if (schedule === undefined) return;
+
+  //   getTourList();
+  // }, [schedule]);
 
   useEffect(() => {
     ask();
@@ -116,7 +151,7 @@ export default function Index() {
 
   useFocusEffect(
     useCallback(() => {
-      getTourList();
+      // getTourList();
       setValue(null);
       setHasValue(false);
       setIsFlyOn(false);
