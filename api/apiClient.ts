@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 import axios from 'axios';
 import { Alert } from 'react-native';
 import { useAuthStore } from '../store/useAuthStore';
-=======
-import { useAuthStore } from "@/store/useAuthStore";
-import axios from "axios";
-import { Alert } from "react-native";
->>>>>>> feat/48-schedule_detail
 
 export const apiClient = axios.create({
   baseURL: `${process.env.EXPO_PUBLIC_API_URL}`,
