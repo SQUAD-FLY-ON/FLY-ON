@@ -251,6 +251,7 @@ export interface TourismSchedule {
   scheduleStart: string;
   scheduleEnd: string;
   dailyTourismSpots: TourismSpot[][];
+  tourName: string;
 }
 
 export interface TourismScheduleData {

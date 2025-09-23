@@ -1,6 +1,7 @@
 import { apiClient } from "@/api/apiClient";
 import { AuthResponse, MemberInfo } from "@/types";
 import { ApiResponse, LoginRequest } from "@/types/api";
+import { useQueryClient } from "@tanstack/react-query";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -54,18 +55,17 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         }
 
         set({ isLoading: true });
-
-          // 액세스 토큰 유효성 검사 (예: 사용자 정보 요청)
-          const userResponse = await apiClient.get("/members");
-          if (userResponse.httpStatusCode === 200) {
-            set({
-              isAuthenticated: true,
-              memberInfo: userResponse.data || get().memberInfo,
-              isInitialized: true,
-              isLoading: false,
-            });
-            return;
-          }
+        // 액세스 토큰 유효성 검사 (예: 사용자 정보 요청)
+        const userResponse = await apiClient.get("/members");
+        if (userResponse.httpStatusCode === 200) {
+          set({
+            isAuthenticated: true,
+            memberInfo: userResponse.data || get().memberInfo,
+            isInitialized: true,
+            isLoading: false,
+          });
+          return;
+        }
       },
       login: async (credentials) => {
         set({ isLoading: true });
@@ -74,9 +74,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             "/auth",
             credentials
           );
+          console.log(response.data, response, response.httpStatusCode);
           if (response.httpStatusCode === 200 && response.data) {
             const { accessToken, refreshToken, memberInfo } = response.data;
-
             set({
               isAuthenticated: true,
               accessToken,
@@ -103,15 +103,18 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       logout: async () => {
+        const queryClient = useQueryClient();
         set({ isLoading: true });
         try {
           const refreshToken = get().refreshToken;
+          
           if (refreshToken) {
             await apiClient
               .delete("/tokens", { data: { refreshToken } })
               .catch((error) => {
                 console.warn("서버 로그아웃 요청 실패:", error);
               });
+            queryClient.invalidateQueries({queryKey: ['mySchedule']})
           }
         } catch (error) {
           console.error("로그아웃 중 오류:", error);

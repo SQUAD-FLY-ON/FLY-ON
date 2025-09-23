@@ -12,18 +12,18 @@ export default async function extractTourNames(): Promise<string[]> {
     const schedules = response.data.tourismSchedules;
     // const schedules = mockSchedule;
     const result: string[] = [];
-    for (const schedule of schedules) {
-      if (schedule.dailyTourismSpots) {
-        const flatSpots = schedule.dailyTourismSpots.flat();
+    // for (const schedule of schedules) {
+    //   if (schedule.dailyTourismSpots) {
+    //     const flatSpots = schedule.dailyTourismSpots.flat();
 
-        for (const spot of flatSpots) {
-          if (spot.name.includes("패러글라이딩")) {
-            result.push(spot.name);
-            break;
-          }
-        }
-      }
-    }
+    //     for (const spot of flatSpots) {
+    //       if (spot.name.includes("패러글라이딩")) {
+    //         result.push(spot.name);
+    //         break;
+    //       }
+    //     }
+    //   }
+    // }
 
     return result;
   } catch (error) {

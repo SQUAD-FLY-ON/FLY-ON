@@ -18,7 +18,7 @@ export default function PlaceCard({ data }: { data: TourismItem }) {
   };
 
   const selected = Array.isArray(selectedPlaces) &&
-    selectedPlaces.some(place => place.fullAddress === data.fullAddress);
+    selectedPlaces.some(place => (place.fullAddress === data.fullAddress && place.name === data.name))
 
   return (
     <Pressable

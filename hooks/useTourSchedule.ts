@@ -1,13 +1,13 @@
-import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/api/apiClient";
-import { ApiResponse } from "@/types/api";
-import { Alert } from "react-native";
 import { useAuthStore } from "@/store/useAuthStore";
-import { TourismScheduleData } from "@/types";
+import { TourismSchedule, TourismScheduleData } from "@/types";
+import { ApiResponse } from "@/types/api";
+import { useQuery } from "@tanstack/react-query";
+import { Alert } from "react-native";
 
 const memberId = useAuthStore.getState().memberInfo?.memberId;
 
-export async function fetchTourSchedule(): Promise<any> {
+export async function fetchTourSchedule(): Promise<TourismSchedule[]> {
   try {
     const response: ApiResponse<TourismScheduleData> = await apiClient.get(
       `/tourism-schedule`,
@@ -32,6 +32,8 @@ export const useTourSchedule = () => {
   } = useQuery({
     queryKey: ["mySchedule"],
     queryFn: fetchTourSchedule,
+    staleTime: 1000 * 60 * 30,
+    gcTime: 1000 * 60 * 60 * 24,
   });
 
   return { isScheduleLoading, isScheduleError, schedule, isSuccess };

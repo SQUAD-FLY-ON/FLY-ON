@@ -1,18 +1,19 @@
+import CustomButton from "@/conponents/CustomButton";
 import Colors from "@/constants/colors";
 import { TourismSchedule } from "@/types";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View, ViewStyle } from "react-native";
+import { StyleSheet, View, ViewStyle } from "react-native";
 import CardContents from "./CardContents";
 import UserGroup from "./icons/UserGroup";
 
 const TravelCard = ({ 
   containerStyle, 
-  button = true,
+  onPress,
   schedule,
   loading = false
 }: { 
   containerStyle?: ViewStyle, 
-  button?: boolean,
+  onPress?: () => void,
   schedule: TourismSchedule | null,
   loading?: boolean
 }) => {
@@ -26,17 +27,17 @@ const TravelCard = ({
         {schedule ? (
           <View style={styles.userGroupView}>
             <UserGroup />
-            <Text style={styles.userGroupText}>2인</Text>
+            {/* <Text style={styles.userGroupText}>2인</Text> */}
           </View>
         ) : null}
-        {/* {button && <CustomButton
+        {<CustomButton
           onPress={onPress}
           containerStyle={styles.scheduleDetailBtn}
           buttonType={"small"}
-          text={schedule ? "일정보기" : "일정생성"}
+          text={"일정보기"}
           rightArrow
         />
-        } */}
+        }
       </View>
     </View>
   );

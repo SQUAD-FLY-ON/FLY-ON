@@ -23,6 +23,17 @@ const CardContents = ({
     day: 0,
   };
 
+  outer: for (let i = 0; i < schedule.dailyTourismSpots.length; i++) {
+    const day = schedule.dailyTourismSpots[i];
+    for (const spot of day) {
+      if (spot.name.includes("패러글라이딩 체험장")) {
+        paragliding.spot = spot.name;
+        paragliding.day = i + 1;
+      }
+      break outer;
+    }
+  }
+
   const formatDate = (dateStr: string) => {
     const [_, month, day] = dateStr.split("-");
     return `${month}.${day}`;
@@ -34,6 +45,7 @@ const CardContents = ({
   return (
     <>
       <View style={styles.cardTop}>
+
         <Text style={styles.title}>
           {schedule.tourName?`${schedule.tourName} 여행`: '여행'} (
           {schedule.dailyTourismSpots.length}일)
@@ -44,7 +56,7 @@ const CardContents = ({
         </Text>
       </View>
       <View style={styles.cardContents}>
-        {schedule.dailyTourismSpots?.map((v, i) => (
+        {schedule.dailyTourismSpots.map((v, i) => (
           <View key={i} style={styles.schedule}>
             <View style={styles.circle} />
             <Text style={styles.scheduleDay}>{i + 1}일차</Text>
@@ -72,13 +84,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   cardTop: {
-    paddingTop: 31,
+    marginTop: 40,
     paddingBottom: 16,
-    marginHorizontal: 18,
     flexDirection: "row",
     alignItems: "baseline",
-    borderBottomColor: "rgba(208, 208, 208, 0.50)",
-    borderBottomWidth: 2,
   },
   title: {
     fontFamily: "Pretendard-SemiBold",
@@ -92,14 +101,16 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   cardContents: {
-    paddingTop: 16,
-    paddingHorizontal: 18,
+    paddingVertical: 27,
+    paddingHorizontal: 14,
+    backgroundColor: '#ffffff',
+    gap: 12,
+    borderRadius: 12,
   },
   schedule: {
     flexDirection: "row",
     gap: 10,
     alignItems: "center",
-    marginBottom: 12,
   },
   circle: {
     width: 12,
