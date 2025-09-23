@@ -1,7 +1,7 @@
 import { fetchSignout } from "@/libs/(tabs)/user/fetchSignout";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useScheduleStore } from "@/store/useScheduleStore";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import {
   Alert,
   Linking,
@@ -24,8 +24,15 @@ const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
       clearAuthState: state.clearAuthState,
     }))
   );
+
+  const router = useRouter();
+
   const onPress = async (name: string, url: string) => {
-    if (name === "개인정보처리방침") {
+    if (name === "비행 기록") {
+      // 비행 기록 상세 페이지로 이동
+      console.log("비행 기록 클릭");
+      router.navigate("/(tabs)/user/my-flight-records");
+    } else if (name === "개인정보처리방침") {
       const supported = await Linking.canOpenURL(url);
 
       if (supported) {
