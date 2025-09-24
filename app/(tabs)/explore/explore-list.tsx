@@ -1,6 +1,6 @@
 import PlaceCard from "@/conponents/(tabs)/explore/PlaceCard";
 import Header from "@/conponents/Header";
-import { fetchSpotMarkers } from "@/libs/fetchSpots";
+import { fetchSpots } from "@/libs/fetchSpots";
 import useExploreStore from "@/store/exploreStore";
 import { useQuery } from "@tanstack/react-query";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -8,7 +8,7 @@ import { useShallow } from "zustand/shallow";
 
 export default function ExploreList() {
   const { selectedRegion, selectedMarkerSpot } = useExploreStore(useShallow(state => ({ selectedRegion: state.selectedRegion, selectedMarkerSpot: state.selectedMarkerSpot })));
-  const query = useQuery({ queryKey: ['spotMarkers', selectedRegion.name], queryFn: async () => await fetchSpotMarkers({ sido: selectedRegion.name! }) })
+  const query = useQuery({ queryKey: ['spots', selectedRegion.name], queryFn: async () => await fetchSpots({ sido: selectedRegion.name! }) })
   const spotMarkers = query.data;
   return (
     <View>

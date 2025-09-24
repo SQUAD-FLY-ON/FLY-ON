@@ -20,6 +20,7 @@ export interface ScheduleActions {
   setSelectedRegion: (region: selectedRegion) => void;
   setSelectedPlaces: (places: TourismItem) => void;
   setSelectedActivities: (activity: Spot) => void;
+  settingSigungu: (sigungu: string) => void;
   setDayData: (scheduledayDataOrUpdater: DayData | ((prevData: DayData) => DayData)) => void;
   setSchedule: (schedule: Schedules) => void;
   goToPrevStep: () => void;
@@ -36,8 +37,9 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
   setCurrentMarkedDates: (dates) => {
     set({ currentMarkedDates: dates });
   },
-  selectedRegion: { key: '', name: '', coordinates: [] },
+  selectedRegion: { key: '', name: '', sigungu:'', coordinates: [] },
   setSelectedRegion: (region) => set({ selectedRegion: region }),
+  settingSigungu: (sigungu) => set({ selectedRegion: { ...get().selectedRegion, sigungu: sigungu } }),
   selectedActivities: {
     id: '',
     imgUrl: '',
