@@ -11,8 +11,16 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function RootLayout() {
   // setupInterceptors();
-  const queryClient = new QueryClient();
-
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1, // 모든 쿼리에 대해 1번만 재시도
+    },
+    mutations: {
+      retry: 1, // mutation도 재시도 설정 가능
+    },
+  },
+});
   const [fontsLoaded] = useFonts({
     "Pretendard-Bold": require("@/assets/fonts/Pretendard-Bold.ttf"),
     "Pretendard-Regular": require("@/assets/fonts/Pretendard-Regular.ttf"),
