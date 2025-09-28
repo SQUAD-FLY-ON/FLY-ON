@@ -47,6 +47,7 @@ export default function PlaceList({
       if(!center?.latitude || !center?.longitude ) {
         return;
       }
+      console.log(pageParam);
       if (currentFilter === 'restaurant') {
         return await fetchRestaurants({ 
         lat: center?.latitude, 
@@ -64,7 +65,7 @@ export default function PlaceList({
       }
     },
     enabled: !!center,
-    initialPageParam: 1,
+    initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       console.log(lastPage);
       // // lastPage가 비어있거나 설정된 페이지 크기보다 작으면 다음 페이지 없음
