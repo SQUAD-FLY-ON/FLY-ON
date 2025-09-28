@@ -1,6 +1,7 @@
 import { apiClient } from "@/api/apiClient";
 import { AuthResponse, MemberInfo } from "@/types";
 import { ApiResponse, LoginRequest } from "@/types/api";
+import { useQueryClient } from "@tanstack/react-query";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -55,17 +56,17 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
         set({ isLoading: true });
 
-          // 액세스 토큰 유효성 검사 (예: 사용자 정보 요청)
-          const userResponse = await apiClient.get("/members");
-          if (userResponse.httpStatusCode === 200) {
-            set({
-              isAuthenticated: true,
-              memberInfo: userResponse.data || get().memberInfo,
-              isInitialized: true,
-              isLoading: false,
-            });
-            return;
-          }
+        // 액세스 토큰 유효성 검사 (예: 사용자 정보 요청)
+        const userResponse = await apiClient.get("/members");
+        if (userResponse.httpStatusCode === 200) {
+          set({
+            isAuthenticated: true,
+            memberInfo: userResponse.data || get().memberInfo,
+            isInitialized: true,
+            isLoading: false,
+          });
+          return;
+        }
       },
       login: async (credentials) => {
         set({ isLoading: true });
@@ -103,6 +104,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       logout: async () => {
+        const queryClient = useQueryClient();
+
         set({ isLoading: true });
         try {
           const refreshToken = get().refreshToken;
@@ -112,6 +115,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               .catch((error) => {
                 console.warn("서버 로그아웃 요청 실패:", error);
               });
+            queryClient.invalidateQueries({ queryKey: ['mySchedule'] })
           }
         } catch (error) {
           console.error("로그아웃 중 오류:", error);
@@ -122,12 +126,15 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       refreshAccessToken: async () => {
+        const queryClient = useQueryClient();
+
         try {
           const refreshToken = get().refreshToken;
           if (!refreshToken) {
             get().clearAuthState();
             return false;
           }
+
           const response: ApiResponse<AuthResponse> = await apiClient.post(
             "/tokens",
             {
@@ -155,6 +162,10 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         } catch (error: any) {
           console.error("토큰 갱신 실패:", error);
           return false;
+        }
+        finally {
+          queryClient.invalidateQueries({ queryKey: ['mySchedule'] });
+          set({ isLoading: false });
         }
       },
       clearAuthState: () => {
