@@ -1,9 +1,65 @@
 import CustomButton from "@/conponents/CustomButton";
+import useExploreStore from "@/store/exploreStore";
+import { useScheduleStore } from "@/store/useScheduleStore";
 import { Ionicons } from '@expo/vector-icons';
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { useShallow } from "zustand/shallow";
 import CustomCalendar from "../schedule/screens/CalanderScreen/Calander";
 export default function CalanderModal({ isModalVisible, setIsModalVisible }: { isModalVisible: boolean, setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>> }) {
-
+  const { selectedMarkerSpot, selectedRegion } = useExploreStore(useShallow(state => ({ selectedMarkerSpot: state.selectedMarkerSpot, selectedRegion: state.selectedRegion })))
+  const router = useRouter();
+  const [dates, setDates] = useState({});
+  const { currentStep, setCurrentStep, setSelectedRegion, setSelectedActivities, resetAllStates, setCurrentMarkedDates } = useScheduleStore(
+    useShallow((state) => ({
+      currentStep: state.currentStep,
+      setCurrentStep: state.setCurrentStep,
+      setSelectedRegion: state.setSelectedRegion,
+      setSelectedActivities: state.setSelectedActivities,
+      resetAllStates: state.resetAllStates,
+      setCurrentMarkedDates: state.setCurrentMarkedDates,
+    }))
+  );
+  const createButtonPress = () => {
+    if(Object.keys(dates).length === 0){
+      return;
+    }
+    if (currentStep > 0) {
+      Alert.alert(
+        '일정 생성 중',
+        '기존에 생성하던 일정이 있습니다. 초기화하고 다시 일정을 생성할까요?',
+        [
+          {
+            text: '아니오',
+            onPress: () => console.log('취소됨'),
+            style: 'cancel',
+          },
+          {
+            text: '예',
+            onPress: () => {
+              resetAllStates();
+              setCurrentStep(4);
+              setSelectedRegion(selectedRegion);
+              setSelectedActivities(selectedMarkerSpot);
+              router.push('/(tabs)/schedule');
+            },
+          },
+        ],
+        { cancelable: false } // 바깥 영역 터치로 닫기 방지
+      );
+    } else {
+      // currentStep이 0일 때 바로 실행
+      resetAllStates();
+      setCurrentStep(4);
+      setSelectedRegion(selectedRegion);
+      setSelectedActivities(selectedMarkerSpot);
+      router.push('/(tabs)/schedule');
+    }
+  }
+  const resetDates = () => {
+    setDates({});
+  }
   return (
     <Modal
       visible={isModalVisible}
@@ -11,20 +67,20 @@ export default function CalanderModal({ isModalVisible, setIsModalVisible }: { i
       animationType="fade"
       onRequestClose={() => setIsModalVisible(false)}
     >
-      <Pressable onPress = {() =>{setIsModalVisible(false)}} style={styles.modalOverlay}>
+      <Pressable onPress={() => { setIsModalVisible(false) }} style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <Text style={styles.title}>
             여행 일정 선택하기
           </Text>
-          <Ionicons name="close" size={36} onPress={() => setIsModalVisible(false)} color="#D2D2D2" style = {styles.closeButton}/>
+          <Ionicons name="close" size={36} onPress={() => setIsModalVisible(false)} color="#D2D2D2" style={styles.closeButton} />
           <Text numberOfLines={2} style={styles.description}>
             해당 체험장을 방문할 여행 일정을{'\n'}
             선택해 주세요
           </Text>
-          <CustomCalendar />
+          <CustomCalendar setDates={setDates} dates={dates} />
           <View style={styles.buttonContainer}>
-            <CustomButton text='일정 생성하기' style={styles.button} />
-            <CustomButton text='초기화' backgroundColor="#D2D2D2" undo style={styles.button} textStyle={styles.prevText} />
+            <CustomButton text='일정 생성하기' style={styles.button} onPress={createButtonPress} disabled={Object.keys(dates).length === 0} />
+            <CustomButton text='초기화' onPress={resetDates} backgroundColor="#D2D2D2" undo style={styles.button} textStyle={styles.prevText} />
           </View>
         </View>
       </Pressable>
@@ -37,7 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex:100,
+    zIndex: 100,
   },
   modalContainer: {
     padding: 16,
@@ -47,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 16,
     minWidth: 310,
-    zIndex:200,
+    zIndex: 200,
   },
   title: {
     fontFamily: 'Pretendard-SemiBold',
