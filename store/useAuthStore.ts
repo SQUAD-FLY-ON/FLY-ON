@@ -1,4 +1,5 @@
 import { apiClient } from "@/api/apiClient";
+import { queryClient } from "@/app/_layout";
 import { AuthResponse, MemberInfo } from "@/types";
 import { ApiResponse, LoginRequest } from "@/types/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -48,7 +49,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       refreshToken: null,
       initializeAuth: async () => {
         const { accessToken, refreshToken } = get();
-        console.log(accessToken, refreshToken);
         if (!accessToken || !refreshToken) {
           set({ isInitialized: true });
           return;
@@ -126,7 +126,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       refreshAccessToken: async () => {
-        const queryClient = useQueryClient();
+        // const queryClient = useQueryClient();
+        console.log('aaa');
 
         try {
           const refreshToken = get().refreshToken;
@@ -134,7 +135,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             get().clearAuthState();
             return false;
           }
-
+          console.log(refreshToken);
           const response: ApiResponse<AuthResponse> = await apiClient.post(
             "/tokens",
             {
