@@ -9,11 +9,11 @@ export function ScheduleBackButton() {
     const isFirst = currentStep === 0;
     const router = useRouter();
     const backButtonPress = () => {
-        if(isFirst) {
+        // if(isFirst) {
             router.back();
-            return;
-        }
-        goToPrevStep();
+        //     return;
+        // }
+        // goToPrevStep();
     }
     return (<Pressable onPress = {() => {backButtonPress();}} style={{ width: 40, height: 40, justifyContent: 'center', alignItems: 'center' }}>
         <Entypo name="chevron-left" size={26.67} color="black" />
