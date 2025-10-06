@@ -11,7 +11,13 @@ export default function MyFlightRecords() {
       <Header title="비행 기록" backButton={true} />
       <ScrollView contentContainerStyle={styles.cardContainer}>
         {data.content.map((v) => (
-          <FlightCard key={v.id} name={v.airfieldName} date={v.createdAt} />
+          <FlightCard
+            key={v.id}
+            id={v.id}
+            name={v.airfieldName}
+            date={v.createdAt}
+            data={v}
+          />
         ))}
       </ScrollView>
     </View>

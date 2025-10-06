@@ -1,12 +1,26 @@
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const FlightCard = ({ name, date }: { name: string; date: string }) => {
+const FlightCard = ({
+  id,
+  name,
+  date,
+  data,
+}: {
+  id: string;
+  name: string;
+  date: string;
+  data: any;
+}) => {
   const router = useRouter();
 
   const onPress = () => {
+    console.log(data);
     // 체험장 상세 페이지로 이동
-    router.navigate("/(tabs)/user/my-flight-details");
+    router.push({
+      pathname: `/user/flight-detail/[id]`,
+      params: { id, data: JSON.stringify(data) },
+    });
   };
 
   return (

@@ -28,6 +28,7 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
         styles.container,
         (pathname === "/air" ||
           pathname === "/air/report" ||
+          pathname.startsWith("/user/flight-detail") ||
           pathname === "/schedule") && { display: "none" },
       ]}
     >

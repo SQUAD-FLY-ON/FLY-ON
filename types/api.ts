@@ -110,7 +110,7 @@ interface IPageable {
   sort: ISort;
 }
 
-interface myFlightLogsContents {
+export interface myFlightLogsContents {
   id: string;
   airfieldName: string;
   flightTime: number;

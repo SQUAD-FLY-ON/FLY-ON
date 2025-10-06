@@ -5,7 +5,10 @@ export default function UserLayout() {
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="my-flight-records" options={{ headerShown: false }} />
-      <Stack.Screen name="my-flight-details" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="flight-detail/[id]"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 }
