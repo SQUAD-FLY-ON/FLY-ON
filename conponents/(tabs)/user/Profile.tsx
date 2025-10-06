@@ -4,11 +4,14 @@ import { Image, StyleSheet, Text, View } from "react-native";
 
 const Profile = ({ level, nickname }: { level: string; nickname: string }) => {
   const profileImage = useAuthStore((state) => state.memberInfo?.imgUrl);
+  console.log("image:", profileImage);
 
   return (
     <View style={styles.profileContainer}>
       <View style={styles.profileImgContainer}>
-        <Image style={styles.profileImg} source={{ uri: profileImage || "" }} />
+        {profileImage && (
+          <Image style={styles.profileImg} source={{ uri: profileImage }} />
+        )}
       </View>
       <LevelBadge text={level} />
       <Text style={styles.profileName}>{nickname}님</Text>
@@ -34,7 +37,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   profileImg: {
-    flex: 1,
+    width: "100%",
+    height: "100%",
+    borderRadius: 30,
+    zIndex: 10,
+    resizeMode: "cover",
   },
   profileName: {
     fontFamily: "Pretendard-Bold",
