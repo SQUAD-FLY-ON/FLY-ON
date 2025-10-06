@@ -2,7 +2,6 @@ import { apiClient } from "@/api/apiClient";
 import { queryClient } from "@/app/_layout";
 import { AuthResponse, MemberInfo } from "@/types";
 import { ApiResponse, LoginRequest } from "@/types/api";
-import { useQueryClient } from "@tanstack/react-query";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -104,7 +103,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       logout: async () => {
-        const queryClient = useQueryClient();
 
         set({ isLoading: true });
         try {
@@ -127,7 +125,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       refreshAccessToken: async () => {
         // const queryClient = useQueryClient();
-        console.log('aaa');
 
         try {
           const refreshToken = get().refreshToken;
@@ -135,7 +132,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             get().clearAuthState();
             return false;
           }
-          console.log(refreshToken);
           const response: ApiResponse<AuthResponse> = await apiClient.post(
             "/tokens",
             {
@@ -162,6 +158,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           }
         } catch (error: any) {
           console.error("토큰 갱신 실패:", error);
+          get().clearAuthState();
           return false;
         }
         finally {
@@ -176,6 +173,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           refreshToken: null,
           memberInfo: null,
         });
+
       },
     }),
     {
