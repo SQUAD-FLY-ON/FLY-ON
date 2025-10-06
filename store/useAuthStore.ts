@@ -61,7 +61,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         if (userResponse.httpStatusCode === 200) {
           set({
             isAuthenticated: true,
-            memberInfo: userResponse.data || get().memberInfo,
+            // memberInfo: userResponse.data || get().memberInfo,
             isInitialized: true,
             isLoading: false,
           });
@@ -115,7 +115,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               .catch((error) => {
                 console.warn("서버 로그아웃 요청 실패:", error);
               });
-            queryClient.invalidateQueries({ queryKey: ['mySchedule'] })
+            queryClient.invalidateQueries({ queryKey: ["mySchedule"] });
           }
         } catch (error) {
           console.error("로그아웃 중 오류:", error);
@@ -127,7 +127,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       refreshAccessToken: async () => {
         // const queryClient = useQueryClient();
-        console.log('aaa');
+        console.log("aaa");
 
         try {
           const refreshToken = get().refreshToken;
@@ -143,17 +143,11 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             }
           );
           if (response.httpStatusCode === 201 && response.data) {
-            const {
-              accessToken,
-              refreshToken: newRefreshToken,
-              memberInfo,
-            } = response.data;
+            const { accessToken } = response.data;
 
             set({
               isAuthenticated: true,
               accessToken,
-              refreshToken: newRefreshToken || refreshToken,
-              memberInfo: memberInfo || get().memberInfo,
             });
 
             return true;
@@ -163,9 +157,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         } catch (error: any) {
           console.error("토큰 갱신 실패:", error);
           return false;
-        }
-        finally {
-          queryClient.invalidateQueries({ queryKey: ['mySchedule'] });
+        } finally {
+          queryClient.invalidateQueries({ queryKey: ["mySchedule"] });
           set({ isLoading: false });
         }
       },
