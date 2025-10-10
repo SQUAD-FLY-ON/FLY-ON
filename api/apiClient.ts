@@ -1,18 +1,6 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
 import { Alert } from "react-native";
-
-/**
- * Axios 클라이언트 인스턴스
- *
- * - `baseURL`은 환경변수 `EXPO_PUBLIC_API_URL`에서 불러옵니다.
- * - 주소에서 `api` 뒤에 url부터 입력합니다 (ex) https://xxxx/api/users -> '/users'
- *
- * 사용 예시:
- * ```ts
- * const res = await apiClient.get('/users');
- * ```
- */
 export const apiClient = axios.create({
   baseURL: `${process.env.EXPO_PUBLIC_API_URL}`,
   timeout: 10000,
@@ -39,7 +27,7 @@ apiClient.interceptors.response.use(
       return response.data;
   },
   async (error) => {
-    if (error.response?.data?.serverErrorMessage && error.response?.status !== 401) {
+    if (error.response?.data?.serverErrorMessage) {
       Alert.alert('오류', error.response.data.serverErrorMessage);
     } else {
       Alert.alert('오류', '데이터 요청에 실패했습니다.');
@@ -49,15 +37,19 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshed = await useAuthStore.getState().refreshAccessToken();
+
       if (refreshed) {
         const token = useAuthStore.getState().accessToken;
         originalRequest.headers.Authorization = `Bearer ${token}`;
         return apiClient(originalRequest);
+
       } else {
-        useAuthStore.getState().clearAuthState();
         Alert.alert('오류', '토큰 갱신에 실패했습니다. 다시 로그인해주세요');
+            useAuthStore.getState().clearAuthState();
+
       }
     }
+
 
     return Promise.reject(error);
   }

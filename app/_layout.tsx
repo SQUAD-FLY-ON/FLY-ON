@@ -8,10 +8,11 @@ import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+export const queryClient = new QueryClient();
 
-const queryClient = new QueryClient()
 export default function RootLayout() {
   const queryClient = new QueryClient();
+
 
   const [fontsLoaded] = useFonts({
     "Pretendard-Bold": require("@/assets/fonts/Pretendard-Bold.ttf"),
@@ -23,7 +24,7 @@ export default function RootLayout() {
   const isInitialized = useAuthStore((state) => state.isInitialized);
   const isLoading = useAuthStore((state) => state.isLoading);
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
-
+  console.log(isAuthenticated);
   // 앱 시작 시 인증 상태 초기화
   useEffect(() => {
     if (fontsLoaded && !isInitialized) {
