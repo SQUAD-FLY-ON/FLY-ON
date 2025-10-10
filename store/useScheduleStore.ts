@@ -51,13 +51,13 @@ export const useScheduleStore = create<ScheduleState & ScheduleActions>((set, ge
   setSelectedPlaces: (place) =>
     set((state) => {
       const isAlreadySelected = state.selectedPlaces.some(
-        (activity) => activity.fullAddress === place.fullAddress
+        (activity) => activity.fullAddress === place.fullAddress && activity.name === place.name
       );
 
       if (isAlreadySelected) {
         return {
           selectedPlaces: state.selectedPlaces.filter(
-            (activity) => activity.fullAddress !== place.fullAddress
+            (activity) => activity.fullAddress !== place.fullAddress || activity.name !== place.name
           ),
         };
       } else {

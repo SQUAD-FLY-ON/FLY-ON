@@ -1,7 +1,6 @@
-import axios from 'axios';
-import { Alert } from 'react-native';
-import { useAuthStore } from '../store/useAuthStore';
-
+import { useAuthStore } from "@/store/useAuthStore";
+import axios from "axios";
+import { Alert } from "react-native";
 export const apiClient = axios.create({
   baseURL: `${process.env.EXPO_PUBLIC_API_URL}`,
   timeout: 10000,
@@ -23,30 +22,34 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => {
     if (!response.data || !response.data.httpStatusCode) {
-      return response;
-    }
-    return response.data;
+        return response;
+      }
+      return response.data;
   },
   async (error) => {
-    const originalRequest = error.config;
-    if (error.response?.status === 401) {
-      console.log(error.response.status);
-
-      const refreshed = await useAuthStore.getState().refreshAccessToken();
-      console.log(refreshed);
-      if (refreshed) {
-        const token = useAuthStore.getState().accessToken;
-        originalRequest.headers.Authorization = `Bearer ${token}`;
-        return apiClient(originalRequest);
-      }
-    }
     if (error.response?.data?.serverErrorMessage) {
       Alert.alert('오류', error.response.data.serverErrorMessage);
     } else {
       Alert.alert('오류', '데이터 요청에 실패했습니다.');
     }
 
-    
+    const originalRequest = error.config;
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const refreshed = await useAuthStore.getState().refreshAccessToken();
+
+      if (refreshed) {
+        const token = useAuthStore.getState().accessToken;
+        originalRequest.headers.Authorization = `Bearer ${token}`;
+        return apiClient(originalRequest);
+
+      } else {
+        Alert.alert('오류', '토큰 갱신에 실패했습니다. 다시 로그인해주세요');
+            useAuthStore.getState().clearAuthState();
+
+      }
+    }
+
 
     return Promise.reject(error);
   }
