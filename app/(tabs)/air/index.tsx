@@ -2,7 +2,8 @@ import Background from "@/conponents/(tabs)/air/Background";
 import Dropdown from "@/conponents/(tabs)/air/Dropdown";
 import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
 import Stopwatch from "@/conponents/(tabs)/air/Stopwatch";
-import extractTourNames from "@/libs/(tabs)/air/extractTourNames";
+import { useTourSchedule } from "@/hooks/useTourSchedule";
+import extractTourList from "@/libs/(tabs)/air/extractTourList";
 import { Option, TLocationData } from "@/types";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Location from "expo-location";
@@ -23,7 +24,15 @@ export default function Index() {
   const [hasValue, setHasValue] = useState(false);
   const [isFlyOn, setIsFlyOn] = useState(false);
   const [seconds, setSeconds] = useState<number>(0);
+  const {schedule, isScheduleLoading, isScheduleError} = useTourSchedule();
 
+  useEffect(() => { 
+    if(!isScheduleError && !isScheduleLoading && schedule) {
+      const tourList = extractTourList(schedule);
+        
+        setTourList(tourList);
+    }
+}, [schedule, isScheduleLoading, isScheduleError]);
   const ask = async () => {
     try {
       const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -92,23 +101,24 @@ export default function Index() {
     }
   };
 
-  const getTourList = async () => {
-    try {
-      const response = await extractTourNames();
 
-      // 중복 제거 후 옵션 생성
-      const uniqueNames = [...new Set(response)];
-      const options: Option[] = uniqueNames.map((name) => ({
-        label: name,
-        value: name,
-      }));
+  // const getTourList = async () => {
+  //   try {
+  //     const response = await extractTourNames();
 
-      setTourList(options);
-      console.log("투어리스트:", options);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  //     // 중복 제거 후 옵션 생성
+  //     const uniqueNames = [...new Set(response)];
+  //     const options: Option[] = uniqueNames.map((name) => ({
+  //       label: name,
+  //       value: name,
+  //     }));
+
+  //     setTourList(options);
+  //     console.log("투어리스트:", options);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   useEffect(() => {
     ask();
@@ -116,7 +126,6 @@ export default function Index() {
 
   useFocusEffect(
     useCallback(() => {
-      getTourList();
       setValue(null);
       setHasValue(false);
       setIsFlyOn(false);

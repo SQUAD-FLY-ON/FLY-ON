@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import axios from "axios";
 import { Alert } from "react-native";
+
 export const apiClient = axios.create({
   baseURL: `${process.env.EXPO_PUBLIC_API_URL}`,
   timeout: 10000,
@@ -44,10 +45,8 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
 
       } else {
-        Alert.alert('오류', '토큰 갱신에 실패했습니다. 다시 로그인해주세요');
-            useAuthStore.getState().clearAuthState();
-
-      }
+        useAuthStore.getState().clearAuthState();
+        Alert.alert('오류', '토큰 갱신에 실패했습니다. 다시 로그인해주세요');      }evelop
     }
 
 

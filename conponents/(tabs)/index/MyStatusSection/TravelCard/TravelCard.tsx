@@ -1,18 +1,15 @@
 import CustomButton from "@/conponents/CustomButton";
 import Colors from "@/constants/colors";
-import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
-import UserGroup from "./icons/UserGroup";
-import CardContents from "./CardContents";
-import mockSchedule from "@/dummy/mock_schdule";
 import { useTourSchedule } from "@/hooks/useTourSchedule";
+import { useRouter } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import CardContents from "./CardContents";
 
 const TravelCard = () => {
   const router = useRouter();
 
   const { isScheduleLoading, isScheduleError, schedule } = useTourSchedule();
-  console.log("test-schedule:", schedule, schedule?.length);
-
+  console.log(schedule);
   const onPress = () => {
     const route = schedule?.length ? "/my-schedules" : "/schedule";
     router.push(route);
