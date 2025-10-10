@@ -1,4 +1,5 @@
 import { apiClient } from "@/api/apiClient";
+import { queryClient } from "@/app/_layout";
 import { AuthResponse, MemberInfo } from "@/types";
 import { ApiResponse, LoginRequest } from "@/types/api";
 import { useQueryClient } from "@tanstack/react-query";
@@ -48,7 +49,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       refreshToken: null,
       initializeAuth: async () => {
         const { accessToken, refreshToken } = get();
-        console.log(accessToken, refreshToken);
         if (!accessToken || !refreshToken) {
           set({ isInitialized: true });
           return;
@@ -104,6 +104,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       logout: async () => {
         const queryClient = useQueryClient();
+
         set({ isLoading: true });
         try {
           const refreshToken = get().refreshToken;
@@ -114,7 +115,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               .catch((error) => {
                 console.warn("서버 로그아웃 요청 실패:", error);
               });
-            queryClient.invalidateQueries({queryKey: ['mySchedule']})
+
+            queryClient.invalidateQueries({ queryKey: ['mySchedule'] })
           }
         } catch (error) {
           console.error("로그아웃 중 오류:", error);
@@ -125,12 +127,16 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       refreshAccessToken: async () => {
+        // const queryClient = useQueryClient();
+        console.log('aaa');
+
         try {
           const refreshToken = get().refreshToken;
           if (!refreshToken) {
             get().clearAuthState();
             return false;
           }
+          console.log(refreshToken);
           const response: ApiResponse<AuthResponse> = await apiClient.post(
             "/tokens",
             {
@@ -158,6 +164,10 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         } catch (error: any) {
           console.error("토큰 갱신 실패:", error);
           return false;
+        }
+        finally {
+          queryClient.invalidateQueries({ queryKey: ['mySchedule'] });
+          set({ isLoading: false });
         }
       },
       clearAuthState: () => {

@@ -15,7 +15,7 @@ export async function fetchTourSchedule(): Promise<TourismSchedule[]> {
         params: { memberId },
       }
     );
-    // 필수 값들이 유효한 항목만 필터링
+     // 필수 값들이 유효한 항목만 필터링
     const filteredSchedules = response.data.tourismSchedules.filter(schedule =>
       schedule.dailyTourismSpots &&
       schedule.scheduleStart &&

@@ -8,9 +8,11 @@ import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+export const queryClient = new QueryClient();
 
 export default function RootLayout() {
   const queryClient = new QueryClient();
+
 
   const [fontsLoaded] = useFonts({
     "Pretendard-Bold": require("@/assets/fonts/Pretendard-Bold.ttf"),
