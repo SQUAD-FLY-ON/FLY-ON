@@ -3,29 +3,48 @@ import {
   fetchSpotDetail,
   SpotDetailResponse,
 } from "@/libs/(tabs)/explore/detail/fetchSpotDetail";
+import { fetchSpotTrack } from "@/libs/(tabs)/explore/detail/fetchSpotTrack";
+import { ITrackData, ITrackPoints } from "@/types";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Image, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import WebView, { WebView as WebViewType } from "react-native-webview";
-
-interface IFlightPath {
-  lat: number;
-  lon: number;
-  alt: number;
-}
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import WebView, {
+  WebViewMessageEvent,
+  WebView as WebViewType,
+} from "react-native-webview";
 
 export default function Detail() {
   const { id } = useLocalSearchParams();
 
+  const [isReady, setIsReady] = useState<boolean>(false);
+  const [hasSentFlight, setHasSentFlight] = useState<boolean>(false);
+
   const [spotInfo, setSpotInfo] = useState<SpotDetailResponse | null>(null);
+  const [track, setTrack] = useState<ITrackData[] | null>(null);
+
   const spotDetail = async () => {
     const response = await fetchSpotDetail(id as string);
     if (response !== null) {
       setSpotInfo(response);
     }
   };
+  const getTrack = async () => {
+    const response = await fetchSpotTrack(id as string);
+    if (response !== null) setTrack(response);
+  };
+  useEffect(() => {
+    spotDetail();
+    getTrack();
+  }, [id]);
 
   const webviewRef = useRef<WebViewType>(null);
 
@@ -43,82 +62,108 @@ export default function Detail() {
     true;
   `;
 
-  const sendFlightData = (flightPath: IFlightPath[]) => {
+  const sendFlightData = () => {
+    console.log("sendFlightData-track:", track);
     const message = {
       type: "SET_FLIGHT",
-      flightPath,
+      track,
     };
 
     webviewRef.current?.postMessage(JSON.stringify(message));
+
+    setHasSentFlight(true);
+    console.log("[RN] SET_FLIGHT data sent.");
   };
 
-  useEffect(() => {
-    spotDetail();
+  const onMessage = (e: WebViewMessageEvent) => {
+    try {
+      const raw = e.nativeEvent.data;
+      const data = JSON.parse(raw);
+      if (!data?.type) return;
 
-    const flightPath = [
-      { lat: 37.5, lon: 128.2, alt: 1000 },
-      { lat: 37.51, lon: 128.21, alt: 900 },
-      { lat: 37.52, lon: 128.22, alt: 700 },
-      { lat: 37.53, lon: 128.23, alt: 300 },
-    ];
-    if (flightPath) {
-      setTimeout(() => sendFlightData(flightPath), 500);
+      if (data.type === "READY") {
+        console.log("[RN] webview READY received");
+        setIsReady(true);
+        if (!hasSentFlight) sendFlightData();
+      }
+
+      if (data.type === "PLAY_STARTED") {
+        console.log("[RN] play started");
+      }
+      if (data.type === "ERROR") {
+        console.warn("[RN] webview error:", data.message);
+      }
+    } catch (err) {
+      console.error("[RN] invalid message from webview", err);
     }
-  }, []);
+  };
+
+  const onLoadEnd = () => {
+    console.log("[RN] onLoadEnd");
+  };
 
   console.log("로드");
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.webveiwContainer}>
-        <WebView
-          ref={webviewRef}
-          source={{
-            uri: CESIUM_WEB_URL,
-          }}
-          injectedJavaScriptBeforeContentLoaded={cesiumAccessToken}
-          javaScriptEnabled={true}
-          originWhitelist={["*"]}
-          style={styles.webview}
-        />
-        <LinearGradient
-          colors={["rgba(245, 245, 245, 0)", "#F5F5F5"]}
-          start={{ x: 0.5, y: 0 }}
-          end={{ x: 0.5, y: 1 }}
-          locations={[0, 0.3886]} // 0% ~ 38.86%
-          style={styles.gradient}
-        />
-      </View>
-      <View style={styles.cardContainer}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{spotInfo ? spotInfo.name : "ERROR"}</Text>
-          <View style={styles.scoreContainer}>
-            <Image
-              source={require("@/assets/images/star.png")}
-              style={styles.star}
-            />
-            <Text style={styles.score}>4.9</Text>
-            <Text style={styles.review}>(19)</Text>
-          </View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.webveiwContainer}>
+          <WebView
+            ref={webviewRef}
+            source={{
+              uri: CESIUM_WEB_URL,
+            }}
+            injectedJavaScriptBeforeContentLoaded={cesiumAccessToken}
+            javaScriptEnabled={true}
+            originWhitelist={["*"]}
+            onMessage={onMessage}
+            onLoadEnd={onLoadEnd}
+            style={styles.webview}
+            // Android WebGL 이슈 방지를 위한 추가 옵션 (필요 시 주석 해제)
+            allowsInlineMediaPlayback={true}
+            mediaPlaybackRequiresUserAction={false}
+          />
+          <LinearGradient
+            colors={["rgba(245, 245, 245, 0)", "#F5F5F5"]}
+            start={{ x: 0.5, y: 0 }}
+            end={{ x: 0.5, y: 1 }}
+            locations={[0, 0.3886]} // 0% ~ 38.86%
+            style={styles.gradient}
+          />
         </View>
-        <SpotCard
-          address={
-            spotInfo?.fullAddress
-              ? spotInfo.fullAddress
-              : "등록된 주소 정보가 없습니다"
-          }
-          phoneNumber={
-            spotInfo?.phoneNumber
-              ? spotInfo.phoneNumber
-              : "등록된 전화번호가 존재하지 않습니다"
-          }
-          webURL={
-            spotInfo?.websiteUrl
-              ? spotInfo.websiteUrl
-              : "체험장 사이트가 존재하지 않습니다"
-          }
-        />
-      </View>
+        <View style={styles.cardContainer}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>
+              {spotInfo ? spotInfo.name : "ERROR"}
+            </Text>
+            <View style={styles.scoreContainer}>
+              <Image
+                source={require("@/assets/images/star.png")}
+                style={styles.star}
+              />
+              <Text style={styles.score}>4.9</Text>
+              <Text style={styles.review}>(19)</Text>
+            </View>
+          </View>
+          <SpotCard
+            address={
+              spotInfo?.fullAddress
+                ? spotInfo.fullAddress
+                : "등록된 주소 정보가 없습니다"
+            }
+            phoneNumber={
+              spotInfo?.phoneNumber
+                ? spotInfo.phoneNumber
+                : "등록된 전화번호가 존재하지 않습니다"
+            }
+            webURL={
+              spotInfo?.websiteUrl
+                ? spotInfo.websiteUrl
+                : "체험장 사이트가 존재하지 않습니다"
+            }
+          />
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -126,6 +171,10 @@ export default function Detail() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    paddingBottom: 300,
   },
   webveiwContainer: {
     height: 549,
@@ -147,7 +196,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 14,
     position: "absolute",
-    bottom: 40,
+    top: 500,
     width: "100%",
     height: 300,
   },
