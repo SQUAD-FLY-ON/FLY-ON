@@ -3,6 +3,7 @@ import Dropdown from "@/conponents/(tabs)/air/Dropdown";
 import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
 import Stopwatch from "@/conponents/(tabs)/air/Stopwatch";
 import { useTourSchedule } from "@/hooks/useTourSchedule";
+import extractTourList from "@/libs/(tabs)/air/extractTourList";
 import { Option, TLocationData } from "@/types";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Location from "expo-location";
@@ -26,6 +27,13 @@ export default function Index() {
   const [isFlyOn, setIsFlyOn] = useState(false);
   const [seconds, setSeconds] = useState<number>(0);
 
+  useEffect(() => {
+    if (!isScheduleError && !isScheduleLoading && schedule) {
+      const tourList = extractTourList(schedule);
+
+      setTourList(tourList);
+    }
+  }, [schedule, isScheduleLoading, isScheduleError]);
   const ask = async () => {
     try {
       const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -96,25 +104,10 @@ export default function Index() {
 
   // const getTourList = async () => {
   //   try {
-  //     if (schedule === undefined) return [];
-
-  //     const result = [];
-
-  //     for (const tour of schedule) {
-  //       if (tour.dailyTourismSpots) {
-  //         const flatSpots = tour.dailyTourismSpots.flat();
-
-  //         for (const spot of flatSpots) {
-  //           if (spot.name.includes("패러글라이딩")) {
-  //             result.push(spot.name);
-  //             break;
-  //           }
-  //         }
-  //       }
-  //     }
+  //     const response = await extractTourNames();
 
   //     // 중복 제거 후 옵션 생성
-  //     const uniqueNames = [...new Set(result)];
+  //     const uniqueNames = [...new Set(response)];
   //     const options: Option[] = uniqueNames.map((name) => ({
   //       label: name,
   //       value: name,
@@ -128,30 +121,11 @@ export default function Index() {
   // };
 
   useEffect(() => {
-    if (schedule === undefined) return;
-
-    // tourName: null 에러
-    const options: Option[] = schedule?.map((tour) => ({
-      label: tour.tourName,
-      value: tour.tourName,
-    }));
-
-    setTourList(options);
-  }, [schedule]);
-
-  // useEffect(() => {
-  //   if (schedule === undefined) return;
-
-  //   getTourList();
-  // }, [schedule]);
-
-  useEffect(() => {
     ask();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
-      // getTourList();
       setValue(null);
       setHasValue(false);
       setIsFlyOn(false);

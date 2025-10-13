@@ -1,13 +1,13 @@
 import { pageRoutes } from "@/types";
 import { TabTriggerSlotProps } from "expo-router/ui";
 import React from "react";
-import { Pressable, StyleSheet, Text } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 // import CommunityIcon from "./icons/CommunityIcon";
+import Colors from "@/constants/colors";
 import ExploreIcon from "./icons/ExploreIcon";
 import HomeIcon from "./icons/HomeIcon";
-import UserIcon from "./icons/UserIcon";
-import Colors from "@/constants/colors";
 import MySchedulesIcon from "./icons/MySchedulesIcon";
+import UserIcon from "./icons/UserIcon";
 
 type CustomTabButtonProps = TabTriggerSlotProps & {
   routeName: pageRoutes;
@@ -40,35 +40,47 @@ export default function CustomTabButton({
       {...props}
       style={[
         styles.button,
-        routeName === "my-schedules" && { marginRight: -18 },
       ]}
     >
       {routeName === "home" && <HomeIcon isFocused={isActive} />}
       {routeName === "explore" && <ExploreIcon isFocused={isActive} />}
       {routeName === "my-schedules" && <MySchedulesIcon isFocused={isActive} />}
       {routeName === "user" && <UserIcon isFocused={isActive} />}
-      <Text
-        style={[
-          styles.text,
-          { color: `${isActive ? Colors.main : Colors.text.text50}` },
-        ]}
-        numberOfLines={1}
-      >
-        {getRouteLabel(routeName)}
-      </Text>
+      <View style = {styles.textContainer}>
+        <Text
+          style={[
+            styles.text,
+            { color: `${isActive ? Colors.main : Colors.text.text50}` },
+          ]}
+          numberOfLines={1}
+          ellipsizeMode="clip"
+        >
+          {getRouteLabel(routeName)}
+        </Text>
+        </View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   button: {
-    gap: 8,
+    gap: 4,
     alignItems: "center",
     zIndex: 10,
     overflow: "visible",
+    position: 'relative',
+    height: 42,
+    width:24,
+  },
+  textContainer: {
+    position: 'absolute',
+    bottom: 0,
+    width:42,
+    alignItems: 'center',
   },
   text: {
     fontFamily: "Pretendard-Regular",
     fontSize: 12,
+    lineHeight: 12,
   },
 });

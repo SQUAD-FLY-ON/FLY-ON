@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { Alert } from 'react-native';
-import { useAuthStore } from '../store/useAuthStore';
+import { useAuthStore } from "@/store/useAuthStore";
+import axios from "axios";
+import { Alert } from "react-native";
 
 export const apiClient = axios.create({
   baseURL: `${process.env.EXPO_PUBLIC_API_URL}`,
@@ -38,12 +38,17 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshed = await useAuthStore.getState().refreshAccessToken();
+
       if (refreshed) {
         const token = useAuthStore.getState().accessToken;
         originalRequest.headers.Authorization = `Bearer ${token}`;
         return apiClient(originalRequest);
-      }
+
+      } else {
+        useAuthStore.getState().clearAuthState();
+        Alert.alert('오류', '토큰 갱신에 실패했습니다. 다시 로그인해주세요');      }evelop
     }
+
 
     return Promise.reject(error);
   }

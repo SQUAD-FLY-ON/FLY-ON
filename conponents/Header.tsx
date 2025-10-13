@@ -4,7 +4,7 @@ import { BackButton } from "./BackButton";
 
 export default function Header({title, backButton = true}: {title: string; backButton?: boolean}) {
   const router = useRouter();
-  return (<View style={[styles.container,!backButton && {paddingHorizontal:24}]}>
+  return (<View style={[styles.container,!backButton && {paddingHorizontal:24, paddingVertical: 18}]}>
     {backButton && <BackButton onPress={() => {router.back()}}/>}
     <Text style={styles.text}>{title}</Text>
   </View>)
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 16,
-    paddingVertical: 18,
+    paddingVertical: 12,
     gap: 8,
     backgroundColor: "#fff",
   },
