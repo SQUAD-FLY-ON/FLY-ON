@@ -1,13 +1,12 @@
 import axios from 'axios';
-import { Alert } from 'react-native';
 import { useAuthStore } from '../store/useAuthStore';
+import { useModalStore } from '../store/useModalStore';
 
 export const apiClient = axios.create({
   baseURL: `${process.env.EXPO_PUBLIC_API_URL}`,
   timeout: 10000,
 });
 
-// Request 인터셉터
 apiClient.interceptors.request.use(
   async (config) => {
     const token = useAuthStore.getState().accessToken;
@@ -19,7 +18,6 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response 인터셉터
 apiClient.interceptors.response.use(
   (response) => {
     if (!response.data || !response.data.httpStatusCode) {
@@ -40,14 +38,18 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       }
     }
-    if (error.response?.data?.serverErrorMessage) {
-      Alert.alert('오류', error.response.data.serverErrorMessage);
-    } else {
-      Alert.alert('오류', '데이터 요청에 실패했습니다.');
-    }
 
+    // Alert.alert 대신 Zustand 스토어 사용
+    const errorMessage = error.response?.data?.serverErrorMessage 
+      || '데이터 요청에 실패했습니다.';
     
+    await useModalStore.getState().showAlert({
+      title: '오류',
+      description: errorMessage,
+      isError: true,
+    });
 
     return Promise.reject(error);
   }
 );
+

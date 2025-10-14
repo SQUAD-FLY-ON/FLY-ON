@@ -1,3 +1,4 @@
+import { GlobalModals } from "@/conponents/GlobalModals";
 import Header from "@/conponents/Header";
 import { useAuthStore } from "@/store/useAuthStore";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -32,7 +33,6 @@ const queryClient = new QueryClient({
   const isInitialized = useAuthStore((state) => state.isInitialized);
   const isLoading = useAuthStore((state) => state.isLoading);
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
-  console.log(isAuthenticated);
   // 앱 시작 시 인증 상태 초기화
   useEffect(() => {
     if (fontsLoaded && !isInitialized) {
@@ -72,6 +72,7 @@ const queryClient = new QueryClient({
                   />
                 </Stack.Protected>
               </Stack>
+              <GlobalModals />
             </BottomSheetModalProvider>
           </GestureHandlerRootView>
         </SafeAreaView>
