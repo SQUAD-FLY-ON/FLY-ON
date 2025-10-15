@@ -95,3 +95,40 @@ export interface postFlightLogRequest {
   averageSpeed: number;
   flightAltitude: number;
 }
+
+interface ISort {
+  unsorted: boolean;
+  sorted: boolean;
+  empty: boolean;
+}
+interface IPageable {
+  unpaged: boolean;
+  pageNumber: number;
+  paged: boolean;
+  pageSize: number;
+  offset: number;
+  sort: ISort;
+}
+
+export interface myFlightLogsContents {
+  id: string;
+  airfieldName: string;
+  flightTime: number;
+  flightDistance: number;
+  averageSpeed: number;
+  flightAltitude: number;
+  videoUrl: string; // 삭제 예정
+  createdAt: string;
+  track: any; // 삭제 예정
+}
+export interface myFlightLogs {
+  pageable: IPageable;
+  numberOfElements: number;
+  size: number;
+  content: myFlightLogsContents[];
+  number: number;
+  sort: ISort;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}

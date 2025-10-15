@@ -1,10 +1,11 @@
+import CustomButton from "@/conponents/CustomButton";
 import { useRouter } from "expo-router";
 import {
   Image,
   ImageSourcePropType,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 
 interface PlaceCardProps {
@@ -12,18 +13,9 @@ interface PlaceCardProps {
   image?: ImageSourcePropType;
   title: string;
   address: string;
-  score: number | string;
-  review: number | string;
 }
 
-const PlaceCard = ({
-  id,
-  image,
-  title,
-  address,
-  score,
-  review,
-}: PlaceCardProps) => {
+const PlaceCard = ({ id, image, title, address }: PlaceCardProps) => {
   const router = useRouter();
   return (
     <View style={[styles.container]}>
@@ -40,18 +32,19 @@ const PlaceCard = ({
           <Text style={styles.review}>({review})</Text>
         </View> */}
       </View>
-      {/* <CustomButton
+      <CustomButton
         containerStyle={styles.buttonPosition}
         buttonType="small"
         text="자세히보기"
         textStyle={{ lineHeight: 14, fontSize: 14 }}
         onPress={() => {
+          console.log(id, title);
           router.push({
-            pathname: `/(tabs)/explore/detail/${id}`,
-            params: { id: `${id}` }
+            pathname: `/explore/detail/${id}`,
+            params: { id: `${id}` },
           });
         }}
-      /> */}
+      />
     </View>
   );
 };

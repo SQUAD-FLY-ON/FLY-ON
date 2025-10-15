@@ -26,8 +26,13 @@ const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
       clearAuthState: state.clearAuthState,
     }))
   );
+
   const onPress = async (name: string, url: string) => {
-    if (name === "개인정보처리방침") {
+    if (name === "비행 기록") {
+      // 비행 기록 상세 페이지로 이동
+      console.log("비행 기록 클릭");
+      router.navigate("/(tabs)/user/my-flight-records");
+    } else if (name === "개인정보처리방침") {
       const supported = await Linking.canOpenURL(url);
 
       if (supported) {
@@ -63,7 +68,7 @@ const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
                 console.log("회원탈퇴 성공");
                 Alert.alert("회원탈퇴가 완료되었습니다.");
                 clearAuthState();
-                queryClient.invalidateQueries({ queryKey: ['mySchedule'] })
+                queryClient.invalidateQueries({ queryKey: ["mySchedule"] });
                 router.replace("/intro");
               } else {
                 // 탈퇴 실패 시 사용자에게 알림
