@@ -23,10 +23,12 @@ apiClient.interceptors.response.use(
     if (!response.data || !response.data.httpStatusCode) {
       return response;
     }
+    console.log(response);
     return response.data;
   },
   async (error) => {
     const originalRequest = error.config;
+    console.log(error.response);
     if (error.response?.status === 401) {
       console.log(error.response.status);
 
@@ -36,13 +38,18 @@ apiClient.interceptors.response.use(
         const token = useAuthStore.getState().accessToken;
         originalRequest.headers.Authorization = `Bearer ${token}`;
         return apiClient(originalRequest);
+      } else {
+
       }
+    }
+    else {
+      return Promise.reject(error);
     }
 
     // Alert.alert 대신 Zustand 스토어 사용
-    const errorMessage = error.response?.data?.serverErrorMessage 
+    const errorMessage = error.response?.data?.serverErrorMessage
       || '데이터 요청에 실패했습니다.';
-    
+
     await useModalStore.getState().showAlert({
       title: '오류',
       description: errorMessage,

@@ -65,6 +65,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             isLoading: false,
           });
           return;
+        } else {
+          get().clearAuthState();
+          return;
         }
       },
       login: async (credentials) => {
@@ -138,6 +141,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               refreshToken,
             }
           );
+          console.log(response);
           if (response.httpStatusCode === 201 && response.data) {
             const {
               accessToken,
@@ -151,9 +155,10 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               refreshToken: newRefreshToken || refreshToken,
               memberInfo: memberInfo || get().memberInfo,
             });
-
+            console.log('aaaa')
             return true;
           } else {
+            console.log('bbbb')
             return false;
           }
         } catch (error: any) {
@@ -163,7 +168,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         }
         finally {
           queryClient.invalidateQueries({ queryKey: ['mySchedule'] });
-          set({ isLoading: false });
+          set({ isLoading: false, isInitialized: true });
+          console.log('isLoading false and isInitialized');
         }
       },
       clearAuthState: () => {

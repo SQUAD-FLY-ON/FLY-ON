@@ -40,7 +40,7 @@ const queryClient = new QueryClient({
     }
   }, [fontsLoaded, isInitialized, initializeAuth]);
   // 폰트 로딩 또는 인증 초기화가 완료되지 않은 경우 로딩 화면 표시
-  if (!fontsLoaded || !isInitialized || isLoading) {
+  if (isLoading || !isInitialized) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" />
