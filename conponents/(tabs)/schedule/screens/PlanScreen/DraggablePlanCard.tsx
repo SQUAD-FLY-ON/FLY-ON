@@ -31,10 +31,7 @@ const DraggablePlanCard = ({
   scrollViewLayoutRef: React.MutableRefObject<{ y: number; height: number }>;
   autoScrollOffsetYRef: React.RefObject<number>;
 }) => {
-  console.log(item.type);
-  const pan = useRef(new Animated.ValueXY()).current;
   const cardOpacity = useRef(new Animated.Value(1)).current;
-  const floatingCardOpacity = useRef(new Animated.Value(0)).current;
   const [componentHeight, setComponentHeight] = useState(0);
   const [isPanEnabled, setIsPanEnabled] = useState(false);
   const cardRef = useRef<View>(null);
@@ -81,7 +78,6 @@ const DraggablePlanCard = ({
           );
         });
       } else {
-        console.log('측정실패');
         // fallback: 측정 실패 시에도 드래그 시작
         const defaultLayout = {
           x: evt.nativeEvent.pageX,

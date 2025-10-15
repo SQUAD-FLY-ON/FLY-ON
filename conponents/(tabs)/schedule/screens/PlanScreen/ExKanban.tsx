@@ -171,7 +171,6 @@ const TravelPlanKanban = () => {
   const measureScrollViewPosition = useCallback(() => {
     if (containerRef.current) {
       containerRef.current.measureInWindow((x, y, width, height) => {
-        console.log('ScrollView position:', { x, y, width, height });
         const layout = { y, height, x, width };
         setScrollViewLayout(layout);
         scrollViewLayoutRef.current = layout; // ref에도 저장
@@ -214,11 +213,9 @@ const TravelPlanKanban = () => {
   }, []);
 
   const remeasureDayLayouts = useCallback(() => {
-  console.log('🔄 remeasureDayLayouts START');
 
   return new Promise<void>((resolve) => {
     const dayIds = Object.keys(dayRefs.current);
-    console.log('📋 Day IDs from refs:', dayIds);
 
     if (dayIds.length === 0) {
       resolve();
@@ -227,7 +224,6 @@ const TravelPlanKanban = () => {
 
     // ✅ 현재 스크롤 오프셋 저장
     const currentScrollOffset = scrollOffsetRef.current;
-    console.log('📊 Current scroll offset:', currentScrollOffset);
 
     let measured = 0;
     let resolved = false;
@@ -235,7 +231,6 @@ const TravelPlanKanban = () => {
     const timeoutId = setTimeout(() => {
       if (!resolved) {
         resolved = true;
-        console.warn('⏰ remeasureDayLayouts TIMEOUT');
         resolve();
       }
     }, 3000);
@@ -244,13 +239,11 @@ const TravelPlanKanban = () => {
       if (measured >= dayIds.length && !resolved) {
         resolved = true;
         clearTimeout(timeoutId);
-        console.log('🎉 All days measured successfully');
         resolve();
       }
     };
 
     dayIds.forEach((dayId, index) => {
-      console.log(`🔍 Measuring day ${index + 1}/${dayIds.length}: ${dayId}`);
 
       const dayRef = dayRefs.current[dayId];
       if (dayRef && dayRef.measureInWindow) {
@@ -260,11 +253,6 @@ const TravelPlanKanban = () => {
               // ✅ 화면 좌표를 콘텐츠 좌표로 변환
               const contentY = y + currentScrollOffset;
               
-              console.log(`📏 Measured ${dayId}:`, {
-                screenY: y,
-                scrollOffset: currentScrollOffset,
-                contentY: contentY
-              });
 
               setDayLayouts(prev => ({
                 ...prev,
@@ -278,16 +266,13 @@ const TravelPlanKanban = () => {
             }
 
             measured++;
-            console.log(`✅ Progress: ${measured}/${dayIds.length}`);
             checkComplete();
           });
         } catch (error) {
-          console.error(`❌ Error measuring ${dayId}:`, error);
           measured++;
           checkComplete();
         }
       } else {
-        console.warn(`❌ No ref or measureInWindow for ${dayId}`);
         measured++;
         setTimeout(checkComplete, 0);
       }
@@ -309,10 +294,8 @@ const TravelPlanKanban = () => {
     const scrollSpeed = 15;
 
     const scroll = () => {
-      console.log('🔄 scroll() called, isAutoScrolling:', isAutoScrollingRef.current);
 
       if (!isAutoScrollingRef.current) {
-        console.log('⚠️ Auto scrolling stopped, exiting');
         return;
       }
 
@@ -321,25 +304,20 @@ const TravelPlanKanban = () => {
         ? Math.max(0, currentOffset - scrollSpeed)
         : currentOffset + scrollSpeed;
 
-      console.log(`📊 Offset: ${currentOffset} → ${newOffset}`);
 
       if (direction === 'up' && newOffset <= 0) {
-        console.log('🔝 Reached top, stopping');
         stopAutoScroll();
         return;
       }
 
       if (scrollViewRef.current) {
-        console.log('✅ Calling scrollTo');
         scrollViewRef.current.scrollTo({
           y: newOffset,
           animated: false
         });
       } else {
-        console.log('⚠️ scrollViewRef.current is null!');
       }
 
-      console.log('➡️ Requesting next frame');
       autoScrollFrameId.current = requestAnimationFrame(scroll);
     };
 
@@ -367,7 +345,6 @@ const TravelPlanKanban = () => {
   const handleScroll = useCallback((event: any) => {
     const offsetY = event.nativeEvent.contentOffset.y;
     scrollOffsetRef.current = offsetY;
-    console.log('Scroll updated:', offsetY);
   }, []);
 
 
@@ -384,7 +361,6 @@ const TravelPlanKanban = () => {
     gestureState: any
   ) => {
     if (!floatingPortal) return;
-    console.log(initialPosition);
     // ⚠️ layout.x, layout.y는 초기 offset 계산용
     // 실제 위치는 현재 터치 위치로!
 
@@ -450,10 +426,8 @@ const TravelPlanKanban = () => {
     );
 
     try {
-      console.log('Setting floating card with content');
       floatingPortal.setFloatingElement(floatingCard);
     } catch (error) {
-      console.error('Failed to set floating card:', error);
     }
   }, []);
 
@@ -464,8 +438,6 @@ const TravelPlanKanban = () => {
     cardLayout: { x: number; y: number; width: number; height: number },
     initialPosition: { x: number; y: number }  // NEW!
   ) => {
-    console.log('handleDragStart called with layout:', cardLayout);
-    console.log('createFloatingCard function:', createFloatingCard);
 
     setDraggingItem({ item, sourceDay: dayId, sourceIndex: index });
     initialScrollOffsetRef.current = scrollOffsetRef.current;
@@ -488,15 +460,11 @@ const TravelPlanKanban = () => {
       gestureState: { dx: 0, dy: 0 }
     });
 
-    console.log('floating왜안되냐대체');
-    console.log('About to call createFloatingCard with:', { item, dayId, index, cardLayout });
 
     // 직접 호출해보기
     try {
       const result = createFloatingCard(item, dayId, index, cardLayout, initialPosition, { dx: 0, dy: 0 });
-      console.log('createFloatingCard result:', result);
     } catch (error) {
-      console.error('Error calling createFloatingCard:', error);
     }
 
     Animated.timing(floatingOpacity, {
@@ -545,7 +513,6 @@ const TravelPlanKanban = () => {
 
       // 필요시 floating 카드 재생성 (자동스크롤 상태 변화 등)
       if (gestureState.isAutoScrolling !== floatingCardData.gestureState?.isAutoScrolling) {
-        console.log('새로생성', gestureState.dy);
         setFloatingCardData(prev => prev ? {
           ...prev,
           gestureState
@@ -608,12 +575,6 @@ const TravelPlanKanban = () => {
 
     // ✅ pageY를 콘텐츠 좌표로 변환
     const contentY = pageY + currentScrollOffset;
-    console.log('=== getDropTarget Debug ===');
-    console.log('pageY:', pageY);
-    console.log('currentScrollOffset:', currentScrollOffset);
-    console.log('contentY:', contentY);
-    console.log('dayIds:', dayIds);
-
     for (const dayId of dayIds) {
       const dayLayout = dayLayouts[dayId];
       if (!dayLayout) continue;
@@ -654,19 +615,13 @@ const TravelPlanKanban = () => {
 
     if (!draggingItem) return;
     // 드롭 로직 (기존과 동일)
-    console.log('=== handleDragEnd Debug ===');
-    console.log('Input x, y:', x, y);
-    console.log('scrollOffsetRef.current:', scrollOffsetRef.current);
-    console.log('Calculated contentY:', y + scrollOffsetRef.current);
-    console.log('First dayLayout:', Object.values(dayLayouts)[0]);
+
     const dropTarget = getDropTarget(x, y);
-    console.log('Drop target:', dropTarget);
 
     if (dropTarget) {
       const { dayId: targetDay, insertIndex } = dropTarget;
       const { item, sourceDay, sourceIndex } = draggingItem;
 
-      console.log(`Moving from ${sourceDay}[${sourceIndex}] to ${targetDay}[${insertIndex}]`);
 
       if (targetDay === sourceDay) {
         // 같은 Day 내에서 순서 변경
@@ -690,9 +645,6 @@ const TravelPlanKanban = () => {
         // 다른 Day로 이동
         const newDayData = { ...dayData };
 
-        console.log('Before cross-day move:');
-        console.log(`Source ${sourceDay}:`, newDayData[sourceDay].plans.map(p => p.place));
-        console.log(`Target ${targetDay}:`, newDayData[targetDay].plans.map(p => p.place));
 
         // 소스에서 제거
         const [movedItem] = newDayData[sourceDay].plans.splice(sourceIndex, 1);
@@ -704,10 +656,6 @@ const TravelPlanKanban = () => {
           key: `${targetDay}-${Date.now()}`
         };
         newDayData[targetDay].plans.splice(insertIndex, 0, newItem);
-
-        console.log('After cross-day move:');
-        console.log(`Source ${sourceDay}:`, newDayData[sourceDay].plans.map(p => p.place));
-        console.log(`Target ${targetDay}:`, newDayData[targetDay].plans.map(p => p.place));
 
         setDayData(newDayData);
       }
@@ -800,7 +748,6 @@ const TravelPlanKanban = () => {
         scrollEventThrottle={16}
         onLayout={(event) => {
           const { x, y, width, height } = event.nativeEvent.layout;
-          console.log('📐 ScrollView layout:', { x, y, width, height });
           setScrollViewLayout({ x, y, width, height });
         }}
       >
