@@ -134,7 +134,7 @@ const TravelPlanKanban = () => {
     ]
   ]
   useEffect(() => {
-    const dayData = transformSchedulesToDayData(dummySchedule)
+    const dayData = transformSchedulesToDayData(schedule)
     setDayData(dayData);
   }, [schedule])
   // ScrollView 레이아웃 측정 - measureInWindow로 화면 기준 절대 좌표 획득
