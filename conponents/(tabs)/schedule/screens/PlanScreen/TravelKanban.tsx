@@ -1,8 +1,7 @@
-
-
 import { typeToLabel } from '@/constants/screens';
 import { transformSchedulesToDayData } from '@/libs/schedule/transformSchedulesToDayData ';
 import { useScheduleStore } from '@/store/useScheduleStore';
+import { Plan } from '@/types';
 import Entypo from '@expo/vector-icons/Entypo';
 import React, { Fragment, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import {
@@ -16,15 +15,6 @@ import {
 import DraggablePlanCard from './DraggablePlanCard';
 import { FloatingPortalContext } from './FloatingPortal';
 
-// 타입 정의
-interface Plan {
-  key: string;
-  type: string;
-  place: string;
-  address: string;
-  image: any;
-  day: string;
-}
 
 interface DayData {
   [dayId: string]: {
@@ -48,7 +38,6 @@ const TravelPlanKanban = () => {
   const scrollViewLayoutRef = useRef({ y: 0, height: 0 });
   const isAutoScrollingRef = useRef(false);
   const autoScrollDirectionRef = useRef<'up' | 'down' | null>(null)
-  const autoScrollOffsetYRef = useRef(0);
   const dayRefs = useRef<{ [key: string]: View }>({});
   const autoScrollInterval = useRef<NodeJS.Timeout | null>(null);
 
@@ -151,15 +140,14 @@ const TravelPlanKanban = () => {
   // ScrollView 레이아웃 측정 - measureInWindow로 화면 기준 절대 좌표 획득
   const scrollViewRef = useRef<ScrollView>(null);
   const containerRef = useRef<View>(null);
-  const scrollY = useRef(new Animated.Value(0)).current;
 
-  // 🎯 Floating 관련 새로운 state들
   const [floatingCardData, setFloatingCardData] = useState<{
     item: Plan;
     dayId: string;
     index: number;
     layout: { x: number; y: number; width: number; height: number };
     gestureState: any;
+    initialPosition: { x: number; y: number };
   } | null>(null);
 
   const floatingPan = useRef(new Animated.ValueXY()).current;
@@ -436,7 +424,7 @@ const TravelPlanKanban = () => {
     dayId: string,
     index: number,
     cardLayout: { x: number; y: number; width: number; height: number },
-    initialPosition: { x: number; y: number }  // NEW!
+    initialPosition: { x: number; y: number }
   ) => {
 
     setDraggingItem({ item, sourceDay: dayId, sourceIndex: index });
@@ -475,7 +463,7 @@ const TravelPlanKanban = () => {
   }, [createFloatingCard, floatingOpacity]);
 
   // 부모 컴포넌트의 handleDragMove 수정
-  const handleDragMove = useCallback((x: number, y: number, gestureState: any, evt: any, initialPosition) => {
+  const handleDragMove = useCallback((x: number, y: number, gestureState: any, evt: any, initialPosition: {x:number; y:number}) => {
     if (!scrollViewLayout.height) return;
 
     // gestureState가 undefined인 경우 방어 처리
@@ -568,7 +556,7 @@ const TravelPlanKanban = () => {
   // }, [dayLayouts, cardLayouts]);
 
   // 타겟 Day와 위치 찾기 (실시간 스크롤 오프셋 적용)
-  const getDropTarget = useCallback((screenX: number, pageY: number) => {
+  const getDropTarget = useCallback(( pageY: number) => {
 
     const dayIds = Object.keys(dayLayouts);
     const currentScrollOffset = scrollOffsetRef.current;
@@ -607,16 +595,13 @@ const TravelPlanKanban = () => {
     return null;
   }, [dayLayouts, cardLayouts]);
 
-  // const getDropTarget = useCallback((x: number, y: number) => {
-  //     return getDropTargetInternal(x, y);
-  //   }, [getDropTargetInternal]);
-  const handleDragEnd = useCallback((x: number, y: number) => {
+  const handleDragEnd = useCallback(( y: number) => {
     stopAutoScroll();
 
     if (!draggingItem) return;
     // 드롭 로직 (기존과 동일)
 
-    const dropTarget = getDropTarget(x, y);
+    const dropTarget = getDropTarget(y);
 
     if (dropTarget) {
       const { dayId: targetDay, insertIndex } = dropTarget;
@@ -726,10 +711,7 @@ const TravelPlanKanban = () => {
                     onDragMove={handleDragMove}
                     onDragEnd={handleDragEnd}
                     isDragging={draggingItem?.item.key === plan.key}
-                    isAutoScrollingRef={isAutoScrollingRef}
-                    autoScrollDirectionRef={autoScrollDirectionRef}
-                    scrollViewLayoutRef={scrollViewLayoutRef}
-                    autoScrollOffsetYRef={autoScrollOffsetYRef}
+  
                   />
                 </View>
               </Fragment>
@@ -748,7 +730,7 @@ const TravelPlanKanban = () => {
         scrollEventThrottle={16}
         onLayout={(event) => {
           const { x, y, width, height } = event.nativeEvent.layout;
-          setScrollViewLayout({ x, y, width, height });
+          setScrollViewLayout({ y, height });
         }}
       >
         {Object.keys(dayData).sort().map((dayId, index) => renderDayColumn(dayId, index))}

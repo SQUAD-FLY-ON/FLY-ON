@@ -13,23 +13,15 @@ const DraggablePlanCard = ({
   onDragMove,
   onDragEnd,
   isDragging,
-  isAutoScrollingRef,
-  autoScrollDirectionRef,
-  scrollViewLayoutRef,
-  autoScrollOffsetYRef,
 }: {
   item: Plan;
   index: number;
   dayId: string;
   isLast: boolean;
-  onDragStart: (item: Plan, dayId: string, index: number, cardLayout: { x: number; y: number; width: number; height: number }) => void;
-  onDragMove: (x: number, y: number, gestureState: PanResponderGestureState, evt: any) => void;
-  onDragEnd: (x: number, y: number) => void;
+  onDragStart: (item: Plan, dayId: string, index: number, cardLayout: { x: number; y: number; width: number; height: number }, initialPosition: { x: number; y: number }) => void;
+  onDragMove: (x: number, y: number, gestureState: PanResponderGestureState, evt: any, initialPosition: { x: number; y: number }) => void;
+  onDragEnd: ( y: number) => void;
   isDragging: boolean;
-  isAutoScrollingRef: React.MutableRefObject<boolean>;
-  autoScrollDirectionRef: React.MutableRefObject<'up' | 'down' | null>;
-  scrollViewLayoutRef: React.MutableRefObject<{ y: number; height: number }>;
-  autoScrollOffsetYRef: React.RefObject<number>;
 }) => {
   const cardOpacity = useRef(new Animated.Value(1)).current;
   const [componentHeight, setComponentHeight] = useState(0);
@@ -74,7 +66,7 @@ const DraggablePlanCard = ({
             dayId,
             index,
             cardLayout,
-            cardInitialPosition.current  // NEW!
+            cardInitialPosition.current
           );
         });
       } else {
@@ -85,7 +77,7 @@ const DraggablePlanCard = ({
           width: 200,
           height: 100
         };
-        onDragStart(item, dayId, index, defaultLayout);
+        onDragStart(item, dayId, index, defaultLayout, cardInitialPosition.current);
       }
 
       // ⚠️ pan.setOffset/setValue 제거
@@ -100,17 +92,18 @@ const DraggablePlanCard = ({
         evt.nativeEvent.pageX,
         evt.nativeEvent.pageY,
         gestureState,
-        evt
+        evt,
+        cardInitialPosition.current
       );
     },
 
-    onPanResponderRelease: (evt, gestureState) => {
+    onPanResponderRelease: (evt) => {
       // 1. 상태 초기화
       isDraggingRef.current = false;
       localAutoScrollingRef.current = false;
 
       // 2. 드롭 처리
-      onDragEnd(evt.nativeEvent.pageX, evt.nativeEvent.pageY);
+      onDragEnd(evt.nativeEvent.pageY);
 
       // 3. 애니메이션 복원
       Animated.parallel([
