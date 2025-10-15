@@ -7,7 +7,7 @@ import { Pressable } from "react-native";
 import { useShallow } from "zustand/shallow";
 
 export function ScheduleBackButton() {
-    const { currentStep, goToPrevStep } = useScheduleStore(useShallow(state => ({ currentStep: state.currentStep, goToPrevStep: state.goToPrevStep })))
+    const { currentStep, goToPrevStep, resetAllStates } = useScheduleStore(useShallow(state => ({ currentStep: state.currentStep, goToPrevStep: state.goToPrevStep, resetAllStates: state.resetAllStates })))
     const isFirst = currentStep === 0;
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
@@ -24,8 +24,9 @@ export function ScheduleBackButton() {
                 description2="저장되지 않습니다." 
                 pressButtonText = '그만두기'
                 onPressConfirm={() => {
-                    router.back();
                     setIsOpen(false);
+                    resetAllStates();
+                    router.back();
                 }}            
                 />}
         </>
