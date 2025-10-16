@@ -46,7 +46,7 @@ const CardContents = ({
     <>
       <View style={styles.cardTop}>
         <Text style={styles.title}>
-          {paragliding.spot.split(" ")[0]} 여행 (
+         {schedule[0].tourName?`${schedule[0].tourName} 여행`: '여행'} (
           {schedule[0].dailyTourismSpots.length}일)
         </Text>
         <Text style={styles.period}>

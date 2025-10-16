@@ -16,7 +16,7 @@ const Level = ({
     <View style={styles.container}>
       <View style={styles.levelContainer}>
         <LevelBadge text={`LV ${level}`} />
-        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.title}>{title} 글라이더</Text>
       </View>
       <View style={styles.gaugeBackground}>
         <View style={[styles.gaugeFill, { width: `${proportion}%` }]} />

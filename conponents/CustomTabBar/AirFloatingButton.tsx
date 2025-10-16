@@ -1,11 +1,12 @@
 import { TabTriggerSlotProps } from "expo-router/ui";
-import { Image, Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet } from "react-native";
 import { MainGradient } from "../LinearGradients/MainGradient";
+import AirIcon from "./icons/AirIcon";
 export default function AirFloatingButton({ ...props }: TabTriggerSlotProps) {
   return (
     <MainGradient style={styles.container}>
       <Pressable {...props}>
-        <Image source={require("@/assets/images/floatingButtonImage.png")} />
+        <AirIcon />
       </Pressable>
     </MainGradient>
   );

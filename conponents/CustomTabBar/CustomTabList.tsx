@@ -22,12 +22,14 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
   const rightTriggers = triggers.filter(
     (c: any) => c.props.name === "my-schedules" || c.props.name === "user"
   );
+  console.log(width/10-1)
   return (
     <View
       style={[
         styles.container,
         (pathname === "/air" ||
           pathname === "/air/report" ||
+          pathname.startsWith("/user/flight-detail") ||
           pathname === "/schedule") && { display: "none" },
       ]}
     >
@@ -66,7 +68,7 @@ export function CustomTabList({ children }: { children: React.ReactNode }) {
           rightFloatTrigger &&
           cloneElement(rightFloatTrigger as any, {
             router,
-            isCenter: true,
+            // isCenter: true,
           })}
         <View style={styles.rightContainer}>
           {rightTriggers.map((child: any, idx: number) => {
@@ -100,20 +102,26 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     height: "100%",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "flex-start",
     position: "relative",
   },
   leftContainer: {
     flexDirection: "row",
-    marginLeft: width / 10 - 1,
+    position:'absolute',
+    left: width / 10 - 1,
+    right: width*0.67,
+    width: width - (width / 10 - 1) - (width * 0.67),
     marginTop: 16,
-    gap: 48,
+    justifyContent: 'space-between',
   },
   rightContainer: {
     flexDirection: "row",
-    marginRight: width / 10 - 1,
+    position:'absolute',
+    right: width / 10 - 1,
+    left: width*0.67,
+    width: width - (width / 10 - 1) - (width * 0.67),
     marginTop: 16,
-    gap: 48,
+    justifyContent: 'space-between',
   },
 });

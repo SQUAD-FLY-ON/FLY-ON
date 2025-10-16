@@ -8,12 +8,15 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import haversine from "haversine-distance";
 import { useAuthStore } from "@/store/useAuthStore";
 import { getAllFlightLogs, saveFlightLog } from "@/store/flightLogStore";
-import { ApiResponse, postFlightLogRequest } from "@/types/api";
+import {
+  ApiResponse,
+  myFlightLogsContents,
+  postFlightLogRequest,
+} from "@/types/api";
 import { postFlightLog } from "@/libs/(tabs)/air/flightLogs";
 
 export default function Report() {
   const params = useLocalSearchParams();
-  // console.log("params: ", params);
 
   const memberId = useAuthStore((state) => state.memberInfo?.memberId);
   console.log("memberId:", memberId);
@@ -65,16 +68,19 @@ export default function Report() {
       flightAltitude: maxAltitude,
     };
 
-    const response: ApiResponse<any> = await postFlightLog(
-      memberId as string,
-      data
-    );
+    const response: ApiResponse<myFlightLogsContents> | null =
+      await postFlightLog(memberId as string, data);
     console.log(response);
 
+    if (!response) {
+      console.log("비행 기록을 저장하는 과정에 오류가 발생했습니다");
+      return;
+    }
+
     // API response로 받은 id값과 비행 경로 저장
-    const mockId = Math.abs(Math.random() * 10000);
-    const flightLog = await saveFlightLog(`${mockId}`, locationData);
-    console.log(`ID ${mockId}: `, flightLog.success);
+    const id = response.data.id;
+    const flightLog = await saveFlightLog(id, locationData);
+    console.log(`ID ${id}: `, flightLog.success);
 
     const allFlightLogs = await getAllFlightLogs();
     console.log("전체 비행 기록:", allFlightLogs);

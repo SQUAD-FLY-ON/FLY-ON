@@ -1,5 +1,9 @@
 import { apiClient } from "@/api/apiClient";
-import { ApiResponse, postFlightLogRequest } from "@/types/api";
+import {
+  ApiResponse,
+  myFlightLogsContents,
+  postFlightLogRequest,
+} from "@/types/api";
 import { Alert } from "react-native";
 
 /**
@@ -9,9 +13,9 @@ import { Alert } from "react-native";
 export async function postFlightLog(
   memberId: string,
   request: postFlightLogRequest
-): Promise<any> {
+): Promise<ApiResponse<myFlightLogsContents> | null> {
   try {
-    const response: ApiResponse<any> = await apiClient.post(
+    const response: ApiResponse<myFlightLogsContents> = await apiClient.post(
       "/flight-logs",
       request,
       { params: { memberId: Number(memberId) } }
@@ -20,6 +24,6 @@ export async function postFlightLog(
   } catch (error) {
     console.log("❌ 비행 기록 실패: ", error);
     Alert.alert("비행 기록에 실패하였습니다.");
-    return [];
+    return null;
   }
 }
