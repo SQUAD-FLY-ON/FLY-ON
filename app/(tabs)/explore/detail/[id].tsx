@@ -4,7 +4,7 @@ import {
   SpotDetailResponse,
 } from "@/libs/(tabs)/explore/detail/fetchSpotDetail";
 import { fetchSpotTrack } from "@/libs/(tabs)/explore/detail/fetchSpotTrack";
-import { ITrackData, ITrackPoints } from "@/types";
+import { ITrackData } from "@/types";
 import Constants from "expo-constants";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";

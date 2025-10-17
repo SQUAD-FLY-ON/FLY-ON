@@ -7,33 +7,41 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { useShallow } from "zustand/shallow";
 
 export default function ExploreList() {
-  const { selectedRegion, selectedMarkerSpot } = useExploreStore(useShallow(state => ({ selectedRegion: state.selectedRegion, selectedMarkerSpot: state.selectedMarkerSpot })));
-  const query = useQuery({ queryKey: ['spotMarkers', selectedRegion.name], queryFn: async () => await fetchSpotMarkers({ sido: selectedRegion.name! }) })
+  const { selectedRegion, selectedMarkerSpot } = useExploreStore(
+    useShallow((state) => ({
+      selectedRegion: state.selectedRegion,
+      selectedMarkerSpot: state.selectedMarkerSpot,
+    }))
+  );
+  const query = useQuery({
+    queryKey: ["spotMarkers", selectedRegion.name],
+    queryFn: async () => await fetchSpotMarkers({ sido: selectedRegion.name! }),
+  });
   const spotMarkers = query.data;
   return (
     <View>
       <Header title="체험장 목록" />
-      <ScrollView contentContainerStyle={styles.scrollViewStyle} >
+      <ScrollView contentContainerStyle={styles.scrollViewStyle}>
         <View style={styles.TopView}>
           <Text style={styles.TopTitle}>
-            &nbsp;&nbsp;•&nbsp;&nbsp;{selectedRegion.name} 체험장 ({query.data?.length})
+            &nbsp;&nbsp;•&nbsp;&nbsp;{selectedRegion.name} 체험장 (
+            {query.data?.length})
           </Text>
         </View>
-        <View style = {styles.exploreContainer}>
-          {
-            spotMarkers?.map((item) => (
-              <PlaceCard
-                key={item.id}
-                id="1"
-                image={item.imgUrl !== "" ? {uri:item.imgUrl} :require("@/assets/images/dummy_image_activity_area.png")}
-                title={item.name}
-                address={item.fullAddress}
-                score={4.9}
-                review={19}
-              />
-            ))
-          }
-
+        <View style={styles.exploreContainer}>
+          {spotMarkers?.map((item) => (
+            <PlaceCard
+              key={item.id}
+              id={item.id}
+              image={
+                item.imgUrl !== ""
+                  ? { uri: item.imgUrl }
+                  : require("@/assets/images/dummy_image_activity_area.png")
+              }
+              title={item.name}
+              address={item.fullAddress}
+            />
+          ))}
         </View>
       </ScrollView>
     </View>
@@ -56,6 +64,6 @@ const styles = StyleSheet.create({
     fontSize: 22,
   },
   exploreContainer: {
-    gap:12,
-  }
+    gap: 12,
+  },
 });

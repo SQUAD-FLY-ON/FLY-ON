@@ -14,6 +14,8 @@ import { StyleSheet, Text, View } from "react-native";
 export default function Index() {
   const router = useRouter();
 
+  const { isScheduleLoading, isScheduleError, schedule } = useTourSchedule();
+
   const [ok, setOk] = useState<boolean>();
   const locationDataRef = useRef<TLocationData[]>([]);
   const intervalRef = useRef<null | number>(null);
@@ -24,15 +26,14 @@ export default function Index() {
   const [hasValue, setHasValue] = useState(false);
   const [isFlyOn, setIsFlyOn] = useState(false);
   const [seconds, setSeconds] = useState<number>(0);
-  const {schedule, isScheduleLoading, isScheduleError} = useTourSchedule();
 
-  useEffect(() => { 
-    if(!isScheduleError && !isScheduleLoading && schedule) {
+  useEffect(() => {
+    if (!isScheduleError && !isScheduleLoading && schedule) {
       const tourList = extractTourList(schedule);
-        
-        setTourList(tourList);
+
+      setTourList(tourList);
     }
-}, [schedule, isScheduleLoading, isScheduleError]);
+  }, [schedule, isScheduleLoading, isScheduleError]);
   const ask = async () => {
     try {
       const { granted } = await Location.requestForegroundPermissionsAsync();
@@ -100,7 +101,6 @@ export default function Index() {
       });
     }
   };
-
 
   // const getTourList = async () => {
   //   try {

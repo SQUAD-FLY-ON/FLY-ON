@@ -1,6 +1,6 @@
-import Level from "@/conponents/(tabs)/user/Level";
-import MenuList from "@/conponents/(tabs)/user/MenuList";
-import Profile from "@/conponents/(tabs)/user/Profile";
+import Level from "@/conponents/(tabs)/user/index/Level";
+import MenuList from "@/conponents/(tabs)/user/index/MenuList";
+import Profile from "@/conponents/(tabs)/user/index/Profile";
 import Header from "@/conponents/Header";
 import { fetchMembers } from "@/libs/fetchMember";
 import { MemberProfileInfo } from "@/types";
@@ -9,6 +9,10 @@ import { useEffect, useState } from "react";
 import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 
 const innerPages = [
+  {
+    name: "비행 기록",
+    link: "/user/flight-records",
+  },
   {
     name: "개인정보처리방침",
     link: "https://caring-terrier-504.notion.site/Fly-On-268edf14ec908039a2f2dae5dd9e94c1?source=copy_link",
