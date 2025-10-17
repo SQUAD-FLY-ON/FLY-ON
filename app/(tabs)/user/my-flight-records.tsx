@@ -1,11 +1,17 @@
 import FlightCard from "@/conponents/(tabs)/user/my-flight-records/FlightCard";
 import Header from "@/conponents/Header";
 import { mock_flight_logs } from "@/dummy/mock_flight_logs";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function MyFlightRecords() {
   const data = mock_flight_logs;
+
+  useEffect(() => {
+    // 최근 순/오래된 순 토글 할 때마다 다시 요청
+  }, []);
+
   return (
     <View style={styles.container}>
       <Header title="비행 기록" backButton={true} />
@@ -31,9 +37,6 @@ const styles = StyleSheet.create({
   cardContainer: {
     paddingVertical: 16,
     paddingHorizontal: 16,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-evenly",
-    gap: 18,
+    gap: 8,
   },
 });
