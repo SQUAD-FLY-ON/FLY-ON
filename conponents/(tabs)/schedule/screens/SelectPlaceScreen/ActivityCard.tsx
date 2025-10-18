@@ -43,7 +43,7 @@ export default function ActivityCard({data}: {data:Spot}) {
         buttonType="small"
         text="자세히보기"
         textStyle={{ lineHeight: 14, fontSize: 14 }}
-        onPress={() => { }}
+        onPress={() => {router.push(`/explore/detail/${data.id}`)}}
       />
     </Pressable>
   );
