@@ -1,65 +1,62 @@
 import CustomButton from "@/conponents/CustomButton";
 import useExploreStore from "@/store/exploreStore";
+import { useModalStore } from "@/store/useModalStore";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { Alert, Modal, Pressable, StyleSheet, Text, View } from "react-native";
+import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import { useShallow } from "zustand/shallow";
 import CustomCalendar from "../schedule/screens/CalanderScreen/Calander";
 export default function CalanderModal({ isModalVisible, setIsModalVisible }: { isModalVisible: boolean, setIsModalVisible: React.Dispatch<React.SetStateAction<boolean>> }) {
   const { selectedMarkerSpot, selectedRegion } = useExploreStore(useShallow(state => ({ selectedMarkerSpot: state.selectedMarkerSpot, selectedRegion: state.selectedRegion })))
-  const router = useRouter();
-  const [dates, setDates] = useState({});
-  const { currentStep, setCurrentStep, setSelectedRegion, setSelectedActivities, resetAllStates, setCurrentMarkedDates } = useScheduleStore(
-    useShallow((state) => ({
-      currentStep: state.currentStep,
-      setCurrentStep: state.setCurrentStep,
-      setSelectedRegion: state.setSelectedRegion,
-      setSelectedActivities: state.setSelectedActivities,
-      resetAllStates: state.resetAllStates,
-      setCurrentMarkedDates: state.setCurrentMarkedDates,
-    }))
-  );
-  const createButtonPress = () => {
-    if(Object.keys(dates).length === 0){
-      return;
-    }
-    if (currentStep > 0) {
-      Alert.alert(
-        '일정 생성 중',
-        '기존에 생성하던 일정이 있습니다. 초기화하고 다시 일정을 생성할까요?',
-        [
-          {
-            text: '아니오',
-            onPress: () => console.log('취소됨'),
-            style: 'cancel',
-          },
-          {
-            text: '예',
-            onPress: () => {
-              resetAllStates();
-              setCurrentStep(4);
-              setSelectedRegion(selectedRegion);
-              setSelectedActivities(selectedMarkerSpot);
-              router.push('/(tabs)/schedule');
-            },
-          },
-        ],
-        { cancelable: false } // 바깥 영역 터치로 닫기 방지
-      );
-    } else {
-      // currentStep이 0일 때 바로 실행
-      resetAllStates();
-      setCurrentStep(4);
-      setSelectedRegion(selectedRegion);
-      setSelectedActivities(selectedMarkerSpot);
-      router.push('/(tabs)/schedule');
-    }
+const router = useRouter();
+const [dates, setDates] = useState({});
+const { showConfirm } = useModalStore();
+const { currentStep, setCurrentStep, setSelectedRegion, setSelectedActivities, resetAllStates, setCurrentMarkedDates } = useScheduleStore(
+  useShallow((state) => ({
+    currentStep: state.currentStep,
+    setCurrentStep: state.setCurrentStep,
+    setSelectedRegion: state.setSelectedRegion,
+    setSelectedActivities: state.setSelectedActivities,
+    resetAllStates: state.resetAllStates,
+    setCurrentMarkedDates: state.setCurrentMarkedDates,
+  }))
+);
+const handleCreateSchedule = () => {
+  resetAllStates();
+  setCurrentStep(4);
+  setSelectedRegion(selectedRegion);
+  setSelectedActivities(selectedMarkerSpot);
+  setCurrentMarkedDates(dates);
+  router.push('/(tabs)/schedule');
+};
+
+const createButtonPress = async () => {
+  if(Object.keys(dates).length === 0){
+    return;
   }
-  const resetDates = () => {
-    setDates({});
+  
+  if (currentStep > 0) {
+    const result = await showConfirm({
+      title: '일정 생성 중',
+      description: '기존에 생성하던 일정이 있습니다.',
+      description2: '초기화하고 다시 일정을 생성할까요?',
+      pressButtonText: '예',
+    });
+    
+    if (result) {
+      handleCreateSchedule();
+    }
+  } else {
+    // currentStep이 0일 때 바로 실행
+    handleCreateSchedule();
   }
+}
+
+const resetDates = () => {
+  setDates({});
+}
   return (
     <Modal
       visible={isModalVisible}
