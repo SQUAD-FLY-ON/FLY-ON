@@ -29,6 +29,8 @@ const handleCreateSchedule = () => {
   setSelectedRegion(selectedRegion);
   setSelectedActivities(selectedMarkerSpot);
   setCurrentMarkedDates(dates);
+  setDates({});
+  setIsModalVisible(false);
   router.push('/(tabs)/schedule');
 };
 
