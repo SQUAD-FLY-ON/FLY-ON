@@ -28,11 +28,6 @@ apiClient.interceptors.response.use(
       return response.data;
   },
   async (error) => {
-    if (error.response?.data?.serverErrorMessage) {
-      Alert.alert('오류', error.response.data.serverErrorMessage);
-    } else {
-      Alert.alert('오류', '데이터 요청에 실패했습니다.');
-    }
 
     const originalRequest = error.config;
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -46,8 +41,9 @@ apiClient.interceptors.response.use(
 
       } else {
         useAuthStore.getState().clearAuthState();
-        Alert.alert('오류', '토큰 갱신에 실패했습니다. 다시 로그인해주세요');      }evelop
+        Alert.alert('오류', '토큰 갱신에 실패했습니다. 다시 로그인해주세요');      }
     }
+    console.log(error.response);
 
 
     return Promise.reject(error);

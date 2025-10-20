@@ -22,6 +22,7 @@ const storage = {
 interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
+  isInitializing: boolean;
   isInitialized: boolean;
   memberInfo: MemberInfo | null;
   accessToken: string | null;
@@ -42,7 +43,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
   persist(
     (set, get) => ({
       isAuthenticated: false,
-      isLoading: false,
+      isLoading: false, // 일반 로딩 (로그인, 로그아웃 등)
+      isInitializing: false, // 앱 초기화 로딩
       isInitialized: false,
       memberInfo: null,
       accessToken: null,
@@ -54,7 +56,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           return;
         }
 
-        set({ isLoading: true });
+        set({ isInitializing: true });
         // 액세스 토큰 유효성 검사 (예: 사용자 정보 요청)
         const userResponse = await apiClient.get("/members");
         if (userResponse.httpStatusCode === 200) {
@@ -62,7 +64,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             isAuthenticated: true,
             memberInfo: userResponse.data || get().memberInfo,
             isInitialized: true,
-            isLoading: false,
+            isInitializing: false,
           });
           return;
         }
@@ -74,7 +76,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             "/auth",
             credentials
           );
-          console.log(response.data, response, response.httpStatusCode);
           if (response.httpStatusCode === 200 && response.data) {
             const { accessToken, refreshToken, memberInfo } = response.data;
             set({
@@ -156,7 +157,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               refreshToken: newRefreshToken || refreshToken,
               memberInfo: memberInfo || get().memberInfo,
             });
-
             return true;
           } else {
             return false;
@@ -167,7 +167,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         }
         finally {
           queryClient.invalidateQueries({ queryKey: ['mySchedule'] });
-          set({ isLoading: false });
+          set({ isInitializing: false, isInitialized: true });
+          console.log('isLoading false and isInitialized');
         }
       },
       clearAuthState: () => {
