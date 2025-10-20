@@ -2,7 +2,6 @@ import { apiClient } from "@/api/apiClient";
 import { queryClient } from "@/app/_layout";
 import { AuthResponse, MemberInfo } from "@/types";
 import { ApiResponse, LoginRequest } from "@/types/api";
-import { useQueryClient } from "@tanstack/react-query";
 import * as SecureStore from "expo-secure-store";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -106,7 +105,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       logout: async () => {
-        const queryClient = useQueryClient();
 
         set({ isLoading: true });
         try {
