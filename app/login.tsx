@@ -21,14 +21,11 @@ export default function Index() {
   const router = useRouter();
   const { login, isLoading } = useAuthStore(useShallow(state => ({
     login: state.login,
-    isLoading: state.isLoading,
-  })));
+    isLoading: state.isLoading  })));
   async function onSubmit(data: z.infer<typeof loginSchema>) {
     const response = await login(data);
+    console.log(response);
     if (response.success) {
-      // await setAuth(
-      //   response?.data.data
-      // );
       router.push("/");
     }
   }
