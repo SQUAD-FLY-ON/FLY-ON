@@ -32,7 +32,7 @@ interface AuthState {
 interface AuthActions {
   login: (
     credentials: LoginRequest
-  ) => Promise<{ success: boolean; error?: any }>;
+  ) => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
   refreshAccessToken: () => Promise<boolean>; // ✅ 메서드 이름 변경
   clearAuthState: () => void;
@@ -86,17 +86,19 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             });
 
             return { success: true };
-          } else {
-            return {
-              success: false,
-              error: response.httpStatusMessage || "Login failed",
-            };
           }
+          // } else {
+          //   console.log(response?.data.serverErrorMessage);
+          //   return {
+          //     success: false,
+          //     error: response.httpStatusMessage || "Login failed",
+          //   };
+          // }
         } catch (error: any) {
           return {
             success: false,
             error:
-              error.response?.data?.message || error.message || "Network error",
+              error.response?.data?.serverErrorMessage || "로그인에 실패했습니다.",
           };
         } finally {
           set({ isLoading: false });

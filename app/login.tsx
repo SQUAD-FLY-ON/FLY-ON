@@ -5,7 +5,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useForm } from 'react-hook-form';
-import { StyleSheet, Text, View } from "react-native";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import z from "zod";
 import { useShallow } from 'zustand/shallow';
 
@@ -22,11 +22,14 @@ export default function Index() {
   const { login, isLoading } = useAuthStore(useShallow(state => ({
     login: state.login,
     isLoading: state.isLoading  })));
+  // TO-DO: develop 머지후
+  // const showAlert = useModalStore(state => state.showAlert);
   async function onSubmit(data: z.infer<typeof loginSchema>) {
     const response = await login(data);
-    console.log(response);
     if (response.success) {
       router.push("/");
+    } else {
+      Alert.alert('오류', `${response.error}`);
     }
   }
   return (
