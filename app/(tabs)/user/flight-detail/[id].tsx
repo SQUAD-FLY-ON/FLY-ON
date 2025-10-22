@@ -6,22 +6,10 @@ import Constants from "expo-constants";
 import Close from "@/conponents/icons/Close";
 import MyReportText from "@/conponents/(tabs)/user/my-flight-records/MyReportText";
 import { useLocalSearchParams } from "expo-router";
-import { getAllFlightLogs, getFlightLog } from "@/store/flightLogStore";
+import { getFlightLog } from "@/store/flightLogStore";
 import { ITrackData } from "@/types";
 
 const { height, width } = Dimensions.get("window");
-
-// interface IFlightPath {
-//   lat: number;
-//   lon: number;
-//   alt: number;
-// }
-// const flightPath = [
-//   { lat: 37.5, lon: 128.2, alt: 1000 },
-//   { lat: 37.51, lon: 128.21, alt: 900 },
-//   { lat: 37.52, lon: 128.22, alt: 700 },
-//   { lat: 37.53, lon: 128.23, alt: 300 },
-// ];
 
 export default function MyFlightDetails() {
   const { id, data } = useLocalSearchParams();
@@ -47,7 +35,6 @@ export default function MyFlightDetails() {
 
   const [visible, setVisible] = useState<boolean>(false);
   const [isReady, setIsReady] = useState<boolean>(false);
-  const [hasSentFlight, setHasSentFlight] = useState<boolean>(false);
 
   const webviewRef = useRef<WebView>(null);
   const { CESIUM_TOKEN, CESIUM_WEB_URL } = Constants?.expoConfig?.extra as {
@@ -63,45 +50,86 @@ export default function MyFlightDetails() {
     true;
   `;
 
-  const sendFlightData = () => {
-    console.log("sendFlightData-track:", flightLog);
-    const message = {
-      type: "SET_FLIGHT",
-      flightLog,
-    };
+  useEffect(() => {
+    console.log(
+      "[RN] useEffect triggered - isReady:",
+      isReady,
+      "flightLog:",
+      flightLog?.length
+    );
+    if (isReady && flightLog && flightLog.length > 0) {
+      console.log(
+        "[RN] 🚀 Sending flight data with",
+        flightLog.length,
+        "points"
+      );
+      console.log("[RN] First flightLog point:", flightLog[0]);
 
-    webviewRef.current?.postMessage(JSON.stringify(message));
-
-    setHasSentFlight(true);
-    console.log("[RN] SET_FLIGHT data sent.");
-  };
+      const message = {
+        type: "SET_FLIGHT",
+        track: flightLog,
+      };
+      webviewRef.current?.postMessage(JSON.stringify(message));
+      console.log("[RN] ✅ postMessage called");
+    } else {
+      console.log(
+        "[RN] ⏳ Waiting... isReady:",
+        isReady,
+        "flightLog length:",
+        flightLog?.length || 0
+      );
+    }
+  }, [isReady, flightLog]);
 
   const onMessage = (e: WebViewMessageEvent) => {
+    console.log("[RN] 📨 Message received from WebView");
+    console.log("[RN] Raw data:", e.nativeEvent.data);
+
     try {
       const raw = e.nativeEvent.data;
       const data = JSON.parse(raw);
-      if (!data?.type) return;
+      console.log("[RN] Parsed message type:", data.type);
+
+      if (!data?.type) {
+        console.log("[RN] ⚠️ No type in message");
+        return;
+      }
 
       if (data.type === "READY") {
-        console.log("[RN] webview READY received");
+        console.log("[RN] ✅ WebView READY received");
         setIsReady(true);
-        if (!hasSentFlight) sendFlightData();
       }
 
       if (data.type === "PLAY_STARTED") {
-        console.log("[RN] play started");
+        console.log("[RN] ▶️ play started");
       }
       if (data.type === "ERROR") {
-        console.warn("[RN] webview error:", data.message);
+        console.warn("[RN] ❌ webview error:", data.message);
       }
     } catch (err) {
-      console.error("[RN] invalid message from webview", err);
+      console.error("[RN] 💥 invalid message from webview", err);
     }
   };
 
   const onLoadEnd = () => {
-    console.log("[RN] onLoadEnd");
+    console.log("[RN] 🔄 WebView onLoadEnd called");
   };
+
+  const onLoadStart = () => {
+    console.log("[RN] 🔄 WebView onLoadStart called");
+  };
+
+  const onError = (syntheticEvent: any) => {
+    const { nativeEvent } = syntheticEvent;
+    console.error("[RN] 💥 WebView error:", nativeEvent);
+  };
+
+  console.log(
+    "[RN] 🔄 Component rendering - flightLog:",
+    flightLog?.length,
+    "isReady:",
+    isReady
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -118,10 +146,14 @@ export default function MyFlightDetails() {
             originWhitelist={["*"]}
             onMessage={onMessage}
             onLoadEnd={onLoadEnd}
+            onLoadStart={onLoadStart}
+            onError={onError}
             style={styles.webview}
             // Android WebGL 이슈 방지를 위한 추가 옵션 (필요 시 주석 해제)
             allowsInlineMediaPlayback={true}
             mediaPlaybackRequiresUserAction={false}
+            mixedContentMode="always"
+            domStorageEnabled={true}
           />
           {!visible && (
             <Pressable
