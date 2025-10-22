@@ -20,6 +20,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 export default function Report() {
   const params = useLocalSearchParams();
 
+  const [recordId, setRecordId] = useState<string>("");
+  const [recordDate, setRecordDate] = useState<string>("");
   const memberId = useAuthStore((state) => state.memberInfo?.memberId);
   const airfieldName = params?.airfieldName as string;
   const flightTime = params?.time ? Number(params.time) : 0;
@@ -76,6 +78,8 @@ export default function Report() {
     }
 
     const id = response.data.id;
+    setRecordId(id);
+    setRecordDate(response.data.createdAt);
     const flightLog = await saveFlightLog(id, locationData);
     console.log(`[report] ID ${id}: `, flightLog.success);
 
@@ -148,7 +152,22 @@ export default function Report() {
         title="비행기록 저장 완료!"
         description="비행 데이터가 성공적으로 저장되었습니다."
         description2="3D 비행 영상을 확인할까요?"
-        onPressConfirm={() => setIsModalVisible(false)}
+        onPressConfirm={() =>
+          router.navigate({
+            pathname: "/(tabs)/user/flight-detail/[id]",
+            params: {
+              id: recordId,
+              data: JSON.stringify({
+                airfieldName,
+                flightTime,
+                flightDistance,
+                averageSpeed,
+                flightAltitude: maxAltitude,
+                createdAt: recordDate,
+              }),
+            },
+          })
+        }
         pressButtonText="영상 확인하기"
       />
     </Background>
