@@ -113,11 +113,11 @@ interface IPageable {
 export interface myFlightLogsContents {
   id: string;
   airfieldName: string;
+  airfieldImageUrl: string;
   flightTime: number;
   flightDistance: number;
   averageSpeed: number;
   flightAltitude: number;
-  videoUrl: string; // 삭제 예정
   createdAt: string;
   track: any; // 삭제 예정
 }
@@ -131,4 +131,10 @@ export interface myFlightLogs {
   first: boolean;
   last: boolean;
   empty: boolean;
+}
+
+export interface myFlightLogsRequest {
+  memberId: string;
+  page: number;
+  size: number;
 }

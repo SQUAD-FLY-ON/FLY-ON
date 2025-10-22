@@ -14,6 +14,7 @@ import {
   postFlightLogRequest,
 } from "@/types/api";
 import { postFlightLog } from "@/libs/(tabs)/air/flightLogs";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Report() {
   const params = useLocalSearchParams();
@@ -56,10 +57,8 @@ export default function Report() {
   // 평균 비행 속도
   const averageSpeed = flightDistance / seconds;
 
-  // POST 비행기록
-  async function onPressSave() {
-    // 위치 정보 제외한 비행 경로 관련 데이터 서버에 POST
-
+  // POST + AsyncStorage 저장 함수
+  const mutationFunction = async () => {
     const data: postFlightLogRequest = {
       airfieldName,
       flightTime,
@@ -67,28 +66,37 @@ export default function Report() {
       averageSpeed,
       flightAltitude: maxAltitude,
     };
-
     const response: ApiResponse<myFlightLogsContents> | null =
       await postFlightLog(memberId as string, data);
-    console.log(response);
 
+    console.log("[report] 비행 기록 저장:", response);
     if (!response) {
       console.log("비행 기록을 저장하는 과정에 오류가 발생했습니다");
       return;
     }
 
-    // API response로 받은 id값과 비행 경로 저장
     const id = response.data.id;
     const flightLog = await saveFlightLog(id, locationData);
-    console.log(`ID ${id}: `, flightLog.success);
+    console.log(`[report] ID ${id}: `, flightLog.success);
 
-    const allFlightLogs = await getAllFlightLogs();
-    console.log("전체 비행 기록:", allFlightLogs);
+    return response;
+  };
 
-    if (response.httpStatusCode === 200 && flightLog.success) {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: mutationFunction,
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({ queryKey: ["my-flight-logs"] });
       setIsModalVisible(true);
-    }
-  }
+    },
+    onError: (error) => {
+      console.error("저장 실패:", error);
+    },
+  });
+
+  const onPressSave = () => {
+    mutate();
+  };
 
   return (
     <Background>
