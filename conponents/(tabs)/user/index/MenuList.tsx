@@ -1,15 +1,15 @@
 import { fetchSignout } from "@/libs/(tabs)/user/fetchSignout";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useModalStore } from "@/store/useModalStore";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 import {
-  Alert,
   Linking,
   Pressable,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import { useShallow } from "zustand/shallow";
 
@@ -27,6 +27,52 @@ const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
     }))
   );
 
+
+  const showConfirm = useModalStore((state) => state.showConfirm);
+  const showAlert = useModalStore((state) => state.showAlert);
+
+  const handleLogout = async () => {
+    const confirmed = await showConfirm({
+      title: '로그아웃',
+      description: '정말로 로그아웃 하시겠습니까?',
+      pressButtonText: '로그아웃',
+    });
+
+    if (confirmed) {
+      useScheduleStore.getState().resetAllStates();
+      await logout();
+      const accessToken = useAuthStore.getState().accessToken;
+      if (!accessToken) {
+        router.replace("/intro");
+      }
+    }
+  };
+
+  const handleWithdrawal = async () => {
+    const confirmed = await showConfirm({
+      title: '회원탈퇴',
+      description: '정말로 회원을 탈퇴하시겠습니까?',
+      description2: '탈퇴 시 모든 데이터가 삭제됩니다.',
+      pressButtonText: '회원탈퇴',
+    });
+
+    if (confirmed) {
+      useScheduleStore.getState().resetAllStates();
+      const response = await fetchSignout();
+      
+      if (response?.httpStatusCode === 200) {
+        console.log("회원탈퇴 성공");
+        clearAuthState();
+        router.replace("/intro");
+      } else {
+        await showAlert({
+          title: '오류',
+          description: '회원탈퇴 처리 중 오류가 발생했습니다.',
+        });
+      }
+    }
+  };
+
   const onPress = async (name: string, url: string) => {
     if (name === "비행 기록") {
       // 비행 기록 상세 페이지로 이동
@@ -38,48 +84,15 @@ const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
       if (supported) {
         await Linking.openURL(url);
       } else {
-        Alert.alert(`이 URL을 열 수 없습니다: ${url}`);
+        await showAlert({
+          title: '오류',
+          description: `이 URL을 열 수 없습니다: ${url}`,
+        });
       }
     } else if (name === "로그아웃") {
-      useScheduleStore.getState().resetAllStates();
-      const response = await logout();
-      const accessToken = useAuthStore.getState().accessToken;
-      if (!accessToken) {
-        router.replace("/intro");
-      }
+      await handleLogout();
     } else if (name === "회원탈퇴") {
-      useScheduleStore.getState().resetAllStates();
-
-      Alert.alert(
-        "회원탈퇴", // Alert 제목
-        "정말로 회원을 탈퇴하시겠습니까?", // Alert 내용
-        [
-          {
-            text: "취소",
-            onPress: () => console.log("회원탈퇴가 취소되었습니다."),
-            style: "cancel",
-          },
-          {
-            text: "확인", // '확인' 버튼
-            onPress: async () => {
-              // '확인'을 눌렀을 때만 기존 탈퇴 로직을 실행합니다.
-              const response = await fetchSignout();
-              if (response?.httpStatusCode === 200) {
-                console.log("회원탈퇴 성공");
-                Alert.alert("회원탈퇴가 완료되었습니다.");
-                clearAuthState();
-                queryClient.invalidateQueries({ queryKey: ["mySchedule"] });
-                router.replace("/intro");
-              } else {
-                // 탈퇴 실패 시 사용자에게 알림
-                Alert.alert("오류", "회원탈퇴 처리 중 오류가 발생했습니다.");
-              }
-            },
-            style: "destructive",
-          },
-        ],
-        { cancelable: false }
-      );
+      await handleWithdrawal();
     }
   };
 
@@ -93,7 +106,7 @@ const MenuList = ({ menuItem }: { menuItem: TMenuItem[] }) => {
           }
           onPress={() => onPress(v.name, v.link)}
         >
-          <Text style={styles.itemText}>{menuItem[idx].name}</Text>
+          <Text style={styles.itemText}>{v.name}</Text>
         </Pressable>
       ))}
     </View>
