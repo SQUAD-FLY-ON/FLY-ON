@@ -1,3 +1,4 @@
+import { GlobalModals } from "@/conponents/GlobalModals";
 import Header from "@/conponents/Header";
 import { useAuthStore } from "@/store/useAuthStore";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
@@ -11,9 +12,17 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 export const queryClient = new QueryClient();
 
 export default function RootLayout() {
-  const queryClient = new QueryClient();
-
-
+  // setupInterceptors();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1, // 모든 쿼리에 대해 1번만 재시도
+    },
+    mutations: {
+      retry: 1, // mutation도 재시도 설정 가능
+    },
+  },
+});
   const [fontsLoaded] = useFonts({
     "Pretendard-Bold": require("@/assets/fonts/Pretendard-Bold.ttf"),
     "Pretendard-Regular": require("@/assets/fonts/Pretendard-Regular.ttf"),
@@ -23,7 +32,6 @@ export default function RootLayout() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isInitialized = useAuthStore((state) => state.isInitialized);
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
-  console.log(isAuthenticated);
   // 앱 시작 시 인증 상태 초기화
   useEffect(() => {
     if (fontsLoaded && !isInitialized) {
@@ -64,6 +72,7 @@ export default function RootLayout() {
                   />
                 </Stack.Protected>
               </Stack>
+              <GlobalModals />
             </BottomSheetModalProvider>
           </GestureHandlerRootView>
         </SafeAreaView>

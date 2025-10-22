@@ -66,6 +66,9 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             isInitializing: false,
           });
           return;
+        } else {
+          get().clearAuthState();
+          return;
         }
       },
       login: async (credentials) => {
@@ -129,7 +132,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
 
       refreshAccessToken: async () => {
         // const queryClient = useQueryClient();
-        console.log('aaa');
 
         try {
           const refreshToken = get().refreshToken;
@@ -137,13 +139,13 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             get().clearAuthState();
             return false;
           }
-          console.log(refreshToken);
           const response: ApiResponse<AuthResponse> = await apiClient.post(
             "/tokens",
             {
               refreshToken,
             }
           );
+          console.log(response);
           if (response.httpStatusCode === 201 && response.data) {
             const {
               accessToken,
@@ -156,13 +158,15 @@ export const useAuthStore = create<AuthState & AuthActions>()(
               accessToken,
               refreshToken: newRefreshToken || refreshToken,
               memberInfo: memberInfo || get().memberInfo,
-            });
+            })
             return true;
           } else {
+            console.log('bbbb')
             return false;
           }
         } catch (error: any) {
           console.error("토큰 갱신 실패:", error);
+          get().clearAuthState();
           return false;
         }
         finally {
@@ -178,6 +182,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           refreshToken: null,
           memberInfo: null,
         });
+
       },
     }),
     {
