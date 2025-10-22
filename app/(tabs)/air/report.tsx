@@ -39,19 +39,19 @@ export default function Report() {
   let flightDistance = 0;
 
   let coordinate = { latitude: 0, longitude: 0 };
-  for (let { lat, lon, alt } of locationData) {
+  for (let { latitude, longitude, altitude } of locationData) {
     if (coordinate.latitude === 0) {
-      coordinate.latitude = lat;
-      coordinate.longitude = lon;
+      coordinate.latitude = latitude;
+      coordinate.longitude = longitude;
     } else {
       flightDistance += haversine(coordinate, {
-        latitude: lat,
-        longitude: lon,
+        latitude: latitude,
+        longitude: longitude,
       });
-      coordinate.latitude = lat;
-      coordinate.longitude = lon;
+      coordinate.latitude = latitude;
+      coordinate.longitude = longitude;
     }
-    maxAltitude = Math.max(maxAltitude, alt);
+    maxAltitude = Math.max(maxAltitude, altitude);
   }
 
   // 평균 비행 속도

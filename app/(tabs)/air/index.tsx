@@ -3,7 +3,7 @@ import Dropdown from "@/conponents/(tabs)/air/Dropdown";
 import FlightRecordButton from "@/conponents/(tabs)/air/FlightRecordButton";
 import Stopwatch from "@/conponents/(tabs)/air/Stopwatch";
 import { useTourSchedule } from "@/hooks/useTourSchedule";
-import { TLocationData } from "@/types";
+import { ITrackData, TLocationData } from "@/types";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Location from "expo-location";
 import { useRouter } from "expo-router";
@@ -16,7 +16,7 @@ export default function Index() {
   const { schedule } = useTourSchedule();
 
   const [ok, setOk] = useState<boolean>();
-  const locationDataRef = useRef<TLocationData[]>([]);
+  const locationDataRef = useRef<ITrackData[]>([]);
   const intervalRef = useRef<null | number>(null);
 
   const [value, setValue] = useState<string | null>(null);
@@ -47,8 +47,12 @@ export default function Index() {
     ask();
   }, []);
 
-  const saveLocationData = (lat: number, lon: number, alt: number) => {
-    locationDataRef.current.push({ lat, lon, alt });
+  const saveLocationData = (
+    latitude: number,
+    longitude: number,
+    altitude: number
+  ) => {
+    locationDataRef.current.push({ latitude, longitude, altitude });
     // console.log(locationDataRef.current);
   };
 

@@ -277,7 +277,7 @@ export interface ITrackData {
   latitude: number;
   longitude: number;
   altitude: number;
-  time: string;
+  time?: string;
 }
 
 export interface ITrackPoints {

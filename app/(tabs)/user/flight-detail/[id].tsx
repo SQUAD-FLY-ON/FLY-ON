@@ -1,30 +1,47 @@
 import Header from "@/conponents/Header";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import WebView, { WebViewMessageEvent } from "react-native-webview";
 import Constants from "expo-constants";
 import Close from "@/conponents/icons/Close";
 import MyReportText from "@/conponents/(tabs)/user/my-flight-records/MyReportText";
 import { useLocalSearchParams } from "expo-router";
+import { getAllFlightLogs, getFlightLog } from "@/store/flightLogStore";
+import { ITrackData } from "@/types";
 
 const { height, width } = Dimensions.get("window");
 
-interface IFlightPath {
-  lat: number;
-  lon: number;
-  alt: number;
-}
-const flightPath = [
-  { lat: 37.5, lon: 128.2, alt: 1000 },
-  { lat: 37.51, lon: 128.21, alt: 900 },
-  { lat: 37.52, lon: 128.22, alt: 700 },
-  { lat: 37.53, lon: 128.23, alt: 300 },
-];
+// interface IFlightPath {
+//   lat: number;
+//   lon: number;
+//   alt: number;
+// }
+// const flightPath = [
+//   { lat: 37.5, lon: 128.2, alt: 1000 },
+//   { lat: 37.51, lon: 128.21, alt: 900 },
+//   { lat: 37.52, lon: 128.22, alt: 700 },
+//   { lat: 37.53, lon: 128.23, alt: 300 },
+// ];
 
 export default function MyFlightDetails() {
   const { id, data } = useLocalSearchParams();
   const reprotData = JSON.parse(data as string);
-  console.log("data:", reprotData);
+
+  // 비행 경로 불러오기
+  const [flightLog, setFlightLog] = useState<ITrackData[] | null>(null);
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const data = await getFlightLog(`${id}`);
+        setFlightLog(data);
+        console.log("[id] flightLog", data);
+      } catch (error) {
+        console.error("[id] 데이터 로딩 실패: ", error);
+      }
+    };
+
+    loadData();
+  }, [id]);
 
   // 데이터 불러오기
 
@@ -37,16 +54,20 @@ export default function MyFlightDetails() {
     CESIUM_TOKEN: string;
     CESIUM_WEB_URL: string;
   };
+  if (!CESIUM_WEB_URL) {
+    throw new Error("CESIUM_WEB_URL이 설정되지 않았습니다");
+  }
 
   const cesiumAccessToken = `
     window.CESIUM_ACCESS_TOKEN = "${CESIUM_TOKEN}";
     true;
   `;
 
-  const sendFlightData = (flightPath: IFlightPath[]) => {
+  const sendFlightData = () => {
+    console.log("sendFlightData-track:", flightLog);
     const message = {
       type: "SET_FLIGHT",
-      flightPath,
+      flightLog,
     };
 
     webviewRef.current?.postMessage(JSON.stringify(message));
@@ -64,7 +85,7 @@ export default function MyFlightDetails() {
       if (data.type === "READY") {
         console.log("[RN] webview READY received");
         setIsReady(true);
-        if (!hasSentFlight) sendFlightData(flightPath);
+        if (!hasSentFlight) sendFlightData();
       }
 
       if (data.type === "PLAY_STARTED") {
