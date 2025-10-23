@@ -61,7 +61,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         if (userResponse.httpStatusCode === 200) {
           set({
             isAuthenticated: true,
-            memberInfo: userResponse.data || get().memberInfo,
+            // memberInfo: userResponse.data || get().memberInfo,
             isInitialized: true,
             isInitializing: false,
           });
@@ -108,19 +108,17 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       },
 
       logout: async () => {
-
         set({ isLoading: true });
         try {
           const refreshToken = get().refreshToken;
-          
+
           if (refreshToken) {
             await apiClient
               .delete("/tokens", { data: { refreshToken } })
               .catch((error) => {
                 console.warn("서버 로그아웃 요청 실패:", error);
               });
-
-            queryClient.invalidateQueries({ queryKey: ['mySchedule'] })
+            queryClient.invalidateQueries({ queryKey: ["mySchedule"] });
           }
         } catch (error) {
           console.error("로그아웃 중 오류:", error);
@@ -147,11 +145,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           );
           console.log(response);
           if (response.httpStatusCode === 201 && response.data) {
-            const {
-              accessToken,
-              refreshToken: newRefreshToken,
-              memberInfo,
-            } = response.data;
+            const { accessToken } = response.data;
 
             set({
               isAuthenticated: true,
@@ -161,7 +155,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             })
             return true;
           } else {
-            console.log('bbbb')
+            console.log("bbbb");
             return false;
           }
         } catch (error: any) {
@@ -170,7 +164,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           return false;
         }
         finally {
-          queryClient.invalidateQueries({ queryKey: ['mySchedule'] });
+          queryClient.invalidateQueries({ queryKey: ["mySchedule"] });
           set({ isInitializing: false, isInitialized: true });
           console.log('isLoading false and isInitialized');
         }
@@ -182,7 +176,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
           refreshToken: null,
           memberInfo: null,
         });
-
       },
     }),
     {

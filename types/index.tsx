@@ -273,3 +273,14 @@ export type Option = {
   label: string;
   value: string;
 };
+
+export interface ITrackData {
+  latitude: number;
+  longitude: number;
+  altitude: number;
+  time?: string;
+}
+
+export interface ITrackPoints {
+  points: ITrackData[];
+}
