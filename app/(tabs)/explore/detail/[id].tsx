@@ -27,7 +27,6 @@ export default function Detail() {
   const { id } = useLocalSearchParams();
 
   const [isReady, setIsReady] = useState<boolean>(false);
-  // const [hasSentFlight, setHasSentFlight] = useState<boolean>(false);
   const [spotInfo, setSpotInfo] = useState<SpotDetailResponse | null>(null);
   const [track, setTrack] = useState<ITrackData[] | null>(null);
 
@@ -94,19 +93,6 @@ export default function Detail() {
       );
     }
   }, [isReady, track]);
-
-  // const sendFlightData = () => {
-  //   console.log("sendFlightData-track:", track);
-  //   const message = {
-  //     type: "SET_FLIGHT",
-  //     track,
-  //   };
-
-  //   webviewRef.current?.postMessage(JSON.stringify(message));
-
-  //   setHasSentFlight(true);
-  //   console.log("[RN] SET_FLIGHT data sent.");
-  // };
 
   const onMessage = (e: WebViewMessageEvent) => {
     console.log("[RN] 📨 Message received from WebView");
