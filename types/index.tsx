@@ -222,7 +222,7 @@ export interface MemberProfileInfo {
   totalJumpAltitude: number;
 }
 
-interface TourismSpot {
+export interface TourismSpot {
   id: number;
   tourismType: string;
   name: string;
