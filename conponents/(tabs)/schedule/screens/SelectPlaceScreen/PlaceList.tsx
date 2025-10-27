@@ -3,7 +3,7 @@ import { fetchAttractions } from "@/libs/schedule/fetchAttractions";
 import { fetchRestaurants } from "@/libs/schedule/fetchRestaurants";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet, Text, View } from "react-native";
 import { useShallow } from "zustand/shallow";
 import Filter from "../../Filter";
@@ -15,50 +15,55 @@ interface PlaceListProps {
   description: string;
 }
 
-export default function PlaceList({ 
-  title, 
-  description, 
+export default function PlaceList({
+  title,
+  description,
 }: PlaceListProps) {
-   const {  selectedActivities} = useScheduleStore(
-    useShallow(state => ({ 
-      selectedActivities: state.selectedActivities, 
-      refreshSelectedPlaces: state.refreshSelectedPlaces 
+  const flatListRef = useRef<FlatList>(null);
+
+  const { selectedActivities } = useScheduleStore(
+    useShallow(state => ({
+      selectedActivities: state.selectedActivities,
+      refreshSelectedPlaces: state.refreshSelectedPlaces
     }))
   );
 
-  const filters = [{key: 'restaurant', text: '음식점'}, {key: 'attractions', text:'관광지'}];
+  const filters = [{ key: 'restaurant', text: '음식점' }, { key: 'attractions', text: '관광지' }];
   const [currentFilter, setCurrentFilter] = useState('restaurant');
   const pageSize = 10;
-  const { 
-    data, 
-    isLoading, 
-    fetchNextPage, 
-    hasNextPage, 
+
+  // currentFilter가 변경될 때마다 스크롤을 최상단으로
+  useEffect(() => {
+    flatListRef.current?.scrollToOffset({ offset: 0, animated: false });
+  }, [currentFilter]);
+  console.log(selectedActivities);
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
     isFetchingNextPage,
-    error 
+    error
   } = useInfiniteQuery({
     queryKey: [currentFilter, selectedActivities.latitude, selectedActivities.longitude],
     queryFn: async ({ pageParam = 0 }) => {
-      // if (pageParam === 0) {
-      //   refreshSelectedPlaces();
-      // }
-      if(!selectedActivities.latitude || !selectedActivities.longitude ) {
+      if (!selectedActivities.latitude || !selectedActivities.longitude) {
         return;
       }
       console.log(pageParam);
       if (currentFilter === 'restaurant') {
-        return await fetchRestaurants({ 
-        lat: selectedActivities?.latitude, 
-        lon: selectedActivities?.longitude, 
-        page: pageParam,
-        size: pageSize, 
+        return await fetchRestaurants({
+          lat: selectedActivities?.latitude,
+          lon: selectedActivities?.longitude,
+          page: pageParam,
+          size: pageSize,
         })
       } else {
-        return await fetchAttractions({ 
-        lat: selectedActivities?.latitude, 
-        lon: selectedActivities?.longitude, 
-        page: pageParam,
-        size: pageSize, 
+        return await fetchAttractions({
+          lat: selectedActivities?.latitude,
+          lon: selectedActivities?.longitude,
+          page: pageParam,
+          size: pageSize,
         })
       }
     },
@@ -66,14 +71,14 @@ export default function PlaceList({
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
       console.log(lastPage);
-      // // lastPage가 비어있거나 설정된 페이지 크기보다 작으면 다음 페이지 없음
       if (!lastPage || lastPage.length === 0) return undefined;
-      
+
       if (lastPage.length < pageSize) return undefined;
-      
+
       return allPages.length + 1;
     },
   });
+  console.log(data);
   const flatData = useMemo(() => {
     return data?.pages.flatMap(page => page) || [];
   }, [data]);
@@ -87,9 +92,10 @@ export default function PlaceList({
       </View>
     );
   }
+
   const renderFooter = () => {
     if (!isFetchingNextPage) return null;
-    
+
     return (
       <View style={styles.footerLoader}>
         <ActivityIndicator size="small" color="#666" />
@@ -100,22 +106,29 @@ export default function PlaceList({
 
   return (
     <View style={{ flex: 1 }}>
-      <TitleHeader title={title} description={description} style = {{marginBottom:17}}/>
-      <Filter currentFilter = {currentFilter} setCurrentFilter = {setCurrentFilter} filters = {filters}/>
+      <TitleHeader title={title} description={description} style={{ marginBottom: 17 }} />
+      <Filter currentFilter={currentFilter} setCurrentFilter={setCurrentFilter} filters={filters} />
       <FlatList
+        ref={flatListRef}
         style={{ marginVertical: 14 }}
         contentContainerStyle={styles.placeContainer}
         data={flatData}
         renderItem={({ item, index }) => (
           <PlaceCard
-            key={`${item.id || index}`} // id가 있다면 사용, 없으면 index
+            key={`${item?.id || index}`}
             data={item}
           />
         )}
-        keyExtractor={(item, index) => `${item.id || index}`}
-        onEndReached={hasNextPage ? () => {fetchNextPage()} : undefined}
-        onEndReachedThreshold={0.5} // 50% 지점에서 트리거
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>장소가 없습니다</Text>
+          </View>
+        }
+        keyExtractor={(item, index) => `${item?.id || index}`}
+        onEndReached={hasNextPage ? () => { fetchNextPage() } : undefined}
+        onEndReachedThreshold={0.5}
         ListFooterComponent={renderFooter}
+
       />
     </View>
   );
@@ -124,7 +137,7 @@ export default function PlaceList({
 const styles = StyleSheet.create({
   placeContainer: {
     gap: 8,
-    zIndex:1,
+    zIndex: 1,
   },
   footerLoader: {
     paddingVertical: 20,
@@ -151,5 +164,15 @@ const styles = StyleSheet.create({
     color: '#ff4444',
     textAlign: 'center',
     paddingHorizontal: 20,
-  }
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 60,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#999',
+  },
 });
