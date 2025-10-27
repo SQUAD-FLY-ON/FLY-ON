@@ -22,11 +22,19 @@ export default function SignupForm() {
     const { passwordConfirm, ...apiData } = data;
     try {
     const response = await fetchSignup(apiData);
-    
+      console.log(response);
       Alert.alert('회원가입이 완료되었습니다!');
       router.push("/login");
     } catch (error) {
-      Alert.alert(error?.response?.serverErrorMessage);
+      console.error('회원가입 에러:', error);
+  
+  // 에러 타입 체크 후 메시지 추출
+  const errorMessage = 
+    error?.response?.data?.message || 
+    error?.response?.serverErrorMessage || 
+    error?.message || 
+    '회원가입 중 오류가 발생했습니다.';
+      Alert.alert(errorMessage);
       // Alert.alert(`${error.}`);
     }
   }
