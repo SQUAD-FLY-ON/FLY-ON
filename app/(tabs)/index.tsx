@@ -1,22 +1,28 @@
-import { apiClient } from "@/api/apiClient";
 import FooterSection from "@/conponents/(tabs)/index/FooterSection";
 import MyStatusSection from "@/conponents/(tabs)/index/MyStatusSection";
 import HomeLinearBackground from "@/conponents/(tabs)/index/MyStatusSection/LinearBackground/HomeLinearBackground";
 import RecommendSection from "@/conponents/(tabs)/index/RecommendSection";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useModalStore } from "@/store/useModalStore";
-import { Dimensions, ScrollView, StyleSheet, View } from "react-native";
+import { useTourSchedule } from "@/hooks/useTourSchedule";
+import { useState } from "react";
+import { Dimensions, RefreshControl, ScrollView, StyleSheet, View } from "react-native";
 
 export default function Index() {
-  const refreshToken = useAuthStore(state => state.refreshToken);
-  const showAlert = useModalStore((state) => state.showAlert);
-  const fetch = async () => {
-    const response = await apiClient.post('/tokens', { refreshToken });
-    console.log(response);
-  }
-
+   const [refreshing, setRefreshing] = useState(false);
+  const {refetchSchedule} = useTourSchedule();
+   const onRefresh = async () => {
+    try {
+      setRefreshing(true);
+      await refetchSchedule();
+    } finally {
+      setRefreshing(false);
+    }
+  };
   return (
-    <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View>
         <HomeLinearBackground />
         <MyStatusSection />

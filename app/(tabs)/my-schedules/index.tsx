@@ -1,12 +1,26 @@
 import TravelCard from "@/conponents/(tabs)/my-schedule/TravelCard/TravelCard";
 import Header from "@/conponents/Header";
 import { useTourSchedule } from "@/hooks/useTourSchedule";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
 export default function Index() {
-  const { isScheduleLoading, isScheduleError, schedule } = useTourSchedule();
+  const { isScheduleLoading, isScheduleError, schedule, refetchSchedule } = useTourSchedule();
   const router = useRouter();
+  const [refreshing, setRefreshing] = useState(false);
+
+  // 새로고침 함수
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await refetchSchedule(); // React Query에서 refetch 사용 (데이터 새로 불러오기)
+    setRefreshing(false);
+  }, [refetchSchedule]);
+  useFocusEffect(
+  useCallback(() => {
+    refetchSchedule();
+  }, [refetchSchedule])
+);
   console.log(schedule);
   return (
     <View style={styles.container}>
@@ -15,7 +29,12 @@ export default function Index() {
         data={schedule}
         style={{ flex: 1, width: '100%', marginTop: 24 }}
         contentContainerStyle={{ paddingHorizontal: 16, gap: 24, paddingBottom: 120 }}
-        renderItem={({ item }) => <TravelCard onPress= {() => {router.push(`/(tabs)/my-schedules/detail/${item.id}`)}} key={item.id} schedule={item} />} />
+        renderItem={({ item }) => <TravelCard onPress={() => { router.push(`/(tabs)/my-schedules/detail/${item.id}`) }} key={item.id} schedule={item}
+        />}
+        refreshing={refreshing}
+        onRefresh={onRefresh}
+      />
+
     </View>
   );
 }
