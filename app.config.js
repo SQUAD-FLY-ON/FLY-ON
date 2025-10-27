@@ -4,7 +4,7 @@ export default {
   expo: {
     name: "FlyOn",
     slug: "FlyOn-frontend",
-    version: "1.0.1",
+    version: "1.0.2",
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "flyonfrontend",
@@ -18,8 +18,8 @@ export default {
     },
     android: {
       package: "com.flyon",
-      versionCode: 1,
-      runtimeVersion: "1.0.1",
+      versionCode: 19,
+      runtimeVersion: "1.0.2",
       adaptiveIcon: {
         foregroundImage: "./assets/images/icon.png",
         backgroundColor: '#3A88F4',
@@ -65,13 +65,13 @@ export default {
       typedRoutes: true
     },
     updates: {
-      url: "https://u.expo.dev/c82afcfb-f95e-456e-b9e8-0df6bea8d5eb"
+      url: "https://u.expo.dev/84425ec3-2542-40b9-9444-cb7ecd0fd6b2",
     },
-    runtimeVersion: "1.0.1", 
+    runtimeVersion: "1.0.2", 
     extra: {
       router: {},
       eas: {
-        projectId: "c82afcfb-f95e-456e-b9e8-0df6bea8d5eb"
+        projectId: "84425ec3-2542-40b9-9444-cb7ecd0fd6b2"
       },
       googleMapsIosApiKey: process.env.GOOGLE_MAPS_IOS_API_KEY,
       googleMapsAndroidApiKey: process.env.GOOGLE_MAPS_ANDROID_API_KEY,
