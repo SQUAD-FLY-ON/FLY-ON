@@ -150,12 +150,13 @@ export const useAuthStore = create<AuthState & AuthActions>()(
             set({
               isAuthenticated: true,
               accessToken,
-              refreshToken: newRefreshToken || refreshToken,
-              memberInfo: memberInfo || get().memberInfo,
+              refreshToken: refreshToken,
+              memberInfo: get().memberInfo,
             })
             return true;
           } else {
             console.log("bbbb");
+            get().clearAuthState(); // ✅ 에러 시 상태 초기화
             return false;
           }
         } catch (error: any) {
