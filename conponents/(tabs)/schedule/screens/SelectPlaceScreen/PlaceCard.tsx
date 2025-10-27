@@ -1,7 +1,8 @@
 // PlaceCard.tsx
+import { getSecureImageUrl } from "@/libs/getSecureUrl";
+import { useModalStore } from "@/store/useModalStore";
 import { useScheduleStore } from "@/store/useScheduleStore";
 import { TourismItem } from "@/types";
-import { useRouter } from "expo-router";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useShallow } from "zustand/react/shallow";
 
@@ -12,13 +13,23 @@ export default function PlaceCard({ data }: { data: TourismItem }) {
       setSelectedPlaces: state.setSelectedPlaces,
     }))
   );
-  const router = useRouter();
+  const showAlert = useModalStore(state => state.showAlert);
   const onPress = () => {
+    if (selectedPlaces.length >= 10 && !selected) {
+      showAlert({
+        title: "경고",
+        description: "최대 10개의 장소를 선택할 수 있습니다.",
+        description2: "다른 장소를 선택하거나 일정을 생성해주세요.",
+        isError: true,
+      })
+    }
     setSelectedPlaces(data);
   };
 
   const selected = Array.isArray(selectedPlaces) &&
     selectedPlaces.some(place => (place.fullAddress === data.fullAddress && place.name === data.name))
+  const secureUrl = getSecureImageUrl(data?.imgUrl) 
+    console.log(secureUrl);
 
   return (
     <Pressable
@@ -28,9 +39,17 @@ export default function PlaceCard({ data }: { data: TourismItem }) {
       <Image
         style={styles.image}
         source={data?.imgUrl
-          ? { uri: data?.imgUrl }
+          ? { uri:secureUrl }
           : require('@/assets/images/dummy_image_place.png')
         }
+        onError={(error) => {
+          console.log('Image load error:', error.nativeEvent.error);
+        }}
+        onLoad={() => {
+          console.log('Image loaded successfully');
+        }}
+        defaultSource={require('@/assets/images/dummy_image_place.png')}
+
       />
       <View style={styles.contentContainer}>
         <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{data.name}</Text>
@@ -73,7 +92,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     gap: 4,
-    flex:1,
+    flex: 1,
     flexShrink: 1,
   },
   title: {
