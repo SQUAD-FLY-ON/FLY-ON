@@ -1,13 +1,17 @@
 import CustomButton from "@/conponents/CustomButton";
-import { useState } from "react";
+import useExploreStore from "@/store/exploreStore";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   Alert,
+  BackHandler,
   Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from "react-native";
+import { useShallow } from "zustand/shallow";
 import CalanderModal from "./CalanderModal";
 import LinkIcon from "./icons/LinkIcon";
 import MapPinIcon from "./icons/MapPinIcon";
@@ -23,6 +27,8 @@ const SpotCard = ({
   webURL: string;
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const router = useRouter();
+  const { selectedMarkerSpot, selectedRegion } = useExploreStore(useShallow(state => ({ selectedMarkerSpot: state.selectedMarkerSpot, selectedRegion: state.selectedRegion })))
   const openSite = async () => {
     const supported = await Linking.canOpenURL(webURL);
 
@@ -32,11 +38,28 @@ const SpotCard = ({
       Alert.alert(`이 URL을 열 수 없습니다: ${webURL}`);
     }
   };
+  useEffect(() => {
+    const backAction = () => {
+      if(selectedMarkerSpot.id === ''  && selectedRegion.name === '') {
+      router.push('/(tabs)/explore');
+      return true; // true를 반환하면 기본 백버튼 동작을 막습니다
+      }
+      router.push('/(tabs)/explore/map');
+      return true; // false를 반환하면 기본 백버튼 동작을 유지합니다
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove(); // cleanup
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.title}>체험장 정보</Text>
-        <CustomButton text={"일정 생성하기"} buttonType="small" onPress={() => { setIsModalVisible(prev => !prev) }} />
+        { selectedMarkerSpot.id !== ''  && selectedRegion.name !== '' && <CustomButton text={"일정 생성하기"} buttonType="small" onPress={() => { setIsModalVisible(prev => !prev) }} />}
       </View>
       <View style={styles.contentsContainer}>
         <View style={styles.contents}>

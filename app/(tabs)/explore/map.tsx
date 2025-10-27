@@ -4,7 +4,8 @@ import MapFloatingButton from "@/conponents/(tabs)/explore/map/FloatingButton";
 import { BackButton } from "@/conponents/BackButton";
 import useExploreStore from "@/store/exploreStore";
 import { useRouter } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect } from "react";
+import { BackHandler, StyleSheet, Text, View } from "react-native";
 import { useShallow } from "zustand/shallow";
 
 export default function Index() {
@@ -15,6 +16,19 @@ export default function Index() {
     }))
   );
   const router = useRouter();
+  useEffect(() => {
+      const backAction = () => {
+        router.push('/(tabs)/explore');
+        return true; // true를 반환하면 기본 백버튼 동작을 막습니다)
+      };
+  
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+  
+      return () => backHandler.remove(); // cleanup
+    }, []);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
