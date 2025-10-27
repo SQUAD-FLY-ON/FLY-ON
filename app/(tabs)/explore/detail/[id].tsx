@@ -11,12 +11,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
-  Image,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import WebView, {
   WebViewMessageEvent,
@@ -181,14 +180,14 @@ export default function Detail() {
             <Text style={styles.title}>
               {spotInfo ? spotInfo.name : "ERROR"}
             </Text>
-            <View style={styles.scoreContainer}>
+            {/*<View style={styles.scoreContainer}>
               <Image
                 source={require("@/assets/images/star.png")}
                 style={styles.star}
               />
               <Text style={styles.score}>4.9</Text>
               <Text style={styles.review}>(19)</Text>
-            </View>
+            </View>*/}
           </View>
           <SpotCard
             address={
