@@ -1,4 +1,5 @@
 import { typeToLabel } from "@/constants/screens";
+import { getSecureImageUrl } from "@/libs/getSecureUrl";
 import { Plan } from "@/types";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRef, useState } from "react";
@@ -31,7 +32,8 @@ const DraggablePlanCard = ({
   const isDraggingRef = useRef(false);
   const localAutoScrollingRef = useRef(false);
   const cardInitialPosition = useRef({ x: 0, y: 0 });
-
+      const secureUrl = getSecureImageUrl(item?.image) 
+  
 
 
   const panResponder = PanResponder.create({
@@ -115,7 +117,6 @@ const DraggablePlanCard = ({
         // ✅ pan 애니메이션 제거 (사용 안 하므로)
       ]).start();
     },
-
     // ✅ 추가: 드래그 취소 처리
     onPanResponderTerminate: (evt, gestureState) => {
       // 시스템에 의해 드래그가 중단된 경우 (전화 등)
@@ -129,6 +130,7 @@ const DraggablePlanCard = ({
       }).start();
     },
   });
+
   const handleLayout = (event: any) => {
     const { height } = event.nativeEvent.layout;
     setComponentHeight(height);
@@ -158,7 +160,7 @@ const DraggablePlanCard = ({
           <Text style={styles.type}>{typeToLabel[item?.type]}</Text>
           <View style={styles.card}>
             {item?.image ? (
-              <Image style={styles.imagePlaceholder} source={{ uri: item?.image }} />
+              <Image style={styles.imagePlaceholder} source={{ uri: secureUrl }} />
             ) : (
               <View style={styles.imagePlaceholder}>
                 <Text style={styles.imageText}>IMG</Text>

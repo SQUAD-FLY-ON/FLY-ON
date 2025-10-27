@@ -1,7 +1,9 @@
 import { typeToLabel } from "@/constants/screens";
+import { getSecureImageUrl } from "@/libs/getSecureUrl";
 import { TourismSpot } from "@/types";
 import { useState } from "react";
 import { Image, LayoutChangeEvent, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+
 
 export default function PlanCard({ 
   index, 
@@ -19,7 +21,9 @@ export default function PlanCard({
     const { height } = event.nativeEvent.layout;
     setComponentHeight(height);
   };
+    const secureUrl = getSecureImageUrl(item?.imgUrl) 
 
+  console.log('sccure',getSecureImageUrl(item?.imgUrl));
   return (
     <TouchableOpacity onLongPress={() => {}} style={styles.container}>
       <View style={styles.rowContainer}>
@@ -38,7 +42,7 @@ export default function PlanCard({
             {typeToLabel[item.tourismType] || '장소로 이동'}
           </Text>
           <View style={styles.card}>
-            <Image source={item.imgUrl? {  uri: item.imgUrl }: require('@/assets/images/dummy_image_place.png')} style={styles.image} />
+            <Image source={item.imgUrl? {  uri: secureUrl }: require('@/assets/images/dummy_image_place.png')} style={styles.image} />
             <View style={styles.cardTextContainer}>
               <Text style={styles.place} numberOfLines={1}>
                 {item.name}
