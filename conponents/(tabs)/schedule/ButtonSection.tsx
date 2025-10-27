@@ -19,6 +19,7 @@ export default function ButtonSection() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mySchedule"] });
+      console.log('aaaa');
     },
     onError: (error) => {
       console.error("여행 일정 추가 실패: ", error);
@@ -83,6 +84,7 @@ export default function ButtonSection() {
       // 3. 요청이 성공했을 때만 이 코드가 실행됩니다.
       console.log("일정 추가에 성공했습니다!");
       if (response.status === 201) {
+        queryClient.invalidateQueries({ queryKey: ["mySchedule"] })
         goToNextStep();
       } else {
         await useModalStore.getState().showAlert({
@@ -148,6 +150,7 @@ export default function ButtonSection() {
           onPress={() => {
             resetAllStates();
             router.push("/");
+            queryClient.invalidateQueries({ queryKey: ["mySchedule"] });
           }}
           containerStyle={{ flex: 1, maxWidth: 354 }}
         />
