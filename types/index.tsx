@@ -30,6 +30,10 @@ export interface RecommendSpots {
   id: number;
   spotName: string;
   imgUrl: string;
+  fullAddress: string;
+  sido: string;
+  latitude: number;
+  longitude: number;
 }
 
 export interface MemberInfo {
