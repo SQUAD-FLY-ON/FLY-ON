@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { useAuthStore } from '../store/useAuthStore';
-import { useModalStore } from '../store/useModalStore';
 
 export const apiClient = axios.create({
   baseURL: `${process.env.EXPO_PUBLIC_API_URL}`,
@@ -28,36 +27,26 @@ apiClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    console.log(error.response);
-    if (error.response?.status === 401) {
-      console.log(error.response.status);
-
+    console.log(error.response.status);
+    if (originalRequest.url === '/token') {
+      return Promise.reject(error);
+    }
+    if (error.response?.status === 401 || (error.response?.status === 404 && useAuthStore.getState().accessToken && useAuthStore.getState().refreshToken && useAuthStore.getState().isInitializing)) {
       const refreshed = await useAuthStore.getState().refreshAccessToken();
-      console.log(refreshed);
       if (refreshed) {
         const token = useAuthStore.getState().accessToken;
         originalRequest.headers.Authorization = `Bearer ${token}`;
         return apiClient(originalRequest);
       } else {
+        useAuthStore.getState().clearAuthState();
 
+        return Promise.reject(error);
       }
     }
     else {
+      useAuthStore.getState().clearAuthState();
       return Promise.reject(error);
     }
-    console.log(error.response);
-
-    // Alert.alert 대신 Zustand 스토어 사용
-    const errorMessage = error.response?.data?.serverErrorMessage
-      || '데이터 요청에 실패했습니다.';
-
-    await useModalStore.getState().showAlert({
-      title: '오류',
-      description: errorMessage,
-      isError: true,
-    });
-
-    return Promise.reject(error);
   }
 );
 
