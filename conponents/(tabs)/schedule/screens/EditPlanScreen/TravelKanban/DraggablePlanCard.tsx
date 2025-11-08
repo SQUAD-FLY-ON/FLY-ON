@@ -21,7 +21,7 @@ const DraggablePlanCard = ({
   isLast: boolean;
   onDragStart: (item: Plan, dayId: string, index: number, cardLayout: { x: number; y: number; width: number; height: number }, initialPosition: { x: number; y: number }) => void;
   onDragMove: (x: number, y: number, gestureState: PanResponderGestureState, evt: any, initialPosition: { x: number; y: number }) => void;
-  onDragEnd: ( y: number) => void;
+  onDragEnd: (y: number) => void;
   isDragging: boolean;
 }) => {
   const cardOpacity = useRef(new Animated.Value(1)).current;
@@ -32,8 +32,8 @@ const DraggablePlanCard = ({
   const isDraggingRef = useRef(false);
   const localAutoScrollingRef = useRef(false);
   const cardInitialPosition = useRef({ x: 0, y: 0 });
-      const secureUrl = getSecureImageUrl(item?.image) 
-  
+  const secureUrl = getSecureImageUrl(item?.image)
+
 
 
   const panResponder = PanResponder.create({
