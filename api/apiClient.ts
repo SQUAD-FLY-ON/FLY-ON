@@ -27,8 +27,8 @@ apiClient.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    console.log(error.response.status);
-    if (originalRequest.url === '/token') {
+    if (originalRequest.url === '/tokens') {
+      useAuthStore.getState().clearAuthState();
       return Promise.reject(error);
     }
     if (error.response?.status === 401 || (error.response?.status === 404 && useAuthStore.getState().accessToken && useAuthStore.getState().refreshToken && useAuthStore.getState().isInitializing)) {
@@ -39,12 +39,10 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest);
       } else {
         useAuthStore.getState().clearAuthState();
-
         return Promise.reject(error);
       }
     }
     else {
-      useAuthStore.getState().clearAuthState();
       return Promise.reject(error);
     }
   }
