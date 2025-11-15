@@ -37,6 +37,7 @@ export const useTourSchedule = () => {
     isError: isScheduleError,
     data: schedule,
     isSuccess,
+    refetch: refetchSchedule,
   } = useQuery({
     queryKey: ["mySchedule"],
     queryFn: fetchTourSchedule,
@@ -44,5 +45,5 @@ export const useTourSchedule = () => {
     gcTime: 1000 * 60 * 60 * 24,
   });
 
-  return { isScheduleLoading, isScheduleError, schedule, isSuccess };
+  return { isScheduleLoading, isScheduleError, schedule, isSuccess, refetchSchedule };
 };
