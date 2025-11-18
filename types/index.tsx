@@ -65,13 +65,13 @@ interface PlaceData {
   type: TourismType;
 }
 
-export type Plan = {
-  key: string;
-  type: string;
-  image: any;
-  place: string;
-  address: string;
-};
+// export type Plan = {
+//   key: string;
+//   type: string;
+//   image: any;
+//   place: string;
+//   address: string;
+// };
 
 export type GeoJSONCoordinates = number[][][] | number[][][][];
 
@@ -287,4 +287,19 @@ export interface ITrackData {
 
 export interface ITrackPoints {
   points: ITrackData[];
+}
+
+export interface Plan {
+  key: string;
+  place: string;
+  address: string;
+  image?: string;
+  type: string;
+  day: string;
+}
+
+export interface DraggingItem {
+  item: Plan;
+  sourceDay: string;
+  sourceIndex: number;
 }

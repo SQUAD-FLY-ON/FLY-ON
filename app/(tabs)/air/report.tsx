@@ -10,12 +10,12 @@ import {
   myFlightLogsContents,
   postFlightLogRequest,
 } from "@/types/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import haversine from "haversine-distance";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function Report() {
   const params = useLocalSearchParams();
@@ -30,7 +30,6 @@ export default function Report() {
     ? JSON.parse(params.locationData as string)
     : [];
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-
   const minutes = Math.floor(flightTime / 60);
   const seconds = flightTime - minutes * 60;
   const minutesStr = minutes < 10 ? "0" + minutes : String(minutes);
@@ -146,7 +145,7 @@ export default function Report() {
         </Pressable>
       </View>
 
-      <ConfirmModal
+     <ConfirmModal
         isModalVisible={isModalVisible}
         setIsModalVisible={setIsModalVisible}
         title="비행기록 저장 완료!"

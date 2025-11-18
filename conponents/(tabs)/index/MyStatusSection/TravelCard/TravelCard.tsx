@@ -1,15 +1,21 @@
 import CustomButton from "@/conponents/CustomButton";
 import Colors from "@/constants/colors";
 import { useTourSchedule } from "@/hooks/useTourSchedule";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import CardContents from "./CardContents";
 
 const TravelCard = () => {
   const router = useRouter();
 
-  const { isScheduleLoading, isScheduleError, schedule } = useTourSchedule();
-  console.log(schedule);
+  const { isScheduleLoading, isScheduleError, schedule, refetchSchedule } = useTourSchedule();
+  
+  useFocusEffect(
+  useCallback(() => {
+    refetchSchedule();
+  }, [refetchSchedule])
+);
   const onPress = () => {
     const route = schedule?.length ? "/my-schedules" : "/schedule";
     router.push(route);
