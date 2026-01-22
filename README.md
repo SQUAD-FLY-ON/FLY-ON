@@ -32,6 +32,18 @@ Fly:On은 전국 패러글라이딩 체험장 정보를 한눈에 확인할 수 
 
 - Figma
 
+## 사용 공공데이터
+
+[공공데이터포털, 한국관광공사] 한국관광공사_국문 관광정보 서비스  
+https://www.data.go.kr/data/15101578/openapi.do  
+
+[공공데이터포털, 한국문화정보원] 전국 문화 여가 활동 시설(액티비티) 데이터  
+https://www.data.go.kr/data/42090996/linkedData.do  
+
+[공공데이터포털, 기상청] 기상청_단기예보 ((구)_동네예보) 조회 서비스, 기상청_중기예보 조회 서비스  
+https://www.data.go.kr/data/15084084/openapi.do  
+https://www.data.go.kr/data/15059468/openapi.do  
+
 # 주요 기능
 
 ### 여행 일정 생성
